@@ -17,6 +17,8 @@ ENV PATH="/software:${PATH}"
 #additional installing here
 
 RUN mkdir -p rna-seq-pipeline/src
+#add a mount target dir for interactive testing
+RUN mkdir mount_target
 COPY /src rna-seq-pipeline/src
 ENV PATH="/software/rna-seq-pipeline/src:${PATH}"
 
