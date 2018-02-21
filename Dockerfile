@@ -7,14 +7,21 @@ RUN apt-get update
 RUN apt-get install -y \
     python3-dev \
     python3-pip \
-    wget
+    wget 
 
 #Stick to Jin's way of organizing the directory structure
 RUN mkdir /software
 WORKDIR /software
 ENV PATH="/software:${PATH}"
 
-#additional installing here
+#Install STAR dependencies
+RUN wget http://zlib.net/zlib-1.2.11.tar.gz && tar -xvf zlib-1.2.11.tar.gz
+RUN cd zlib-1.2.11 && ./configure && make && make install
+
+#Install STAR 2.5.1b
+RUN wget https://github.com/alexdobin/STAR/archive/2.5.1b.tar.gz && tar -xzf 2.5.1b.tar.gz
+RUN cd STAR-2.5.1b && make STAR
+ENV PATH="/software/STAR-2.5.1b/bin/Linux_x86_64:${PATH}"
 
 RUN mkdir -p rna-seq-pipeline/src
 #add a mount target dir for interactive testing
