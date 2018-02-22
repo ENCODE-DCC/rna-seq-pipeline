@@ -57,6 +57,12 @@ RUN tar -xzvf tophat-2.0.8.Linux_x86_64.tar.gz
 RUN rm tophat-2.0.8.Linux_x86_64.tar.gz
 ENV PATH="/software/tophat-2.0.8.Linux_x86_64:${PATH}" 
 
+# Install RSEM 1.2.19
+RUN wget https://github.com/deweylab/RSEM/archive/v1.2.19.zip
+RUN unzip v1.2.19.zip && rm v1.2.19.zip
+RUN cd RSEM-1.2.19 && make
+ENV PATH="/software/RSEM-1.2.19:${PATH}"
+
 RUN mkdir -p rna-seq-pipeline/src
 #add a mount target dir for interactive testing
 RUN mkdir mount_target
