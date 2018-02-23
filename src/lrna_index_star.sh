@@ -18,18 +18,19 @@ echo "-- Unzipping reference files..."
 ref_fasta=${ref_fasta_gz%.gz}
 ref_root=${ref_fasta%.fasta}
 ref_root=${ref_root%.fa}
-gunzip $ref_fasta_gz
+gunzip -c $ref_fasta_gz > $ref_fasta
 spike_fasta=${spike_fasta_gz%.gz}
 spike_root=${spike_fasta%.fasta}
 spike_root=${spike_root%.fa}
-gunzip $spike_fasta_gz
+gunzip -c $spike_fasta_gz > $spike_fasta
 anno_gtf=${anno_gtf_gz%.gz}
 anno_root=${anno_gtf%.gtf}
-gunzip $anno_gtf_gz
+gunzip -c $anno_gtf_gz > $anno_gtf
 
-archive_file="${genome}_${anno}_${spike_root}_starIndex.tgz"
+# spike_root needs to be basenamed to handle path in cromwell run
+archive_file="${genome}_${anno}_$(basename ${spike_root})_starIndex.tgz" 
 if [ "$gender" == "famale" ] || [ "$gender" == "male" ] || [ "$gender" == "XX" ] || [ "$gender" == "XY" ]; then
-    archive_file="${genome}_${gender}_${anno}_${spike_root}_starIndex.tgz"
+    archive_file="${genome}_${gender}_${anno}_$(basename ${spike_root})_starIndex.tgz"
 fi
 echo "-- Results will be: '${archive_file}'."
 
@@ -46,7 +47,7 @@ echo "-- Create bam header..."
 set -x
 refComment="@CO\tREFID:$(basename ${ref_root})"
 annotationComment="@CO\tANNID:$(basename ${anno_root})"
-spikeInComment="@CO\tSPIKEID:${spike_root}"
+spikeInComment="@CO\tSPIKEID:$(basename ${spike_root})"
 echo -e ${refComment} > out/star_bamCommentLines.txt
 echo -e ${annotationComment} >> out/star_bamCommentLines.txt
 echo -e ${spikeInComment} >> out/star_bamCommentLines.txt
