@@ -23,9 +23,9 @@ echo "-- Unzipping reference files..."
 ref_fasta=${ref_fasta_gz%.gz}
 ref_root=${ref_fasta%.fasta}
 ref_root=${ref_root%.fa}
-gunzip $ref_fasta_gz
+gunzip -c $ref_fasta_gz > $ref_fasta
 anno_gtf=${anno_gtf_gz%.gz}
-gunzip $anno_gtf_gz
+gunzip -c $anno_gtf_gz > $anno_gtf
 
 echo "-- Build index for '${genome} and annotation ${anno}'..."
 set -x
