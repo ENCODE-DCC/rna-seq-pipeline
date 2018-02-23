@@ -1,0 +1,6 @@
+{
+	"merge_anno.annotation" : "/Users/otto/Documents/RNASeq/cromwell_testruns/inputs/primary_assembly.gtf.gz",
+	"merge_anno.tRNA" : "/Users/otto/Documents/RNASeq/cromwell_testruns/inputs/tRNAs.gtf.gz",
+	"merge_anno.spikeins" : "/Users/otto/Documents/RNASeq/cromwell_testruns/inputs/spikeins.fa.gz",
+	"merge_anno.output_filename" : "merged_annotation.gtf.gz"
+} 
