@@ -32,7 +32,7 @@ task make_index {
     String genome
 
     command {
-        $(which lrna_index_star.sh) \
+        $(which prep_star.sh) \
             ${reference_genome} \
             ${spikeins} \
             ${annotation} \

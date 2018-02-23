@@ -35,7 +35,7 @@ task make_index {
     String genome
 
     command {
-        $(which lrna_index_tophat.sh) \
+        $(which prep_tophat.sh) \
             ${reference_genome} \
             ${spikeins} \
             ${annotation} \
