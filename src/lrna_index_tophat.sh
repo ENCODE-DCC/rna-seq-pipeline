@@ -19,20 +19,20 @@ echo "-- Unzipping reference files..."
 ref_fasta=${ref_fasta_gz%.gz}
 ref_root=${ref_fasta%.fasta}
 ref_root=${ref_root%.fa}
-gunzip $ref_fasta_gz
+gunzip -c $ref_fasta_gz > $ref_fasta
 spike_fasta=${spike_fasta_gz%.gz}
 spike_root=${spike_fasta%.fasta}
 spike_root=${spike_root%.fa}
-gunzip $spike_fasta_gz
+gunzip -c $spike_fasta_gz > $spike_fasta
 anno_gtf=${anno_gtf_gz%.gz}
 anno_root=${anno_gtf%.gtf}
-gunzip $anno_gtf_gz
+gunzip -c $anno_gtf_gz > $anno_gtf
 tiny_fq=${tiny_fq_gz%.gz}
-gunzip $tiny_fq_gz
+gunzip -c $tiny_fq_gz > $tiny_fq
 
-archive_file="${genome}_${anno}_${spike_root}_tophatIndex.tgz"
+archive_file="${genome}_${anno}_$(basename ${spike_root})_tophatIndex.tgz"
 if [ "$gender" == "famale" ] || [ "$gender" == "male" ] || [ "$gender" == "XX" ] || [ "$gender" == "XY" ]; then
-    archive_file="${genome}_${gender}_${anno}_${spike_root}_tophatIndex.tgz"
+    archive_file="${genome}_${gender}_${anno}_$(basename ${spike_root})_tophatIndex.tgz"
 fi
 echo "-- Results will be: '${archive_file}'."
 
@@ -48,8 +48,8 @@ set +x
 # Attempt to make bamCommentLines.txt. NOTE tabs handled by assignment.
 echo "-- Create bam header..."
 set -x
-refComment="@CO\tREFID:${ref_root}"
-annotationComment="@CO\tANNID:${anno_root}"
+refComment="@CO\tREFID:$(basename ${ref_root})"
+annotationComment="@CO\tANNID:$(basename ${anno_root})"
 echo -e ${refComment} > out/${genome}_bamCommentLines.txt
 echo -e ${annotationComment} >> out/${genome}_bamCommentLines.txt
 if [ -n "$spike_in" ]; then
@@ -65,7 +65,7 @@ set -x
 tophat --no-discordant --no-mixed -p 8 -z0 --min-intron-length 20 --max-intron-length 1000000 \
        --read-mismatches 4 --read-edit-dist 4 --max-multihits 20 --library-type fr-firststrand \
        --GTF "$anno_root".gtf --no-coverage-search \
-       --transcriptome-index=out/${anno} out/${genome} tiny.fq
+       --transcriptome-index=out/${anno} out/${genome} ${tiny_fq}
 set +x
 
 echo "-- Tar up results..."
