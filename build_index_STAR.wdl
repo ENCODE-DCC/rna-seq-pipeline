@@ -1,4 +1,4 @@
-#ENCODE DCC RNA-Seq pipeline merge-annotation
+#ENCODE DCC RNA-Seq pipeline prep-STAR
 #Maintainer: Otto Jolanki
 
 workflow build_index {
@@ -6,7 +6,7 @@ workflow build_index {
     # reference genome in gzipped fasta
     File reference_genome
     # spikeins in gzipped fasta 
-    File spikeins
+    File? spikeins
     # annotation in gzipped gtf
     File annotation
     File? tiny_fq

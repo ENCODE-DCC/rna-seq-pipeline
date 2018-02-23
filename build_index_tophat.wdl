@@ -1,4 +1,4 @@
-#ENCODE DCC RNA-Seq pipeline merge-annotation
+#ENCODE DCC RNA-Seq pipeline prep-tophat
 #Maintainer: Otto Jolanki
 
 workflow build_index {
@@ -6,11 +6,11 @@ workflow build_index {
     # reference genome in gzipped fasta
     File reference_genome
     # spikeins in gzipped fasta 
-    File spikeins
+    File? spikeins
     # annotation in gzipped gtf
     File annotation
     # fake gzipped fastq to trick tophat
-    File tiny_fq
+    File? tiny_fq
     # annotation version (e.g 'v24')
     String anno_version
     # genome (e.g 'GRCh38')
