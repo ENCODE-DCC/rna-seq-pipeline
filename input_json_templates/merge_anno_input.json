@@ -1,6 +1,6 @@
 {
-	"merge_anno.annotation" : "/Users/otto/Documents/RNASeq/cromwell_testruns/inputs/primary_assembly.gtf.gz",
-	"merge_anno.tRNA" : "/Users/otto/Documents/RNASeq/cromwell_testruns/inputs/tRNAs.gtf.gz",
-	"merge_anno.spikeins" : "/Users/otto/Documents/RNASeq/cromwell_testruns/inputs/spikeins.fa.gz",
+	"merge_anno.annotation" : "<path-to-repo>/test_data/gencode.v24.primary_assembly.annotation.gtf.gz",
+	"merge_anno.tRNA" : "<path-to-repo>/test_data/gencode.v24.tRNAs.gtf.gz",
+	"merge_anno.spikeins" : "<path-to-repo>/test_data/ERCC_phiX.fa.gz",
 	"merge_anno.output_filename" : "merged_annotation.gtf.gz"
 } 
