@@ -1,1 +1,2 @@
-# rna-seq-pipeline
+ENCODE RNA-seq pipeline
+=================================================
