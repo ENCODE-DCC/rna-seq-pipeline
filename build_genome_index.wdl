@@ -21,6 +21,7 @@ workflow build_index {
     # prep_rsem, prep_srna, prep_star, prep_tophat
     String index_type
 
+
     call make_index { input:
         reference_genome = reference_genome,
         spikeins = spikeins,
@@ -40,7 +41,6 @@ task make_index {
     String anno_version
     String genome
     String index_type
-
     command {
         $(which ${index_type + ".sh"}) \
             ${reference_genome} \
