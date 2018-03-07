@@ -29,7 +29,7 @@ workflow build_index {
         tiny_fq = tiny_fq,
         anno_version = anno_version,
         genome = genome,
-        index_type = index_type
+        index_type = index_type,
     }
 }
 
