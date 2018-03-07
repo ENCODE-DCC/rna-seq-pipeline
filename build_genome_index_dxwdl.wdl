@@ -20,6 +20,8 @@ workflow build_index {
     # available options:
     # prep_rsem, prep_srna, prep_star, prep_tophat
     String index_type
+    # String? dx_instance_type
+    
 
 
     call make_index { input:
@@ -41,6 +43,7 @@ task make_index {
     String anno_version
     String genome
     String index_type
+    String? dx_instance_type
     command {
         $(which ${index_type + ".sh"}) \
             ${reference_genome} \
@@ -52,5 +55,10 @@ task make_index {
     }
     output {
         File index = glob("*.tgz")[0]
+    }
+
+    runtime {
+        docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+        dx_instance_type : "mem3_ssd1_x8"
     }
 }

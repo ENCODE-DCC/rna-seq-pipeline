@@ -99,3 +99,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# dx wdl and cromwell
+*.jar
