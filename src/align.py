@@ -127,7 +127,7 @@ class PairedEndStarAligner(StarAligner):
     --outSAMtype BAM SortedByCoordinate \
     --quantMode TranscriptomeSAM \
     --sjdbScore 1 \
-    --limitBAMsortRAM {ram_GB}000000000'''
+    --limitBAMsortRAM {ramGB}000000000'''
 
     def __init__(self, fastqs, ncpus, ramGB):
         self.fastq_read1 = fastqs[0]
