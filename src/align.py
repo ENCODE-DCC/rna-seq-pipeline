@@ -25,10 +25,17 @@ def make_aligner(args):
 
 def make_modified_TarInfo(archive, target_dir=''):
     '''
-    Input: archive Tarfile in read mode
-    Input: target_dir path
+    Input: archive TarFile object
+    Input: target_dir string
     Returns a list of modified TarInfo objects that are files, whose
     extraction path gets modified into target_dir.
+    Example: archive index.tgz contents are out (directory)
+    out/file1.txt, out/file2.txt. Extracting the files
+    into cwd under directory my_output (instead of ./out/)
+    can be done with this:
+    with tarfile.open('index.tgz', 'r:gz') as archive:
+        archive.extractall('.', members=make_modified_TarInfo(archive,
+        'my_output'))
     '''
     members = []
     for member in archive.getmembers():
