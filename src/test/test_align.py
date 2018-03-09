@@ -12,4 +12,6 @@ class TestAlign(unittest.TestCase):
     TestCase subclass for align.py
     """
 
+    def setUp(self):
+        pass
     

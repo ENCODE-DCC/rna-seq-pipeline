@@ -12,6 +12,15 @@ import tarfile
 from abc import ABC, abstractmethod
 import subprocess
 import shlex
+import os
+
+
+def make_aligner(args):
+    if args.aligner == 'star':
+        if args.endedness == 'single':
+            return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB)
+        elif args.endedness == 'paired':
+            return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB)
 
 
 def make_modified_TarInfo(archive, target_dir=''):
@@ -55,18 +64,29 @@ class StarAligner(ABC):
 
 class SingleEndedStarAligner(StarAligner):
 
-    command_string = '''STAR --genomeDir out --readFilesIn {infastq} \
-    --readFilesCommand zcat --runThreadN {ncpus} --genomeLoad NoSharedMemory \
-    --outFilterMultimapNmax 20 --alignSJoverhangMin 8 \
+    command_string = '''STAR --genomeDir out \
+    --readFilesIn {infastq} \
+    --readFilesCommand zcat \
+    --runThreadN {ncpus} \
+    --genomeLoad NoSharedMemory \
+    --outFilterMultimapNmax 20 \
+    --alignSJoverhangMin 8 \
     --alignSJDBoverhangMin 1 \
-    --outFilterMismatchNmax 999 --outFilterMismatchNoverReadLmax 0.04 \
-    --alignIntronMin 20 --alignIntronMax 1000000 --alignMatesGapMax 1000000 \
+    --outFilterMismatchNmax 999 \
+    --outFilterMismatchNoverReadLmax 0.04 \
+    --alignIntronMin 20 \
+    --alignIntronMax 1000000 \
+    --alignMatesGapMax 1000000 \
     --outSAMheaderCommentFile COfile.txt \
     --outSAMheaderHD @HD VN:1.4 SO:coordinate \
-    --outSAMunmapped Within --outFilterType BySJout \
+    --outSAMunmapped Within \
+    --outFilterType BySJout \
     --outSAMattributes NH HI AS NM MD \
-    --outSAMstrandField intronMotif --outSAMtype BAM SortedByCoordinate  \
-    --quantMode TranscriptomeSAM --sjdbScore 1 --limitBAMsortRAM {ramGB}000000000'''
+    --outSAMstrandField intronMotif \
+    --outSAMtype BAM SortedByCoordinate  \
+    --quantMode TranscriptomeSAM \
+    --sjdbScore 1 \
+    --limitBAMsortRAM {ramGB}000000000'''
 
     def __init__(self, fastqs, ncpus, ramGB):
         self.input_fastq = fastqs[0]
@@ -76,7 +96,7 @@ class SingleEndedStarAligner(StarAligner):
             self.format_command_string(type(self).command_string))
 
     def format_command_string(self, input_string):
-        cmd = self.command_string.format(
+        cmd = input_string.format(
             infastq=self.input_fastq, ncpus=self.ncpus, ramGB=self.ramGB)
         return cmd
 
@@ -84,17 +104,57 @@ class SingleEndedStarAligner(StarAligner):
         pass
 
 
-def make_aligner(args):
-    if args.aligner == 'star':
-        if args.endedness == 'single':
-            return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB)
-        elif args.endedness == 'paired':
-            return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB)
+class PairedEndStarAligner(StarAligner):
+
+    command_string = '''STAR --genomeDir out \
+    --readFilesIn {read1_fq_gz} {read2_fq_gz} \
+    --readFilesCommand zcat \
+    --runThreadN {ncpus} \
+    --genomeLoad NoSharedMemory \
+    --outFilterMultimapNmax 20 \
+    --alignSJoverhangMin 8 \
+    --alignSJDBoverhangMin 1 \
+    --outFilterMismatchNmax 999 \
+    --outFilterMismatchNoverReadLmax 0.04 \
+    --alignIntronMin 20 \
+    --alignIntronMax 1000000 \
+    --alignMatesGapMax 1000000 \
+    --outSAMheaderCommentFile COfile.txt \
+    --outSAMheaderHD @HD VN:1.4 SO:coordinate \
+    --outSAMunmapped Within \
+    --outFilterType BySJout \
+    --outSAMattributes NH HI AS NM MD \
+    --outSAMtype BAM SortedByCoordinate \
+    --quantMode TranscriptomeSAM \
+    --sjdbScore 1 \
+    --limitBAMsortRAM {ram_GB}000000000'''
+
+    def __init__(self, fastqs, ncpus, ramGB):
+        self.fastq_read1 = fastqs[0]
+        self.fastq_read2 = fastqs[1]
+        self.ncpus = ncpus
+        self.ramGB = ramGB
+        self.command = shlex.split(
+            self.format_command_string(type(self).command_string))
+
+    def format_command_string(self, input_string):
+        cmd = input_string.format(
+            read1_fq_gz=self.fastq_read1,
+            read2_fq_gz=self.read2_fq_gz,
+            ncpus=self.ncpus,
+            ramGB=self.ramGB)
+        return cmd
+
+    def post_process(self):
+        pass
+
 
 def main(args):
-    
-    a = make_aligner(args)
-    a.run()
+    print('running {}-end {} aligner'.format(args.endedness, args.aligner))
+    with tarfile.open(args.index, 'r:gz') as archive:
+        archive.extractall()
+    aligner = make_aligner(args)
+    aligner.run()
 
 
 if __name__ == '__main__':
@@ -121,7 +181,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--libraryid',
         type=str,
-        help='Library identifier which will be added to bam header.')
+        help='Library identifier which will be added to bam header.',
+        default='libraryID')
     parser.add_argument(
         '--bamroot',
         type=str,
