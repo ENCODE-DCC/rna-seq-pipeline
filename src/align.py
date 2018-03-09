@@ -88,13 +88,13 @@ def make_aligner(args):
     if args.aligner == 'star':
         if args.endedness == 'single':
             return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB)
-        elif args.endedness == 'paired'
+        elif args.endedness == 'paired':
             return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB)
 
 def main(args):
     
     a = make_aligner(args)
-    
+    a.run()
 
 
 if __name__ == '__main__':
