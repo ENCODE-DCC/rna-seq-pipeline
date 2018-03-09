@@ -11,33 +11,52 @@ import argparse
 import tarfile
 from abc import ABC, abstractmethod
 import subprocess
+import shlex
 
 
-class Aligner(ABC):
+def make_modified_TarInfo(archive, target_dir=''):
+    '''
+    Input: archive Tarfile in read mode
+    Input: target_dir path
+    Returns a list of modified TarInfo objects that are files, whose
+    extraction path gets modified into target_dir.
+    '''
+    members = []
+    for member in archive.getmembers():
+        if member.isfile():
+            member.name = os.path.join(target_dir,
+                                       os.path.basename(member.name))
+            members.append(member)
+    return members
+
+
+class StarAligner(ABC):
     def __init__(self):
-        self.command = self.format_command_string(type(self).command_string)
+        pass
 
     def run(self):
         print('running command:')
         print(self.command)
-        # subprocess.Popen(self.command)
-
-    def set_ram(self):
-        pass
+        # subprocess.call(self.command)
 
     @property
+    @abstractmethod
     def command_string(self):
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def format_command_string(self):
         pass
 
+    @abstractmethod
+    def post_process(self):
+        pass
 
-class SingleEndedStarAligner(Aligner):
 
-    command_string = '''STAR --genomeDir out --readFilesIn $reads_fq_gz \
-    --readFilesCommand zcat --runThreadN $ncpus --genomeLoad NoSharedMemory \
+class SingleEndedStarAligner(StarAligner):
+
+    command_string = '''STAR --genomeDir out --readFilesIn {infastq} \
+    --readFilesCommand zcat --runThreadN {ncpus} --genomeLoad NoSharedMemory \
     --outFilterMultimapNmax 20 --alignSJoverhangMin 8 \
     --alignSJDBoverhangMin 1 \
     --outFilterMismatchNmax 999 --outFilterMismatchNoverReadLmax 0.04 \
@@ -47,43 +66,36 @@ class SingleEndedStarAligner(Aligner):
     --outSAMunmapped Within --outFilterType BySJout \
     --outSAMattributes NH HI AS NM MD \
     --outSAMstrandField intronMotif --outSAMtype BAM SortedByCoordinate  \
-    --quantMode TranscriptomeSAM --sjdbScore 1 --limitBAMsortRAM 60000000000'''
+    --quantMode TranscriptomeSAM --sjdbScore 1 --limitBAMsortRAM {ramGB}000000000'''
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, fastqs, ncpus, ramGB):
+        self.input_fastq = fastqs[0]
+        self.ncpus = ncpus
+        self.ramGB = ramGB
+        self.command = shlex.split(
+            self.format_command_string(type(self).command_string))
 
     def format_command_string(self, input_string):
-        return input_string
+        cmd = self.command_string.format(
+            infastq=self.input_fastq, ncpus=self.ncpus, ramGB=self.ramGB)
+        return cmd
+
+    def post_process(self):
+        pass
 
 
-def make_aligner(aligner_program, endedness):
-    pass
-
-
-def make_post_processor(aligner_program, endedness):
-    pass
-
+def make_aligner(args):
+    if args.aligner == 'star':
+        if args.endedness == 'single':
+            return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB)
+        elif args.endedness == 'paired'
+            return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB)
 
 def main(args):
-    ''' if (args.endedness == 'paired' and len(args.fastqs) != 2):
-        raise AssertionError('paired end must have 2 fastqs')
-    if (args.endedness == 'single' and len(args.fastqs) != 1):
-        raise AssertionError('single end must have 1 fastq')
-    '''
-    '''
-    aligner = make_aligner(
-        aligner_program=args.aligner, endedness=args.endedness)
-    aligner.set_inputs(args.fastqs)
-    aligner.set_index_path(args.index)
-    aligner.set_library_id(args.libraryid)
-    aligner.set_bam_root(args.bamroot)
-    aligner.set_ncpus(args.ncpus)
-    aligner.set_ram(args.ramGB)
-    aligner.run()
-    post_processor = make_post_processor(
-        aligner_program=args.aligner, endedness=args.endedness)
-    post_processor.run()
-    '''
+    
+    a = make_aligner(args)
+    
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
