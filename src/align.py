@@ -46,7 +46,7 @@ class StarAligner(ABC):
     def run(self):
         print('running command:')
         print(self.command)
-        # subprocess.call(self.command)
+        subprocess.call(self.command)
 
     @property
     @abstractmethod
@@ -140,7 +140,7 @@ class PairedEndStarAligner(StarAligner):
     def format_command_string(self, input_string):
         cmd = input_string.format(
             read1_fq_gz=self.fastq_read1,
-            read2_fq_gz=self.read2_fq_gz,
+            read2_fq_gz=self.fastq_read2,
             ncpus=self.ncpus,
             ramGB=self.ramGB)
         return cmd
