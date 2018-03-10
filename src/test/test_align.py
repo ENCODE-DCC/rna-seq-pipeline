@@ -20,7 +20,8 @@ class TestAlignHelpers(unittest.TestCase):
             endedness='paired',
             fastqs=['fq1.fastq.gz', 'fq2.fastq.gz'],
             ncpus=4,
-            ramGB=8)
+            ramGB=8,
+            indexdir='out')
         aligner = align.make_aligner(star_paired)
         self.assertTrue(isinstance(aligner, align.PairedEndStarAligner))
 
@@ -30,7 +31,8 @@ class TestAlignHelpers(unittest.TestCase):
             endedness='single',
             fastqs=['fq.fastq.gz'],
             ncpus=4,
-            ramGB=8)
+            ramGB=8,
+            indexdir='out')
         aligner = align.make_aligner(star_single)
         self.assertTrue(isinstance(aligner, align.SingleEndedStarAligner))
 

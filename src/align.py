@@ -18,9 +18,11 @@ import os
 def make_aligner(args):
     if args.aligner == 'star':
         if args.endedness == 'single':
-            return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB)
+            return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB,
+                                          args.indexdir)
         elif args.endedness == 'paired':
-            return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB)
+            return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB,
+                                        args.indexdir)
 
 
 def make_modified_TarInfo(archive, target_dir=''):
@@ -71,7 +73,7 @@ class StarAligner(ABC):
 
 class SingleEndedStarAligner(StarAligner):
 
-    command_string = '''STAR --genomeDir out \
+    command_string = '''STAR --genomeDir {indexdir} \
     --readFilesIn {infastq} \
     --readFilesCommand zcat \
     --runThreadN {ncpus} \
@@ -95,16 +97,20 @@ class SingleEndedStarAligner(StarAligner):
     --sjdbScore 1 \
     --limitBAMsortRAM {ramGB}000000000'''
 
-    def __init__(self, fastqs, ncpus, ramGB):
+    def __init__(self, fastqs, ncpus, ramGB, indexdir):
         self.input_fastq = fastqs[0]
         self.ncpus = ncpus
         self.ramGB = ramGB
+        self.indexdir = indexdir
         self.command = shlex.split(
             self.format_command_string(type(self).command_string))
 
     def format_command_string(self, input_string):
         cmd = input_string.format(
-            infastq=self.input_fastq, ncpus=self.ncpus, ramGB=self.ramGB)
+            infastq=self.input_fastq,
+            ncpus=self.ncpus,
+            ramGB=self.ramGB,
+            indexdir=self.indexdir)
         return cmd
 
     def post_process(self):
@@ -113,7 +119,7 @@ class SingleEndedStarAligner(StarAligner):
 
 class PairedEndStarAligner(StarAligner):
 
-    command_string = '''STAR --genomeDir out \
+    command_string = '''STAR --genomeDir {indexdir} \
     --readFilesIn {read1_fq_gz} {read2_fq_gz} \
     --readFilesCommand zcat \
     --runThreadN {ncpus} \
@@ -136,11 +142,12 @@ class PairedEndStarAligner(StarAligner):
     --sjdbScore 1 \
     --limitBAMsortRAM {ramGB}000000000'''
 
-    def __init__(self, fastqs, ncpus, ramGB):
+    def __init__(self, fastqs, ncpus, ramGB, indexdir):
         self.fastq_read1 = fastqs[0]
         self.fastq_read2 = fastqs[1]
         self.ncpus = ncpus
         self.ramGB = ramGB
+        self.indexdir = indexdir
         self.command = shlex.split(
             self.format_command_string(type(self).command_string))
 
@@ -149,7 +156,8 @@ class PairedEndStarAligner(StarAligner):
             read1_fq_gz=self.fastq_read1,
             read2_fq_gz=self.fastq_read2,
             ncpus=self.ncpus,
-            ramGB=self.ramGB)
+            ramGB=self.ramGB,
+            indexdir=self.indexdir)
         return cmd
 
     def post_process(self):
@@ -165,8 +173,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.MetavarTypeHelpFormatter, add_help=True)
+    parser = argparse.ArgumentParser()
     parser.add_argument('--fastqs', nargs='+', help='Input gzipped fastq(s)')
     parser.add_argument(
         '--aligner',
@@ -177,8 +184,13 @@ if __name__ == '__main__':
     parser.add_argument(
         '--index',
         type=str,
-        help='Path to aligner index archive.',
+        help='Path to aligner index tar.gz archive.',
         required=True)
+    parser.add_argument(
+        '--indexdir',
+        type=str,
+        help='Directory to extract index to.',
+        default='out')
     parser.add_argument(
         '--endedness',
         type=str,
