@@ -36,16 +36,25 @@ class TestAlignHelpers(unittest.TestCase):
         aligner = align.make_aligner(star_single)
         self.assertTrue(isinstance(aligner, align.SingleEndedStarAligner))
 
+    def create_tar_archive(self, name_type_list):
+        # input : list of tuples with (name, type)
+        # output: TarFile object that contains TarInfo
+        # objects with specified name and type
+        file_like_object = io.BytesIO(b'some content')
+        archive = tarfile.open(fileobj=file_like_object, mode='w')
+        for name_, type_ in name_type_list:
+            tarinfo = tarfile.TarInfo(name=name_)
+            tarinfo.type = type_
+            archive.addfile(tarinfo)
+        return archive
+
     def test_make_modified_TarInfo_when_one_dir_and_no_files(self):
         '''
         fixture setup. need a hack to initialize empty archive.
         add one member that is a directory into the archive.
         '''
-        file_like_object = io.BytesIO(b'some content')
-        archive = tarfile.open(fileobj=file_like_object, mode='w')
-        tar_directory = tarfile.TarInfo(name='/i/am/a/dir/')
-        tar_directory.type = tarfile.DIRTYPE
-        archive.addfile(tar_directory)
+        # setup
+        archive = self.create_tar_archive([('/i/am/a/dir/', tarfile.DIRTYPE)])
         # excercise
         modified_info = align.make_modified_TarInfo(archive)
         # verify
@@ -53,12 +62,8 @@ class TestAlignHelpers(unittest.TestCase):
 
     def test_make_modified_TarInfo_with_one_file_and_empty_target_dir(self):
         # setup
-        file_like_object = io.BytesIO(b'some content')
-        archive = tarfile.open(fileobj=file_like_object, mode='w')
-        tar_file = tarfile.TarInfo(name='/i/am/a/file.txt')
-        # tarfile.REGTYPE is a regular file
-        tar_file.type = tarfile.REGTYPE
-        archive.addfile(tar_file)
+        archive = self.create_tar_archive([('/i/am/a/file.txt',
+                                            tarfile.REGTYPE)])
         # excercise
         modified_info = align.make_modified_TarInfo(archive)
         # verify
@@ -67,14 +72,9 @@ class TestAlignHelpers(unittest.TestCase):
     def test_make_modified_TarInfo_with_one_file_one_dir_and_empty_target_dir(
             self):
         # setup
-        file_like_object = io.BytesIO(b'some content')
-        archive = tarfile.open(fileobj=file_like_object, mode='w')
-        tar_file = tarfile.TarInfo(name='/i/am/a/file.txt')
-        tar_file.type = tarfile.REGTYPE
-        tar_directory = tarfile.TarInfo(name='/i/am/a/dir/')
-        tar_directory.type = tarfile.DIRTYPE
-        archive.addfile(tar_file)
-        archive.addfile(tar_directory)
+        archive = self.create_tar_archive([('/i/am/a/dir/', tarfile.DIRTYPE),
+                                           ('/i/am/a/file.txt',
+                                            tarfile.REGTYPE)])
         # excercise
         modified_info = align.make_modified_TarInfo(archive)
         # verify
@@ -83,11 +83,8 @@ class TestAlignHelpers(unittest.TestCase):
 
     def test_make_modified_TarInfo_when_filepath_changes_to_nonempty(self):
         # setup
-        file_like_object = io.BytesIO(b'some content')
-        archive = tarfile.open(fileobj=file_like_object, mode='w')
-        tar_file = tarfile.TarInfo(name='/my/old/path/file.txt')
-        tar_file.type = tarfile.REGTYPE
-        archive.addfile(tar_file)
+        archive = self.create_tar_archive([('/my/old/path/file.txt',
+                                            tarfile.REGTYPE)])
         # excercise
         modified_info = align.make_modified_TarInfo(
             archive, target_dir='/my/new/path/')

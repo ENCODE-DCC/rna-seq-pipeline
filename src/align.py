@@ -49,8 +49,10 @@ def make_modified_TarInfo(archive, target_dir=''):
 
 
 class StarAligner(ABC):
-    def __init__(self):
-        pass
+    def __init__(self, ncpus, ramGB, indexdir):
+        self.ncpus = ncpus
+        self.ramGB = ramGB
+        self.indexdir = indexdir
 
     def run(self):
         print('running command:')
@@ -98,10 +100,8 @@ class SingleEndedStarAligner(StarAligner):
     --limitBAMsortRAM {ramGB}000000000'''
 
     def __init__(self, fastqs, ncpus, ramGB, indexdir):
+        super().__init__(ncpus, ramGB, indexdir)
         self.input_fastq = fastqs[0]
-        self.ncpus = ncpus
-        self.ramGB = ramGB
-        self.indexdir = indexdir
         self.command = shlex.split(
             self.format_command_string(type(self).command_string))
 
@@ -143,11 +143,9 @@ class PairedEndStarAligner(StarAligner):
     --limitBAMsortRAM {ramGB}000000000'''
 
     def __init__(self, fastqs, ncpus, ramGB, indexdir):
+        super().__init__(ncpus, ramGB, indexdir)
         self.fastq_read1 = fastqs[0]
         self.fastq_read2 = fastqs[1]
-        self.ncpus = ncpus
-        self.ramGB = ramGB
-        self.indexdir = indexdir
         self.command = shlex.split(
             self.format_command_string(type(self).command_string))
 

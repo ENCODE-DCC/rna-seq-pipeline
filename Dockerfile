@@ -63,6 +63,10 @@ RUN unzip v1.2.19.zip && rm v1.2.19.zip
 RUN cd RSEM-1.2.19 && make
 ENV PATH="/software/RSEM-1.2.19:${PATH}"
 
+# Install BedGraphToBigWig
+RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
+RUN chmod +x bedGraphToBigWig
+
 RUN mkdir -p rna-seq-pipeline/src
 #add a mount target dir for interactive testing
 RUN mkdir mount_target
