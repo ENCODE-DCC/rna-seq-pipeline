@@ -19,10 +19,10 @@ def make_aligner(args):
     if args.aligner == 'star':
         if args.endedness == 'single':
             return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB,
-                                          args.indexdir)
+                                          args.indexdir, args.bamroot)
         elif args.endedness == 'paired':
             return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB,
-                                        args.indexdir)
+                                        args.indexdir, args.bamroot)
 
 
 def make_modified_TarInfo(archive, target_dir=''):
@@ -49,10 +49,11 @@ def make_modified_TarInfo(archive, target_dir=''):
 
 
 class StarAligner(ABC):
-    def __init__(self, ncpus, ramGB, indexdir):
+    def __init__(self, ncpus, ramGB, indexdir, bamroot):
         self.ncpus = ncpus
         self.ramGB = ramGB
         self.indexdir = indexdir
+        self.bamroot = bamroot
 
     def run(self):
         print('running command:')
@@ -114,7 +115,11 @@ class SingleEndedStarAligner(StarAligner):
         return cmd
 
     def post_process(self):
-        pass
+        os.rename('Aligned.SortedByCoord.out.bame',
+                  self.bamroot + '_genome.bam')
+        os.rename('Log.final.out', self.bamroot + '_Log.final.out')
+        os.rename('Aligned.toTranscriptome.out.bam',
+                  self.bamroot + '_anno.bam')
 
 
 class PairedEndStarAligner(StarAligner):

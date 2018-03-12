@@ -49,10 +49,6 @@ class TestAlignHelpers(unittest.TestCase):
         return archive
 
     def test_make_modified_TarInfo_when_one_dir_and_no_files(self):
-        '''
-        fixture setup. need a hack to initialize empty archive.
-        add one member that is a directory into the archive.
-        '''
         # setup
         archive = self.create_tar_archive([('/i/am/a/dir/', tarfile.DIRTYPE)])
         # excercise
