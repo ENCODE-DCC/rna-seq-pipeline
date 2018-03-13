@@ -49,6 +49,11 @@ def make_modified_TarInfo(archive, target_dir=''):
 
 
 class StarAligner(ABC):
+    '''
+    Abstract base class that gathers aspects common to both PE and SE
+    Star aligning jobs.
+    '''
+
     def __init__(self, ncpus, ramGB, indexdir, bamroot):
         self.ncpus = ncpus
         self.ramGB = ramGB
@@ -69,9 +74,12 @@ class StarAligner(ABC):
     def format_command_string(self):
         pass
 
-    @abstractmethod
     def post_process(self):
-        pass
+        os.rename('Aligned.SortedByCoord.out.bam',
+                  self.bamroot + '_genome.bam')
+        os.rename('Log.final.out', self.bamroot + '_Log.final.out')
+        os.rename('Aligned.toTranscriptome.out.bam',
+                  self.bamroot + '_anno.bam')
 
 
 class SingleEndedStarAligner(StarAligner):
@@ -100,8 +108,8 @@ class SingleEndedStarAligner(StarAligner):
     --sjdbScore 1 \
     --limitBAMsortRAM {ramGB}000000000'''
 
-    def __init__(self, fastqs, ncpus, ramGB, indexdir):
-        super().__init__(ncpus, ramGB, indexdir)
+    def __init__(self, fastqs, ncpus, ramGB, indexdir, bamroot):
+        super().__init__(ncpus, ramGB, indexdir, bamroot)
         self.input_fastq = fastqs[0]
         self.command = shlex.split(
             self.format_command_string(type(self).command_string))
@@ -113,13 +121,6 @@ class SingleEndedStarAligner(StarAligner):
             ramGB=self.ramGB,
             indexdir=self.indexdir)
         return cmd
-
-    def post_process(self):
-        os.rename('Aligned.SortedByCoord.out.bame',
-                  self.bamroot + '_genome.bam')
-        os.rename('Log.final.out', self.bamroot + '_Log.final.out')
-        os.rename('Aligned.toTranscriptome.out.bam',
-                  self.bamroot + '_anno.bam')
 
 
 class PairedEndStarAligner(StarAligner):
@@ -147,8 +148,8 @@ class PairedEndStarAligner(StarAligner):
     --sjdbScore 1 \
     --limitBAMsortRAM {ramGB}000000000'''
 
-    def __init__(self, fastqs, ncpus, ramGB, indexdir):
-        super().__init__(ncpus, ramGB, indexdir)
+    def __init__(self, fastqs, ncpus, ramGB, indexdir, bamroot):
+        super().__init__(ncpus, ramGB, indexdir, bamroot)
         self.fastq_read1 = fastqs[0]
         self.fastq_read2 = fastqs[1]
         self.command = shlex.split(
@@ -163,9 +164,6 @@ class PairedEndStarAligner(StarAligner):
             indexdir=self.indexdir)
         return cmd
 
-    def post_process(self):
-        pass
-
 
 def main(args):
     print('running {}-end {} aligner'.format(args.endedness, args.aligner))
@@ -173,6 +171,7 @@ def main(args):
         archive.extractall()
     aligner = make_aligner(args)
     aligner.run()
+    aligner.post_process()
 
 
 if __name__ == '__main__':
