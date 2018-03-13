@@ -1,5 +1,5 @@
-#ENCODE DCC RNA-Seq pipeline build_genome_index
-#Maintainer: Otto Jolanki
+# ENCODE DCC RNA-Seq pipeline build_genome_index
+# Maintainer: Otto Jolanki
 
 workflow build_index {
     # Inputs
