@@ -25,7 +25,7 @@ workflow rna {
 
     Int? align_ramGB
 
-    if (endedness == "single"){
+    if (endedness == "single") {
         call align { input:
             endedness = endedness,
             fastq_R1 = fastqs_R1[0],
@@ -56,7 +56,7 @@ workflow rna {
         Int? ramGB
 
         command {
-            python3 $(which aligner.py) \
+            python3 $(which align.py) \
                 --fastqs ${fastq_R1} ${fastq_R2} \
                 --endedness ${endedness} \
                 --aligner ${aligner} \
