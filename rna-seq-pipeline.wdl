@@ -26,18 +26,20 @@ workflow rna {
     Int? align_ramGB
 
     if (endedness == "single") {
-        call align { input:
-            endedness = endedness,
-            fastq_R1 = fastqs_R1[0],
-            endedness = endedness,
-            index = index,
-            aligner = aligner,
-            indexdir = indexdir,
-            libraryid = libraryid,
-            bamroot = bamroot,
-            ncpus = align_ncpus,
-            ramGB = align_ramGB,
-        }
+        scatter (fastq in fastqs_R1) {
+            call align { input:
+                endedness = endedness,
+                fastq_R1 = fastq,
+                endedness = endedness,
+                index = index,
+                aligner = aligner,
+                indexdir = indexdir,
+                libraryid = libraryid,
+                bamroot = bamroot,
+                ncpus = align_ncpus,
+                ramGB = align_ramGB,
+            }
+        }    
     }
 }
 
