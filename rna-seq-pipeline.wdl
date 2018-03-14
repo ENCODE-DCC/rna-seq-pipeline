@@ -21,6 +21,10 @@ workflow rna {
     # create foo_bar_genome.bam and foo_bar_anno.bam
     String? bamroot
 
+    Int? align_ncpus
+
+    Int? align_ramGB
+
     call align { input:
         endedness = endedness,
         fastq_R1 = fastqs_R1[0],
@@ -30,7 +34,10 @@ workflow rna {
         indexdir = indexdir,
         libraryid = libraryid,
         bamroot = bamroot,
+        ncpus = align_ncpus,
+        ramGB = align_ramGB,
     }
+}
 
 
     ## tasks
@@ -43,6 +50,8 @@ workflow rna {
         String? indexdir
         String? libraryid
         String? bamroot
+        Int? ncpus
+        Int? ramGB
 
         command {
             python3 $(which aligner.py) \
@@ -52,13 +61,14 @@ workflow rna {
                 --index ${index} \
                 ${"--indexdir " + indexdir} \
                 ${"--libraryid " + libraryid} \
-                ${"--bamroot " + bamroot}
+                ${"--bamroot " + bamroot} \
+                ${"--ncpus " + ncpus} \
+                ${"--ramGB " + ramGB}
         }
 
-        output{
+        output {
             File genomebam = glob("*_genome.bam")[0]
             File annobam = glob("*_anno.bam")[0]
             File log = glob("*_Log.final.out")[0]
         }
     }
-}
