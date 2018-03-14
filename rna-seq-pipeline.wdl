@@ -25,17 +25,19 @@ workflow rna {
 
     Int? align_ramGB
 
-    call align { input:
-        endedness = endedness,
-        fastq_R1 = fastqs_R1[0],
-        fastq_R2 = fastqs_R2[0],
-        endedness = endedness,
-        aligner = aligner,
-        indexdir = indexdir,
-        libraryid = libraryid,
-        bamroot = bamroot,
-        ncpus = align_ncpus,
-        ramGB = align_ramGB,
+    if (endedness == "single"){
+        call align { input:
+            endedness = endedness,
+            fastq_R1 = fastqs_R1[0],
+            endedness = endedness,
+            index = index,
+            aligner = aligner,
+            indexdir = indexdir,
+            libraryid = libraryid,
+            bamroot = bamroot,
+            ncpus = align_ncpus,
+            ramGB = align_ramGB,
+        }
     }
 }
 
