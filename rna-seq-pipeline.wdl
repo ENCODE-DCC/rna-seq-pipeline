@@ -8,7 +8,7 @@ workflow rna {
     Array[File] fastqs_R1
     # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
     # corresponding to fastqs_R1
-    Array[File] fastqs_R2 
+    Array[File] fastqs_R2 = [] 
     # aligner: star for now, more added if/when needed
     String aligner
     # index: aligner index (tar.gz)
@@ -20,41 +20,26 @@ workflow rna {
     # bamroot: root name for output bams. For example foo_bar will
     # create foo_bar_genome.bam and foo_bar_anno.bam
     String? bamroot
+    # null file value
+    File? null_file
 
     Int? align_ncpus
 
     Int? align_ramGB
 
-    if (endedness == "single") {
-        scatter (fastq in fastqs_R1) {
-            call align as align_se { input:
-                endedness = endedness,
-                fastq_R1 = fastq,
-                index = index,
-                aligner = aligner,
-                indexdir = indexdir,
-                libraryid = libraryid,
-                bamroot = bamroot,
-                ncpus = align_ncpus,
-                ramGB = align_ramGB,
-            }
-        }    
-    }
+    Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
-    if (endedness == "paired") {
-        scatter (read_pair in zip(fastqs_R1, fastqs_R2)) {
-            call align as align_pe { input:
-                endedness = endedness,
-                fastq_R1 = read_pair.left,
-                fastq_R2 = read_pair.right,
-                index = index,
-                aligner = aligner,
-                indexdir = indexdir,
-                libraryid = libraryid,
-                bamroot = bamroot,
-                ncpus = align_ncpus,
-                ramGB = align_ramGB,
-            }
+    scatter (fastq in fastqs_) {
+        call align { input:
+            endedness = endedness,
+            fastqs = fastq,
+            index = index,
+            aligner = aligner,
+            indexdir = indexdir,
+            libraryid = libraryid,
+            bamroot = bamroot,
+            ncpus = align_ncpus,
+            ramGB = align_ramGB,
         }
     }
 }
@@ -62,8 +47,7 @@ workflow rna {
 
     ## tasks
     task align {
-        File fastq_R1
-        File? fastq_R2
+        Array[File] fastqs
         String endedness
         String aligner
         File index
@@ -75,7 +59,7 @@ workflow rna {
 
         command {
             python3 $(which align.py) \
-                --fastqs ${fastq_R1} ${fastq_R2} \
+                ${if length(fastqs)<2 then "--fastqs " + fastqs[0] else "--fastqs " + fastqs[0] + " " + fastqs[1]} \
                 --endedness ${endedness} \
                 --aligner ${aligner} \
                 --index ${index} \
