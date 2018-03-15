@@ -1,5 +1,6 @@
 {
     "rna.fastqs_R1" : ["/Users/otto/Documents/RNASeq/Testfiles/longSE/original/rep1/ENCFF530KSJrep1_chr19only.fastq.gz", "/Users/otto/Documents/RNASeq/Testfiles/longSE/original/rep2/ENCFF185ONQrep2_chr19only.fastq.gz"],
+    "rna.fastqs_R2" : [],
     "rna.aligner" : "star",
     "rna.index" : "/Users/otto/Documents/RNASeq/Testfiles/longSE/test_align_script/GRCh38_v24_ERCC_phiX_starIndex.tgz",
     "rna.endedness" : "single",

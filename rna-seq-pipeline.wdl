@@ -8,7 +8,7 @@ workflow rna {
     Array[File] fastqs_R1
     # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
     # corresponding to fastqs_R1
-    Array[File]? fastqs_R2 
+    Array[File] fastqs_R2 
     # aligner: star for now, more added if/when needed
     String aligner
     # index: aligner index (tar.gz)
@@ -27,10 +27,9 @@ workflow rna {
 
     if (endedness == "single") {
         scatter (fastq in fastqs_R1) {
-            call align { input:
+            call align as align_se { input:
                 endedness = endedness,
                 fastq_R1 = fastq,
-                endedness = endedness,
                 index = index,
                 aligner = aligner,
                 indexdir = indexdir,
@@ -40,6 +39,23 @@ workflow rna {
                 ramGB = align_ramGB,
             }
         }    
+    }
+
+    if (endedness == "paired") {
+        scatter (read_pair in zip(fastqs_R1, fastqs_R2)) {
+            call align as align_pe { input:
+                endedness = endedness,
+                fastq_R1 = read_pair.left,
+                fastq_R2 = read_pair.right,
+                index = index,
+                aligner = aligner,
+                indexdir = indexdir,
+                libraryid = libraryid,
+                bamroot = bamroot,
+                ncpus = align_ncpus,
+                ramGB = align_ramGB,
+            }
+        }
     }
 }
 
