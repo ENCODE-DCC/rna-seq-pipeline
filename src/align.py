@@ -64,6 +64,9 @@ class StarAligner(ABC):
         print('running command:')
         print(self.command)
         subprocess.call(self.command)
+        print('from run command')
+        print(os.getcwd())
+        print(os.listdir())
 
     @property
     @abstractmethod
@@ -75,11 +78,19 @@ class StarAligner(ABC):
         pass
 
     def post_process(self):
-        os.rename('Aligned.SortedByCoord.out.bam',
-                  self.bamroot + '_genome.bam')
-        os.rename('Log.final.out', self.bamroot + '_Log.final.out')
-        os.rename('Aligned.toTranscriptome.out.bam',
-                  self.bamroot + '_anno.bam')
+        cwd = os.getcwd()
+        os.rename(
+            os.path.join(cwd, 'Aligned.sortedByCoord.out.bam'),
+            os.path.join(cwd, self.bamroot + '_genome.bam'))
+        os.rename(
+            os.path.join(cwd, 'Log.final.out'),
+            os.path.join(cwd, self.bamroot + '_Log.final.out'))
+        os.rename(
+            os.path.join(cwd, 'Aligned.toTranscriptome.out.bam'),
+            os.path.join(cwd, self.bamroot + '_anno.bam'))
+        print('from post_process')
+        print(cwd)
+        print(os.listdir())
 
 
 class SingleEndedStarAligner(StarAligner):

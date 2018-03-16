@@ -19,9 +19,7 @@ workflow rna {
     String? libraryid
     # bamroot: root name for output bams. For example foo_bar will
     # create foo_bar_genome.bam and foo_bar_anno.bam
-    String? bamroot
-    # null file value
-    File? null_file
+    String bamroot = ""
 
     Int? align_ncpus
 
@@ -29,15 +27,15 @@ workflow rna {
 
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
-    scatter (fastq in fastqs_) {
+    scatter (i in range(length(fastqs_))) {
         call align { input:
             endedness = endedness,
-            fastqs = fastq,
+            fastqs = fastqs_[i],
             index = index,
             aligner = aligner,
             indexdir = indexdir,
             libraryid = libraryid,
-            bamroot = bamroot,
+            bamroot = "rep"+(i+1)+bamroot,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
         }
@@ -74,5 +72,10 @@ workflow rna {
             File genomebam = glob("*_genome.bam")[0]
             File annobam = glob("*_anno.bam")[0]
             File log = glob("*_Log.final.out")[0]
+        }
+
+        runtime {
+        docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+        dx_instance_type : "mem3_ssd1_x16"
         }
     }
