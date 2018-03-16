@@ -48,6 +48,13 @@ def make_modified_TarInfo(archive, target_dir=''):
     return members
 
 
+def get_flagstats(input_path, output_path):
+    command = shlex.split(
+        'samtools flagstat {infile}'.format(infile=input_path))
+    with open(output_path, 'wt') as f:
+        subprocess.call(command, stdout=f)
+
+
 class StarAligner(ABC):
     '''
     Abstract base class that gathers aspects common to both PE and SE
@@ -183,6 +190,14 @@ def main(args):
     aligner = make_aligner(args)
     aligner.run()
     aligner.post_process()
+    cwd = os.getcwd()
+    genome_bam_path = os.path.join(cwd, args.bamroot + '_genome.bam')
+    anno_bam_path = os.path.join(cwd, args.bamroot + '_anno.bam')
+    genome_flagstat_path = os.path.join(cwd,
+                                        args.bamroot + '_genome_flagstat.txt')
+    anno_flagstat_path = os.path.join(cwd, args.bamroot + '_anno_flagstat.txt')
+    get_flagstats(genome_bam_path, genome_flagstat_path)
+    get_flagstats(anno_bam_path, anno_flagstat_path)
 
 
 if __name__ == '__main__':

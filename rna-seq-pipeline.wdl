@@ -71,6 +71,8 @@ workflow rna {
         output {
             File genomebam = glob("*_genome.bam")[0]
             File annobam = glob("*_anno.bam")[0]
+            File genome_flagstat = glob("*_genome_flagstat.txt")[0]
+            File anno_flagstat = glob("*_anno_flagstat.txt")[0]
             File log = glob("*_Log.final.out")[0]
         }
 
