@@ -48,6 +48,13 @@ def make_modified_TarInfo(archive, target_dir=''):
     return members
 
 
+def get_flagstats(input_path, output_path):
+    command = shlex.split(
+        'samtools flagstat {infile}'.format(infile=input_path))
+    with open(output_path, 'wt') as f:
+        subprocess.call(command, stdout=f)
+
+
 class StarAligner(ABC):
     '''
     Abstract base class that gathers aspects common to both PE and SE
@@ -64,6 +71,9 @@ class StarAligner(ABC):
         print('running command:')
         print(self.command)
         subprocess.call(self.command)
+        print('from run command')
+        print(os.getcwd())
+        print(os.listdir())
 
     @property
     @abstractmethod
@@ -75,11 +85,19 @@ class StarAligner(ABC):
         pass
 
     def post_process(self):
-        os.rename('Aligned.SortedByCoord.out.bam',
-                  self.bamroot + '_genome.bam')
-        os.rename('Log.final.out', self.bamroot + '_Log.final.out')
-        os.rename('Aligned.toTranscriptome.out.bam',
-                  self.bamroot + '_anno.bam')
+        cwd = os.getcwd()
+        os.rename(
+            os.path.join(cwd, 'Aligned.sortedByCoord.out.bam'),
+            os.path.join(cwd, self.bamroot + '_genome.bam'))
+        os.rename(
+            os.path.join(cwd, 'Log.final.out'),
+            os.path.join(cwd, self.bamroot + '_Log.final.out'))
+        os.rename(
+            os.path.join(cwd, 'Aligned.toTranscriptome.out.bam'),
+            os.path.join(cwd, self.bamroot + '_anno.bam'))
+        print('from post_process')
+        print(cwd)
+        print(os.listdir())
 
 
 class SingleEndedStarAligner(StarAligner):
@@ -172,6 +190,14 @@ def main(args):
     aligner = make_aligner(args)
     aligner.run()
     aligner.post_process()
+    cwd = os.getcwd()
+    genome_bam_path = os.path.join(cwd, args.bamroot + '_genome.bam')
+    anno_bam_path = os.path.join(cwd, args.bamroot + '_anno.bam')
+    genome_flagstat_path = os.path.join(cwd,
+                                        args.bamroot + '_genome_flagstat.txt')
+    anno_flagstat_path = os.path.join(cwd, args.bamroot + '_anno_flagstat.txt')
+    get_flagstats(genome_bam_path, genome_flagstat_path)
+    get_flagstats(anno_bam_path, anno_flagstat_path)
 
 
 if __name__ == '__main__':

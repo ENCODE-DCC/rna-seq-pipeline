@@ -41,6 +41,7 @@ task make_index {
     String anno_version
     String genome
     String index_type
+    
     command {
         $(which ${index_type + ".sh"}) \
             ${reference_genome} \
@@ -50,6 +51,7 @@ task make_index {
             ${anno_version} \
             ${genome}
     }
+
     output {
         File index = glob("*.tgz")[0]
     }
