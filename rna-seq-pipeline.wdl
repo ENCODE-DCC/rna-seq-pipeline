@@ -47,14 +47,14 @@ workflow rna {
             input_bam = align.genomebam,
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
-            bamroot = "rep"+(i+1)+bamroot,
+            bamroot = "rep"+(i+1)+bamroot+"_genome",
         }
 
         call bam_to_signals as anno_signal { input:
             input_bam = align.annobam,
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
-            bamroot = "rep"+(i+1)+bamroot,
+            bamroot = "rep"+(i+1)+bamroot+"_anno",
         }
     }
 }
@@ -94,8 +94,8 @@ workflow rna {
         }
 
         runtime {
-        # docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-        # dx_instance_type : "mem3_ssd1_x16"
+          docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+          dx_instance_type : "mem3_ssd1_x16"
         }
     }
 
@@ -119,7 +119,7 @@ workflow rna {
         }
 
         runtime {
-            # docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-            # dx_instance_type : "mem3_ssd1_x16"
+            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+            dx_instance_type : "mem3_ssd1_x16"
         }
     }
