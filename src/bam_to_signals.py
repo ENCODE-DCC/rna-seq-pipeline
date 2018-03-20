@@ -15,11 +15,11 @@ STAR_COMMAND = '''STAR --runMode inputAlignmentsFromBAM \
                 --inputBAMfile {input_bam} \
                 --outWigType bedGraph \
                 --outWigStrand {strandedness} \
-                --outFileNamePrefix ./Signal/ \
                 --outWigReferencesPrefix chr'''
 
 
 def main(args):
+    print(args)
     call_star(args.bamfile, args.strandedness)
     if args.strandedness == 'stranded':
         call_bg_to_bw('Signal.UniqueMultiple.str1.out.bg', args.chrom_sizes,
@@ -39,25 +39,23 @@ def main(args):
 
 def call_star(input_bam, strandedness):
     command = STAR_COMMAND.format(
-        input_bam=input_bam, strandedness=strandedness)
+        input_bam=input_bam, strandedness=strandedness.capitalize())
+    print(command)
     subprocess.call(shlex.split(command))
 
 
 def call_bg_to_bw(input_bg, chrom_sizes, out_fn):
-    command = 'bedGraphToBigWig {input_bg} {chrom_sizes}'.format(
-        input_bg=input_bg, chrom_sizes=chrom_sizes)
-    with open(out_fn, 'wb') as f:
-        subprocess.call(shlex.split(command), stdout=f)
+    command = 'bedGraphToBigWig {input_bg} {chrom_sizes} {out_fn}'.format(
+        input_bg=input_bg, chrom_sizes=chrom_sizes, out_fn=out_fn)
+    print(command)
+    subprocess.call(shlex.split(command))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--bamfile', type=str, nargs=1, help='Input bam')
+    parser.add_argument('--bamfile', type=str, help='Input bam')
     parser.add_argument(
-        '--chrom_sizes',
-        type=str,
-        nargs=1,
-        help='chromosome sizes file the input bam')
+        '--chrom_sizes', type=str, help='chromosome sizes file the input bam')
     parser.add_argument(
         '--strandedness', type=str, choices=['stranded', 'unstranded'])
     parser.add_argument(

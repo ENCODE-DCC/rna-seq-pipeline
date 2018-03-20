@@ -13,17 +13,17 @@ workflow rna {
     String aligner
     # index: aligner index (tar.gz)
     File index
+    # bamroot: root name for output bams. For example foo_bar will
+    # create foo_bar_genome.bam and foo_bar_anno.bam
+    String bamroot 
+    # strandedness: is the library strand specific (stranded or unstranded)
+    String strandedness 
+    # chrom_sizes: chromosome sizes file
+    File chrom_sizes 
     # indexdir: where to extract the index, relative to cwd
     String? indexdir
     # libraryid: identifier which will be added to bam headers
     String? libraryid
-    # bamroot: root name for output bams. For example foo_bar will
-    # create foo_bar_genome.bam and foo_bar_anno.bam
-    String bamroot = ""
-    # strandedness: is the library strand specific (stranded or unstranded)
-    String strandedness = "unstranded"
-    # chrom_sizes: chromosome sizes file
-    File chrom_sizes = ""
 
     Int? align_ncpus
 
@@ -94,22 +94,22 @@ workflow rna {
         }
 
         runtime {
-        docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-        dx_instance_type : "mem3_ssd1_x16"
+        # docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+        # dx_instance_type : "mem3_ssd1_x16"
         }
     }
 
     task  bam_to_signals {
         File input_bam
         File chrom_sizes
-        File strandedness
+        String strandedness
         String bamroot
 
         command {
             python3 $(which bam_to_signals.py) \
                 --bamfile ${input_bam} \
-                --chrom_sizes ${chrom_sizes}
-                --strandedness ${strandedness}
+                --chrom_sizes ${chrom_sizes} \
+                --strandedness ${strandedness} \
                 --bamroot ${bamroot}
         }
 
@@ -119,7 +119,7 @@ workflow rna {
         }
 
         runtime {
-            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-            dx_instance_type : "mem3_ssd1_x16"
+            # docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+            # dx_instance_type : "mem3_ssd1_x16"
         }
     }
