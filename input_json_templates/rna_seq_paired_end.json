@@ -2,8 +2,11 @@
     "rna.fastqs_R1" : ["/Users/otto/Documents/RNASeq/Testfiles/longPE/original/ENCSR142YZV_rep1_1_star_genome_sorted_chr19only_R1.fastq.gz", "/Users/otto/Documents/RNASeq/Testfiles/longPE/original/ENCSR142YZV_rep2_1_star_genome_sorted_chr19only_R1.fastq.gz"],
     "rna.fastqs_R2" : ["/Users/otto/Documents/RNASeq/Testfiles/longPE/original/ENCSR142YZV_rep1_1_star_genome_sorted_chr19only_R2.fastq.gz", "/Users/otto/Documents/RNASeq/Testfiles/longPE/original/ENCSR142YZV_rep2_1_star_genome_sorted_chr19only_R2.fastq.gz"],
     "rna.aligner" : "star",
-    "rna.index" : "/Users/otto/Documents/RNASeq/Testfiles/longSE/test_align_script/GRCh38_v24_ERCC_phiX_starIndex.tgz",
+    "rna.index" : "/Users/otto/Documents/RNASeq/Testfiles/longPE/test_align_script/GRCh38_v24_ERCC_phiX_starIndex_onlychr19.tgz",
     "rna.endedness" : "paired",
-    "rna.align_ncpus" : 1,
-    "rna.align_ramGB" : 4
+    "rna.align_ncpus" : 3,
+    "rna.align_ramGB" : 4,
+    "rna.bamroot" : "foo_bam",
+    "rna.strandedness" : "unstranded",
+    "rna.chrom_sizes" : "/Users/otto/Documents/RNASeq/Testfiles/GRCh38_EBV.chrom.sizes"
 }

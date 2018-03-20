@@ -13,13 +13,17 @@ workflow rna {
     String aligner
     # index: aligner index (tar.gz)
     File index
+    # bamroot: root name for output bams. For example foo_bar will
+    # create foo_bar_genome.bam and foo_bar_anno.bam
+    String bamroot 
+    # strandedness: is the library strand specific (stranded or unstranded)
+    String strandedness 
+    # chrom_sizes: chromosome sizes file
+    File chrom_sizes 
     # indexdir: where to extract the index, relative to cwd
     String? indexdir
     # libraryid: identifier which will be added to bam headers
     String? libraryid
-    # bamroot: root name for output bams. For example foo_bar will
-    # create foo_bar_genome.bam and foo_bar_anno.bam
-    String bamroot = ""
 
     Int? align_ncpus
 
@@ -39,6 +43,19 @@ workflow rna {
             ncpus = align_ncpus,
             ramGB = align_ramGB,
         }
+        call bam_to_signals as genome_signal { input:
+            input_bam = align.genomebam,
+            chrom_sizes = chrom_sizes,
+            strandedness = strandedness,
+            bamroot = "rep"+(i+1)+bamroot+"_genome",
+        }
+
+        call bam_to_signals as anno_signal { input:
+            input_bam = align.annobam,
+            chrom_sizes = chrom_sizes,
+            strandedness = strandedness,
+            bamroot = "rep"+(i+1)+bamroot+"_anno",
+        }
     }
 }
 
@@ -51,7 +68,7 @@ workflow rna {
         File index
         String? indexdir
         String? libraryid
-        String? bamroot
+        String bamroot
         Int? ncpus
         Int? ramGB
 
@@ -77,7 +94,32 @@ workflow rna {
         }
 
         runtime {
-        docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-        dx_instance_type : "mem3_ssd1_x16"
+          docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+          dx_instance_type : "mem3_ssd1_x16"
+        }
+    }
+
+    task  bam_to_signals {
+        File input_bam
+        File chrom_sizes
+        String strandedness
+        String bamroot
+
+        command {
+            python3 $(which bam_to_signals.py) \
+                --bamfile ${input_bam} \
+                --chrom_sizes ${chrom_sizes} \
+                --strandedness ${strandedness} \
+                --bamroot ${bamroot}
+        }
+
+        output {
+            Array[File] unique = glob("*niq.bw")
+            Array[File] all = glob("*ll.bw")
+        }
+
+        runtime {
+            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+            dx_instance_type : "mem3_ssd1_x16"
         }
     }
