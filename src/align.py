@@ -71,9 +71,6 @@ class StarAligner(ABC):
         print('running command:')
         print(self.command)
         subprocess.call(self.command)
-        print('from run command')
-        print(os.getcwd())
-        print(os.listdir())
 
     @property
     @abstractmethod
