@@ -92,12 +92,25 @@ class StarAligner(ABC):
         os.rename(
             os.path.join(cwd, 'Log.final.out'),
             os.path.join(cwd, self.bamroot + '_Log.final.out'))
-        os.rename(
-            os.path.join(cwd, 'Aligned.toTranscriptome.out.bam'),
-            os.path.join(cwd, self.bamroot + '_anno.bam'))
-        print('from post_process')
-        print(cwd)
-        print(os.listdir())
+        rsem_check_cmd = 'rsem-sam-validator {bam_to_check}'.format(
+            bam_to_check='Aligned.toTranscriptome.out.bam')
+        rsem_output = subprocess.check_output(shlex.split(rsem_check_cmd))
+        # rsem validator exits with 0 whether the check passes or not
+        # for this reason we check if the output ends in 'is valid!'
+        # the other possibility is 'is not valid!'
+        rsem_valid = rsem_output.decode().strip().split('\n')[-1].endswith(
+            'is valid!')
+        if rsem_valid:
+            print('Transcriptome bam is already rsem-sorted.')
+            os.rename(
+                os.path.join(cwd, 'Aligned.toTranscriptome.out.bam'),
+                os.path.join(cwd, self.bamroot + '_anno.bam'))
+        else:
+            print('Rsem-sorting transcriptome bam.')
+            rsem_sort_cmd = 'convert-sam-to-rsem {input} {output}'.format(
+                input='Aligned.toTranscriptome.out.bam',
+                output=self.bamroot + '_anno')
+            subprocess.call(shlex.split(rsem_sort_cmd))
 
 
 class SingleEndedStarAligner(StarAligner):
