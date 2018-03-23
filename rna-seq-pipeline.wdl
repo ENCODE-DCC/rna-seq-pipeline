@@ -31,9 +31,9 @@ workflow rna {
     # libraryid: identifier which will be added to bam headers
     String? libraryid
 
-    Int? align_ncpus
+    Int align_ncpus
 
-    Int? align_ramGB
+    Int align_ramGB
 
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
@@ -63,7 +63,6 @@ workflow rna {
             anno_bam = align.annobam,
             endedness = endedness,
             read_strand = strandedness_direction,
-            rnd_seed = rnd_seed,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
         }
@@ -80,8 +79,8 @@ workflow rna {
         String? indexdir
         String? libraryid
         String bamroot
-        Int? ncpus
-        Int? ramGB
+        Int ncpus
+        Int ramGB
 
         command {
             python3 $(which align.py) \
@@ -146,17 +145,22 @@ workflow rna {
 
         command {
             python3 $(which rsem_quant.py) \
-            --rsem_index ${rsem_index} \
-            --anno_bam ${anno_bam} \
-            --endedness ${endedness} \
-            --read_strand ${read_strand} \
-            --rnd_seed ${rnd_seed} \
-            --ncpus ${ncpus} \
-            --ramGB ${ramGB}
+                --rsem_index ${rsem_index} \
+                --anno_bam ${anno_bam} \
+                --endedness ${endedness} \
+                --read_strand ${read_strand} \
+                --rnd_seed ${rnd_seed} \
+                --ncpus ${ncpus} \
+                --ramGB ${ramGB}
         }
 
         output {
             File genes_results = glob("*.genes.results")[0]
             File isoforms_results = glob("*.isoforms.results")[0]
+        }
+
+        runtime {
+            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+            dx_instance_type : "mem3_ssd1_x16"
         }
     }
