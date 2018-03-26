@@ -4,7 +4,7 @@
 workflow rna {
     # endedness: paired or single
     String endedness
-    # fastqs_R1: fastq.gz files for Read1 (only one if single-ended)
+    # fastqs_R1: fastq.gz files for Read1 (only these if single-ended)
     Array[File] fastqs_R1
     # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
     # corresponding to fastqs_R1
