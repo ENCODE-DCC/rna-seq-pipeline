@@ -104,7 +104,7 @@ class StarAligner(ABC):
                 os.path.join(cwd, self.bamroot + '_anno.bam'))
         else:
             print('Rsem-sorting transcriptome bam.')
-            rsem_sort_cmd = 'convert-sam-to-rsem {input} {output}'.format(
+            rsem_sort_cmd = 'convert-sam-for-rsem {input} {output}'.format(
                 input='Aligned.toTranscriptome.out.bam',
                 output=self.bamroot + '_anno')
             subprocess.call(shlex.split(rsem_sort_cmd))
