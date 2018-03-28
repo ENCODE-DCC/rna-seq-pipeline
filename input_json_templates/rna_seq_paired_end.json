@@ -8,5 +8,7 @@
     "rna.align_ramGB" : 4,
     "rna.bamroot" : "foo_bam",
     "rna.strandedness" : "unstranded",
-    "rna.chrom_sizes" : "/Users/otto/Documents/RNASeq/Testfiles/GRCh38_EBV.chrom.sizes"
+    "rna.strandedness_direction" : "unstranded",
+    "rna.chrom_sizes" : "/Users/otto/Documents/RNASeq/Testfiles/GRCh38_EBV.chrom.sizes",
+    "rna.rsem_index" : "/Users/otto/Documents/RNASeq/Testfiles/prep-RSEM/Result/GRCh38_v24_ERCC_phiX_rsemIndex_onlychr19.tgz"
 }

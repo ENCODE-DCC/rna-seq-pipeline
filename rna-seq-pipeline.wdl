@@ -4,7 +4,7 @@
 workflow rna {
     # endedness: paired or single
     String endedness
-    # fastqs_R1: fastq.gz files for Read1 (only one if single-ended)
+    # fastqs_R1: fastq.gz files for Read1 (only these if single-ended)
     Array[File] fastqs_R1
     # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
     # corresponding to fastqs_R1
@@ -18,16 +18,22 @@ workflow rna {
     String bamroot 
     # strandedness: is the library strand specific (stranded or unstranded)
     String strandedness 
+    # strandedness_direction (forward, reverse, unstranded)
+    String strandedness_direction
     # chrom_sizes: chromosome sizes file
     File chrom_sizes 
-    # indexdir: where to extract the index, relative to cwd
+    # rsem_index: location of the RSEM index archive (tar.gz)
+    File rsem_index
+    # rnd_seed: random seed used for rsem
+    Int rnd_seed = 12345
+    # indexdir: where to extract the star index, relative to cwd
     String? indexdir
     # libraryid: identifier which will be added to bam headers
     String? libraryid
 
-    Int? align_ncpus
+    Int align_ncpus
 
-    Int? align_ramGB
+    Int align_ramGB
 
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
@@ -43,6 +49,7 @@ workflow rna {
             ncpus = align_ncpus,
             ramGB = align_ramGB,
         }
+
         call bam_to_signals as genome_signal { input:
             input_bam = align.genomebam,
             chrom_sizes = chrom_sizes,
@@ -50,11 +57,14 @@ workflow rna {
             bamroot = "rep"+(i+1)+bamroot+"_genome",
         }
 
-        call bam_to_signals as anno_signal { input:
-            input_bam = align.annobam,
-            chrom_sizes = chrom_sizes,
-            strandedness = strandedness,
-            bamroot = "rep"+(i+1)+bamroot+"_anno",
+        call rsem_quant { input:
+            rsem_index = rsem_index,
+            rnd_seed = rnd_seed,
+            anno_bam = align.annobam,
+            endedness = endedness,
+            read_strand = strandedness_direction,
+            ncpus = align_ncpus,
+            ramGB = align_ramGB,
         }
     }
 }
@@ -69,8 +79,8 @@ workflow rna {
         String? indexdir
         String? libraryid
         String bamroot
-        Int? ncpus
-        Int? ramGB
+        Int ncpus
+        Int ramGB
 
         command {
             python3 $(which align.py) \
@@ -116,6 +126,37 @@ workflow rna {
         output {
             Array[File] unique = glob("*niq.bw")
             Array[File] all = glob("*ll.bw")
+        }
+
+        runtime {
+            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+            dx_instance_type : "mem3_ssd1_x16"
+        }
+    }
+
+    task rsem_quant {
+        File rsem_index
+        File anno_bam
+        String endedness
+        String read_strand
+        Int rnd_seed
+        Int ncpus
+        Int ramGB
+
+        command {
+            python3 $(which rsem_quant.py) \
+                --rsem_index ${rsem_index} \
+                --anno_bam ${anno_bam} \
+                --endedness ${endedness} \
+                --read_strand ${read_strand} \
+                --rnd_seed ${rnd_seed} \
+                --ncpus ${ncpus} \
+                --ramGB ${ramGB}
+        }
+
+        output {
+            File genes_results = glob("*.genes.results")[0]
+            File isoforms_results = glob("*.isoforms.results")[0]
         }
 
         runtime {
