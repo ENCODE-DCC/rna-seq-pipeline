@@ -45,6 +45,11 @@ def call_star(input_bam, strandedness):
 
 
 def call_bg_to_bw(input_bg, chrom_sizes, out_fn):
+    # sort bedgraph
+    bedgraph_cmd = 'bedSort {input_bg} {output_bg}'.format(
+        input_bg=input_bg, output_bg=input_bg)
+    subprocess.call(shlex.split(bedgraph_cmd))
+    # make bigwig
     command = 'bedGraphToBigWig {input_bg} {chrom_sizes} {out_fn}'.format(
         input_bg=input_bg, chrom_sizes=chrom_sizes, out_fn=out_fn)
     print(command)
