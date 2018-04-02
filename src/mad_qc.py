@@ -13,7 +13,7 @@ import shlex
 import os
 import json
 
-MADQC_CMD = 'RScript {path_to_madR} {quants_1} {quants_2}'
+MADQC_CMD = 'Rscript {path_to_madR} {quants_1} {quants_2}'
 
 
 def remove_quantfile_extensions(quant_fn):
@@ -39,8 +39,9 @@ def main(args):
     mad_output = subprocess.check_output(shlex.split(run_cmd))
     os.rename('MAplot.png', plot_output_filename)
     qc_metrics = dict()
-    qc_metrics['MAD.R'] = json.loads(mad_output)
-    qc_output_fn = '{basename_1}-{basename_2}_mad_qc_metrics.json'
+    qc_metrics['MAD.R'] = json.loads(mad_output.decode())
+    qc_output_fn = '{basename_1}-{basename_2}_mad_qc_metrics.json'.format(
+        basename_1=quant_basename1, basename_2=quant_basename2)
     with open(qc_output_fn, 'w') as f:
         json.dump(qc_metrics, f)
 

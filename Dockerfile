@@ -13,7 +13,8 @@ RUN apt-get install -y \
     libncurses5-dev \ 
 # libboost is a tophat dependency
     libboost-all-dev \
-    r-base-core
+    r-base-core \
+    ghostscript
 
 
 # Stick to Jin's way of organizing the directory structure
