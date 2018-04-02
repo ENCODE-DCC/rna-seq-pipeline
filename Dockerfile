@@ -12,7 +12,8 @@ RUN apt-get install -y \
 # libcurses is a samtools dependency
     libncurses5-dev \ 
 # libboost is a tophat dependency
-    libboost-all-dev
+    libboost-all-dev \
+    r-base-core
 
 
 # Stick to Jin's way of organizing the directory structure
