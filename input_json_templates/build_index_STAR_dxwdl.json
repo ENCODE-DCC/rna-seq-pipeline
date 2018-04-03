@@ -1,8 +1,0 @@
-{
-	"build_index.reference_genome" : "dx://project-BKbfvF00Qy5PZF5V7Gv003v7:file-BjB0pV00Qy5PzkzfX1Gy6pYy",
-	"build_index.spikeins" : "dx://project-BKbfvF00Qy5PZF5V7Gv003v7:file-BkQy1ZQ0Qy54VGPB704j7Fp2",
-	"build_index.annotation" : "dx://project-BKbfvF00Qy5PZF5V7Gv003v7:file-BkV0Q380Xy37ZJZ6x1Jgbq0f",
-	"build_index.anno_version" : "v24",
-	"build_index.genome" : "GRCh38",
-	"build_index.index_type" : "prep_star"
-}

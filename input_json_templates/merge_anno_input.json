@@ -1,6 +1,0 @@
-{
-	"merge_anno.annotation" : "<path-to-repo>/test_data/gencode.v24.primary_assembly.annotation.gtf.gz",
-	"merge_anno.tRNA" : "<path-to-repo>/test_data/gencode.v24.tRNAs.gtf.gz",
-	"merge_anno.spikeins" : "<path-to-repo>/test_data/ERCC_phiX.fa.gz",
-	"merge_anno.output_filename" : "merged_annotation.gtf.gz"
-} 
