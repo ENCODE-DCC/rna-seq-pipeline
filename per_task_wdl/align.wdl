@@ -13,7 +13,7 @@ workflow align{
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
     scatter (i in range(length(fastqs_))) {
-        call align { input:
+        call align_ { input:
             endedness = endedness,
             fastqs = fastqs_[i],
             index = index,
@@ -27,7 +27,7 @@ workflow align{
     }
 }
 
-task align {
+task align_ {
         Array[File] fastqs
         String endedness
         String aligner
@@ -61,5 +61,6 @@ task align {
 
         runtime {
           docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+          dx_instance_type : "mem3_ssd1_x16"
         }
     }
