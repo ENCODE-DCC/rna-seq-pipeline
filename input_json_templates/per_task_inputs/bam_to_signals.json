@@ -1,0 +1,6 @@
+{
+    "bam_to_signals.input_bams" : [],
+    "bam_to_signals.chrom_sizes" : "",
+    "bam_to_signals.strandedness" : "",
+    "bam_to_signals.bamroot" : ""
+}

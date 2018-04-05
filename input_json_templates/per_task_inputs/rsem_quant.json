@@ -1,0 +1,9 @@
+{
+    "rsem_quant.anno_bams" : ["/Users/otto/Documents/RNASeq/Testfiles/longPE/test_align_script/rep2foo_bam_anno.bam"],
+    "rsem_quant.rsem_index" : "/Users/otto/Documents/RNASeq/Testfiles/prep-RSEM/Result/GRCh38_v24_ERCC_phiX_rsemIndex_onlychr19.tgz",
+    "rsem_quant.endedness" : "paired",
+    "rsem_quant.read_strand" : "unstranded",
+    "rsem_quant.rnd_seed" : 12345,
+    "rsem_quant.ncpus" : 1,
+    "rsem_quant.ramGB" : 4
+}

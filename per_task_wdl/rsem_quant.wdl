@@ -1,21 +1,23 @@
-workflow testrsem {
+workflow rsem_quant {
     File rsem_index
-    File anno_bam
+    Array[File] anno_bams
     String endedness
     String read_strand
     Int rnd_seed
     Int ncpus
     Int ramGB
 
-    call rsem_quant { input:
-        rsem_index = rsem_index,
-        rnd_seed = rnd_seed,
-        anno_bam = anno_bam,
-        endedness = endedness,
-        read_strand = read_strand,
-        ncpus = ncpus,
-        ramGB = ramGB,
-    }
+    scatter (i in range(length(anno_bams))){
+        call rsem_quant { input:
+            rsem_index = rsem_index,
+            rnd_seed = rnd_seed,
+            anno_bam = anno_bams[i],
+            endedness = endedness,
+            read_strand = read_strand,
+            ncpus = ncpus,
+            ramGB = ramGB,
+        }
+    }    
 }
 
     task rsem_quant {
