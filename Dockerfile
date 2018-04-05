@@ -40,10 +40,10 @@ RUN rm 2.5.1b.tar.gz
 ENV PATH="/software/STAR-2.5.1b/bin/Linux_x86_64:${PATH}"
 
 # Install Samtools 0.1.19
-RUN wget https://sourceforge.net/projects/samtools/files/samtools/0.1.9/samtools-0.1.9.tar.bz2 && tar -xvjf samtools-0.1.9.tar.bz2
-RUN cd samtools-0.1.9 && make 
-RUN rm samtools-0.1.9.tar.bz2
-ENV PATH="/software/samtools-0.1.9:${PATH}"
+RUN wget https://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2 && tar -xvjf samtools-0.1.19.tar.bz2
+RUN cd samtools-0.1.19 && make 
+RUN rm samtools-0.1.19.tar.bz2
+ENV PATH="/software/samtools-0.1.19:${PATH}"
 
 # Install Bowtie2 2.1.0
 RUN wget http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.1.0/bowtie2-2.1.0-linux-x86_64.zip
