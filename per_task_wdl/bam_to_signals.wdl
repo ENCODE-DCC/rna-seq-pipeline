@@ -5,17 +5,17 @@ workflow bam_to_signals {
         String bamroot
 
     scatter (i in range(length(input_bams))) {
-        call bam_to_signals { input:
+        call bam_to_signals_ { input:
             input_bam = input_bams[i],
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
-            bamroot = "bamroot_"i"_genome",
+            bamroot = bamroot+(i+1)+"_genome",
         }
     }
 }
 
 
-task  bam_to_signals {
+task  bam_to_signals_ {
     File input_bam
     File chrom_sizes
     String strandedness
@@ -36,5 +36,6 @@ task  bam_to_signals {
 
     runtime {
         docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+        dx_instance_type : "mem1_ssd1_x8"
     }
 }

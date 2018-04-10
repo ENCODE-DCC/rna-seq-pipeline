@@ -1,6 +1,6 @@
 {
-    "bam_to_signals.input_bams" : [],
-    "bam_to_signals.chrom_sizes" : "",
-    "bam_to_signals.strandedness" : "",
-    "bam_to_signals.bamroot" : ""
+    "bam_to_signals.input_bams" : ["dx://project-Bzq898809vkf0qzqBkZK2Pv8:file-F5jZ6XQ0FZ1G8VZ53kx2j9J8", "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FF2ZKj004gpJykz1252Bjb9Y"],
+    "bam_to_signals.chrom_sizes" : "dx://project-BKbfvF00Qy5PZF5V7Gv003v7:file-BkQz1080Qy5GqbykkvPpgykq",
+    "bam_to_signals.strandedness" : "unstranded",
+    "bam_to_signals.bamroot" : "test_signals"
 }
