@@ -4,6 +4,6 @@
     "rsem_quant.endedness" : "paired",
     "rsem_quant.read_strand" : "unstranded",
     "rsem_quant.rnd_seed" : 12345,
-    "rsem_quant.ncpus" : 16,
+    "rsem_quant.ncpus" : 8,
     "rsem_quant.ramGB" : 120
 }
