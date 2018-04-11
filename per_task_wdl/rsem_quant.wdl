@@ -8,7 +8,7 @@ workflow rsem_quant {
     Int ramGB
 
     scatter (i in range(length(anno_bams))){
-        call rsem_quant { input:
+        call rsem_quant_ { input:
             rsem_index = rsem_index,
             rnd_seed = rnd_seed,
             anno_bam = anno_bams[i],
@@ -20,7 +20,7 @@ workflow rsem_quant {
     }    
 }
 
-    task rsem_quant {
+    task rsem_quant_ {
         File rsem_index
         File anno_bam
         String endedness
@@ -47,5 +47,6 @@ workflow rsem_quant {
 
         runtime {
             docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+            dx_instance_type : "mem3_ssd1_x16"
         }
     }
