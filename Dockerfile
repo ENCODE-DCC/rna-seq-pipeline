@@ -12,7 +12,9 @@ RUN apt-get install -y \
 # libcurses is a samtools dependency
     libncurses5-dev \ 
 # libboost is a tophat dependency
-    libboost-all-dev
+    libboost-all-dev \
+    r-base-core \
+    ghostscript
 
 
 # Stick to Jin's way of organizing the directory structure
@@ -63,9 +65,9 @@ RUN unzip v1.2.19.zip && rm v1.2.19.zip
 RUN cd RSEM-1.2.19 && make
 ENV PATH="/software/RSEM-1.2.19:${PATH}"
 
-# Install BedGraphToBigWig
-RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
-RUN chmod +x bedGraphToBigWig
+# Install BedGraphToBigWig and bedSort
+RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig && chmod +x bedGraphToBigWig
+RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedSort && chmod +x bedSort
 
 RUN mkdir -p rna-seq-pipeline/src
 #add a mount target dir for interactive testing

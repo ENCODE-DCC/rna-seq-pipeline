@@ -1,9 +1,0 @@
-{
-    "testrsem.anno_bam" : "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FBjbF100k1VfFBz075vq3BFV",
-    "testrsem.rsem_index" : "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FB32y1j0Jpp8fKvY2qK07qpj",
-    "testrsem.endedness" : "paired",
-    "testrsem.read_strand" : "unstranded",
-    "testrsem.rnd_seed" : 12345,
-    "testrsem.ncpus" : 16,
-    "testrsem.ramGB" : 60
-}

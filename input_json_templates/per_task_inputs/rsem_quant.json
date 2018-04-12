@@ -1,0 +1,9 @@
+{
+    "rsem_quant.anno_bams" : ["dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FF2ZKV804gp76XZZ25BK1b6y"],
+    "rsem_quant.rsem_index" : "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-BkkQ0280f0p4x50j19Ky9bxV",
+    "rsem_quant.endedness" : "paired",
+    "rsem_quant.read_strand" : "unstranded",
+    "rsem_quant.rnd_seed" : 12345,
+    "rsem_quant.ncpus" : 8,
+    "rsem_quant.ramGB" : 120
+}
