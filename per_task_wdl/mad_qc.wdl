@@ -26,5 +26,6 @@ task mad_qc_ {
 
     runtime {
         docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
+        dx_instance_type : "mem1_ssd1_x4"
     }
 }
