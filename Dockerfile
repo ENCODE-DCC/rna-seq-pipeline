@@ -51,11 +51,11 @@ RUN wget http://ccb.jhu.edu/software/tophat/downloads/tophat-2.0.8.Linux_x86_64.
 RUN tar -xzvf tophat-2.0.8.Linux_x86_64.tar.gz && rm tophat-2.0.8.Linux_x86_64.tar.gz
 ENV PATH="/software/tophat-2.0.8.Linux_x86_64:${PATH}" 
 
-# Install RSEM 1.2.19
-RUN wget https://github.com/deweylab/RSEM/archive/v1.2.19.zip
-RUN unzip v1.2.19.zip && rm v1.2.19.zip
-RUN cd RSEM-1.2.19 && make
-ENV PATH="/software/RSEM-1.2.19:${PATH}"
+# Install RSEM 1.2.23
+RUN wget https://github.com/deweylab/RSEM/archive/v1.2.23.zip
+RUN unzip v1.2.23.zip && rm v1.2.23.zip
+RUN cd RSEM-1.2.23 && make
+ENV PATH="/software/RSEM-1.2.23:${PATH}"
 
 # Install BedGraphToBigWig and bedSort
 RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig && chmod +x bedGraphToBigWig
