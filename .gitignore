@@ -100,5 +100,9 @@ ENV/
 # mypy
 .mypy_cache/
 
-# dx wdl and cromwell
+# dx wdl and cromwell output
 *.jar
+cromwell-executions/ 
+cromwell-workflow-logs/
+
+Untitled.ipynb

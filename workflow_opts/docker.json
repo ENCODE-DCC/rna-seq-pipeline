@@ -1,7 +1,7 @@
 {
     "default_runtime_attributes" : {
         "docker" : "quay.io/encode-dcc/rna-seq-pipeline:latest",
-        "cpu" : "1",
-        "memory" : "4 GB"
+        "align_ncpus" : "1",
+        "align_ramGB" : "4"
     }
 }
