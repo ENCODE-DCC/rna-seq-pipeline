@@ -6,6 +6,7 @@ Script for comparing md5 sums of results to a reference json.
 import hashlib
 import os
 import argparse
+import json
 
 
 class FileWithMd5(object):
@@ -37,9 +38,32 @@ def get_file_with_md5(filepath):
 
 
 def main(args):
-    pass
+    with open(args.reference_json) as f:
+        reference = json.load(f)
+    files_to_inspect = [get_file_with_md5(file) for file in args.input_files]
+    files_to_inspect_md5 = {
+        file.basename: file.md5
+        for file in files_to_inspect
+    }
+    md5_match_by_file = dict()
+    match_overall = True
+    try:
+        for key in files_to_inspect_md5:
+            match = reference[key] == files_to_inspect_md5[key]
+            md5_match_by_file[key] = match
+            match_overall &= match
+    except KeyError:
+        print('key not found')
+        match_overall = False
+        md5_match_by_file['match_overall'] = False
+    else:
+        md5_match_by_file['match_overall'] = match_overall
+    print(md5_match_by_file)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument()
+    parser.add_argument('--input_files', nargs='+')
+    parser.add_argument('--reference_json')
+    args = parser.parse_args()
+    main(args)
