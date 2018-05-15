@@ -71,9 +71,9 @@ workflow verify_install {
         }
 
         call compare_md5 { input:
-            inputs = [align.anno_flagstat, align.genome_flagstat, bam_to_signals.unique[0], 
-                      bam_to_signals.all[0], rsem_quant.genes_results, rsem_quant.isoforms_results]
-
+            inputs = [align.anno_flagstat, align.genome_flagstat, genome_signal.unique[0], 
+                      genome_signal.all[0]],
+            reference_json = comparison_results_json
         }
     }
 }

@@ -2,7 +2,5 @@
     "rep1verify_install_anno_flagstat.txt" : "e8438fa21ca92b25f8c9fcb58c0f5a89",
     "rep1verify_install_genome_flagstat.txt" : "e9ce86ea876d5f05cc9a1cf967125045",
     "rep1verify_install_genome_uniq.bw" : "9d873d1615c2ee4514f231d1e2e2ff7e",
-    "rep1verify_install_genome_all.bw" : "b74635ecc6935a33dd0c7c239d1717bd",
-    "rep1verify_install_anno_rsem.genes.results" : "59b7a964b63481c0ed7c7cc1de64d44b",
-    "rep1verify_install_anno_rsem.isoforms.results" : "8cbaddfcf77bd522896d20b9dfd2f29d"
+    "rep1verify_install_genome_all.bw" : "b74635ecc6935a33dd0c7c239d1717bd"
 }
