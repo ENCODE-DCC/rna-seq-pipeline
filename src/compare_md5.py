@@ -58,12 +58,14 @@ def main(args):
         md5_match_by_file['match_overall'] = False
     else:
         md5_match_by_file['match_overall'] = match_overall
-    print(md5_match_by_file)
+    with open(args.outfile, 'w') as f:
+        json.dump(md5_match_by_file, fp=f)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_files', nargs='+')
     parser.add_argument('--reference_json')
+    parser.add_argument('--outfile')
     args = parser.parse_args()
     main(args)

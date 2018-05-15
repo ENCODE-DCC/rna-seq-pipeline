@@ -35,6 +35,9 @@ workflow verify_install {
 
     Int align_ramGB = align_ramGB
 
+    # correct md5 sums go here
+    File comparison_results_json
+
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
     scatter (i in range(length(fastqs_))) {
@@ -65,6 +68,12 @@ workflow verify_install {
             read_strand = strandedness_direction,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
+        }
+
+        call compare_md5 { input:
+            inputs = [align.anno_flagstat, align.genome_flagstat, bam_to_signals.unique[0], 
+                      bam_to_signals.all[0], rsem_quant.genes_results, rsem_quant.isoforms_results]
+
         }
     }
 }
@@ -163,16 +172,21 @@ workflow verify_install {
     }
 
     task compare_md5 {
-        File reference_json
-        Array[File] input_files
-
-    }
-
+    Array[File] inputs
+    File reference_json
         command {
-
+            python3 $(which compare_md5.py) \
+                --input_files ${sep=' ' inputs} \
+                --reference_json ${reference_json} \
+                --outfile comparison_result.json
         }
 
         output {
-
+            File comparison_result = glob("comparison_result.json")[0]
         }
 
+        runtime {
+            docker: "quay.io/encode-dcc/rna-seq-pipeline:latest" 
+        }
+
+    }
