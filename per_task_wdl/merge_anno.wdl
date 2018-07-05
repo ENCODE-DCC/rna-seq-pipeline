@@ -8,6 +8,9 @@ workflow merge_anno {
     File spikeins
     # output filename
     String output_filename
+    Int? cpu
+    Int? memGB
+    String? disks
 
     call merge_annotation { input :
         annotation = annotation,
@@ -32,5 +35,10 @@ task merge_annotation {
     }
     output {
         File merged_annotation = glob("${output_filename}")[0]
+    }
+    runtime {
+        cpu : select_first([cpu,2])
+        memory : "${select_first([memGB,'8'])} GB"
+        disks : select_first([disks,"local-disk 100 SSD"])
     }
 }
