@@ -25,6 +25,9 @@ task merge_annotation {
     File tRNA
     File spikeins
     String output_filename
+    Int? cpu
+    Int? memGB
+    String? disks
 
     command {
         python3 $(which merge_annotation.py) \
