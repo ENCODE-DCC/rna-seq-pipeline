@@ -1,10 +1,5 @@
 #!/bin/bash -e
 
-if [ $# -lt 5 ] || [ $# -gt 6 ]; then
-    echo "usage v1: lrna_index_star.sh <ref_fasta_gz> <spike_in_fasta_gz> <annotation_gtf_gz> <annotation_version> <genome> [<gender>]"
-    echo "Creates STAR index of reference genome, annotation and spike-ins for long-RNA-seq. Is independent of DX and encodeD."
-    exit -1; 
-fi
 ref_fasta_gz=$1      # Reference genome assembly in gzipped fasta format.
 spike_fasta_gz=$2    # All spike-ins in single gzipped fasta format.
 anno_gtf_gz=$3       # Gene annotation in gzipped gtf format
