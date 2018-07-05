@@ -5,9 +5,6 @@ spike_fasta_gz=$2    # All spike-ins in single gzipped fasta format.
 anno_gtf_gz=$3       # Gene annotation in gzipped gtf format
 anno=$4              # Annotation (e.g. 'v24')
 genome=$5            # Genome (e.g. 'GRCh38')
-if [ $# -eq 6 ]; then
-    gender=$6        # Gender. Values: 'female', 'male', 'XX', 'XY' will be included in names.  Otherwise, gender neutral.  
-fi
 
 echo "-- Unzipping reference files..."
 ref_fasta=${ref_fasta_gz%.gz}
@@ -23,9 +20,6 @@ anno_root=${anno_gtf%.gtf}
 gunzip -c $anno_gtf_gz > $anno_gtf
 
 archive_file="${genome}_${anno}_$(basename ${spike_root})_rsemIndex.tgz"
-if [ "$gender" == "famale" ] || [ "$gender" == "male" ] || [ "$gender" == "XX" ] || [ "$gender" == "XY" ]; then
-    archive_file="${genome}_${gender}_${anno}_$(basename ${spike_root})_rsemIndex.tgz"
-fi
 echo "-- Results will be: '${archive_file}'."
 
 echo "-- Prepare reference..."
