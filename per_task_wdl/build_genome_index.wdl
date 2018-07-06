@@ -20,7 +20,9 @@ workflow build_index {
     # available options:
     # prep_rsem, prep_srna, prep_star, prep_tophat
     String index_type
-
+    Int ncpu = 8
+    Int? memGB
+    String? disks
 
     call make_index { input:
         reference_genome = reference_genome,
@@ -30,6 +32,9 @@ workflow build_index {
         anno_version = anno_version,
         genome = genome,
         index_type = index_type,
+        ncpu = ncpu,
+        memGB = memGB,
+        disks = disks,
     }
 }
 
@@ -41,6 +46,9 @@ task make_index {
     String anno_version
     String genome
     String index_type
+    Int ncpu
+    Int? memGB
+    String? disks
     
     command {
         $(which ${index_type + ".sh"}) \
@@ -49,10 +57,17 @@ task make_index {
             ${annotation} \
             ${tiny_fq} \
             ${anno_version} \
-            ${genome}
+            ${genome} \
+            ${ncpu}
     }
 
     output {
         File index = glob("*.tgz")[0]
+    }
+    
+    runtime {
+        cpu : ncpu
+        memory : "${select_first([memGB,'8'])} GB"
+        disks : select_first([disks,"local-disk 100 SSD"])
     }
 }
