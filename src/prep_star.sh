@@ -5,6 +5,7 @@ spike_fasta_gz=$2    # All spike-ins in single gzipped fasta format.
 anno_gtf_gz=$3       # Gene annotation in gzipped gtf format
 anno=$4              # Annotation (e.g. 'v24')
 genome=$5            # Genome (e.g. 'GRCh38')
+ncpu=$6
 
 echo "-- Unzipping reference files..."
 ref_fasta=${ref_fasta_gz%.gz}
@@ -27,7 +28,7 @@ echo "-- Build index..."
 set -x
 mkdir out
 STAR --runMode genomeGenerate --genomeFastaFiles $ref_fasta $spike_fasta \
-     --sjdbOverhang 100 --sjdbGTFfile $anno_gtf --runThreadN 8 --genomeDir out/ \
+     --sjdbOverhang 100 --sjdbGTFfile $anno_gtf --runThreadN $ncpu --genomeDir out/ \
      --outFileNamePrefix out
 set +x
 

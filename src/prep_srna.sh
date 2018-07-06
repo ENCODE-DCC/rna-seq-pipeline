@@ -4,6 +4,7 @@ ref_fasta_gz=$1 # Reference genome assembly in gzipped fasta format.
 anno_gtf_gz=$2  # Gene annotation in gzipped gtf format
 anno=$3         # Annotation (e.g. 'v24')
 genome=$4       # Genome (e.g. 'GRCh38')
+ncpu=$5
 
 archive_file="${genome}_${anno}_sRNA_starIndex.tgz"
 echo "-- Results will be: '${archive_file}'."
@@ -20,7 +21,7 @@ echo "-- Build index for '${genome} and annotation ${anno}'..."
 set -x
 mkdir out
 STAR --runMode genomeGenerate --genomeFastaFiles $ref_fasta --sjdbGTFfile $anno_gtf \
-        --sjdbOverhang 1 --runThreadN 8 --genomeDir out/ --outFileNamePrefix out
+        --sjdbOverhang 1 --runThreadN $ncpu --genomeDir out/ --outFileNamePrefix out
 set +x
     
 # Attempt to make bamCommentLines.txt, which should be reviewed. NOTE tabs handled by assignment.
