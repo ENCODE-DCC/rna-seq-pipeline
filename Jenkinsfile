@@ -22,6 +22,7 @@ pipeline{
             agent{label 'slave-w-docker-cromwell-60GB-ebs'}
             steps{
                 echo "Building image with tag $TAG"
+                echo "Hello Ana and Idan!"
             }
         }
     }
