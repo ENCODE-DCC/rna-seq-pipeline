@@ -11,6 +11,7 @@ pipeline{
         stage('Tag Image'){
             agent {label 'master-builder'}
             steps{
+                echo "testing jenkins"
                 echo "Building image tag.."
                 script{
                     TAG = sh([script: "echo quay.io/encode-dcc/rna-seq-pipeline:${env.BRANCH_NAME}_${env.BUILD_NUMBER}", returnStdout: true]).trim()
