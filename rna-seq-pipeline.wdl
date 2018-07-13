@@ -31,6 +31,8 @@ workflow rna {
     # libraryid: identifier which will be added to bam headers
     String? libraryid
 
+    String? disks
+
     Int align_ncpus
 
     Int align_ramGB
@@ -48,6 +50,7 @@ workflow rna {
             bamroot = "rep"+(i+1)+bamroot,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
+            disks = disks,
         }
 
         call bam_to_signals as genome_signal { input:
@@ -55,6 +58,9 @@ workflow rna {
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
             bamroot = "rep"+(i+1)+bamroot+"_genome",
+            ncpus = align_ncpus,
+            ramGB = align_ramGB,
+            disks = disks,
         }
 
         call rsem_quant { input:
@@ -65,6 +71,7 @@ workflow rna {
             read_strand = strandedness_direction,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
+            disks = disks,
         }
     }
 }
@@ -81,6 +88,7 @@ workflow rna {
         String bamroot
         Int ncpus
         Int ramGB
+        String? disks
 
         command {
             python3 $(which align.py) \
@@ -104,8 +112,9 @@ workflow rna {
         }
 
         runtime {
-          docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-          dx_instance_type : "mem3_ssd1_x16"
+          cpu: ncpus
+          memory: "${ramGB} GB"
+          disks : select_first([disks,"local-disk 100 SSD"])
         }
     }
 
@@ -114,6 +123,10 @@ workflow rna {
         File chrom_sizes
         String strandedness
         String bamroot
+        Int ncpus
+        Int ramGB
+        String? disks
+
 
         command {
             python3 $(which bam_to_signals.py) \
@@ -129,8 +142,9 @@ workflow rna {
         }
 
         runtime {
-            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-            dx_instance_type : "mem3_ssd1_x16"
+            cpu: ncpus
+            memory: "${ramGB} GB"
+            disks : select_first([disks,"local-disk 100 SSD"])
         }
     }
 
@@ -142,6 +156,7 @@ workflow rna {
         Int rnd_seed
         Int ncpus
         Int ramGB
+        String? disks
 
         command {
             python3 $(which rsem_quant.py) \
@@ -160,7 +175,8 @@ workflow rna {
         }
 
         runtime {
-            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-            dx_instance_type : "mem3_ssd1_x16"
+            cpu: ncpus
+            memory: "${ramGB} GB"
+            disks : select_first([disks,"local-disk 100 SSD"])
         }
     }
