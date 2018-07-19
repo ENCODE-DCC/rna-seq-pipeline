@@ -11,5 +11,6 @@
     "verify_install.rsem_index" : "/Users/otto/Documents/RNASeq/Testfiles/Installation_test_subsampled_FOR_RELEASE/RSEM_index_chr19/GRCh38_v24_ERCC_phiX_rsemIndex_onlychr19.tgz",
     "verify_install.align_ncpus" : 4,
     "verify_install.align_ramGB" : 8,
-    "verify_install.comparison_results_json" : "/Users/otto/github/rna-seq-pipeline/verify_install/reference_md5.json"
+    "verify_install.comparison_results_json" : "/Users/otto/github/rna-seq-pipeline/test_wdl/reference_md5.json",
+    "verify_install.disks" : "local-disk 100 HDD"
 }
