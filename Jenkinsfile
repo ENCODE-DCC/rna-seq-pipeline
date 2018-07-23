@@ -22,13 +22,14 @@ pipeline{
             agent{label 'slave-w-docker-cromwell-60GB-ebs'}
             steps{
                 echo "Building image with tag $TAG from git commit ${env.GIT_COMMIT}"
+                echo "The git commit hash will be available within the image in environment variable GIT_COMMIT_HASH"
                 slackSend (color: '#7CFC00', message: "started job: ${env.JOB_NAME}, build number ${env.BUILD_NUMBER} on branch: ${env.BRANCH_NAME}.")
                 slackSend "The images will be tagged as $TAG"
                 sh "docker pull quay.io/encode-dcc/rna-seq-pipeline:template"
                 sh "docker login -u=${QUAY_USER} -p=${QUAY_PASS} quay.io"
-                sh "docker build --cache-from quay.io/encode-dcc/rna-seq-pipeline:template -t rna-seq-pipeline ."
-                sh "docker tag rna-seq-pipeline $TAG"
+                sh "docker build --cache-from quay.io/encode-dcc/rna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${env.GIT_COMMIT} -t $TAG -t quay.io/encode-dcc/rna-seq-pipeline:template ."
                 sh "docker push $TAG"
+                sh "docker push quay.io/encode-dcc/rna-seq-pipeline:template"
                 sh "docker logout"
                 slackSend "Finished pushing $TAG into image repo."
             }
