@@ -21,7 +21,7 @@ pipeline{
         stage('Build Image'){
             agent{label 'slave-w-docker-cromwell-60GB-ebs'}
             steps{
-                echo "Building image with tag $TAG"
+                echo "Building image with tag $TAG from git commit ${env.GIT_COMMIT}"
                 slackSend (color: '#7CFC00', message: "started job: ${env.JOB_NAME}, build number ${env.BUILD_NUMBER} on branch: ${env.BRANCH_NAME}.")
                 slackSend "The images will be tagged as $TAG"
                 sh "docker pull quay.io/encode-dcc/rna-seq-pipeline:template"
