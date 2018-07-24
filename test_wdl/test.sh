@@ -36,9 +36,7 @@ EOM
 
 java -Dconfig.file=${BACKEND_CONF} -Dbackend.default=${BACKEND} -jar ${CROMWELL_JAR} run ${WDL} -i ${INPUT} -o ${TMP_WF_OPT} -m ${METADATA}
 
-cat ${METADATA}
-
 # parse output metadata json
-# cat ${METADATA} | python -c "import json,sys;obj=json.load(sys.stdin);print(obj['outputs']['${PREFIX}.compare_md5sum.json_str'])" > ${RESULT}
-# cat ${RESULT}
+cat ${METADATA} | python -c "import json,sys;obj=json.load(sys.stdin);print(obj['outputs']['${PREFIX}.compare_md5.comparison_result'])" > ${RESULT}
+cat ${RESULT}
 # rm -f ${METADATA} ${TMP_WF_OPT}
