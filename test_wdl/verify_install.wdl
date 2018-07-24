@@ -101,5 +101,6 @@ workflow verify_install {
 
         output {
             File comparison_result = glob("comparison_result.json")[0]
+            String comparison_result_string = read_string("comparison_result.json")
         }
     }
