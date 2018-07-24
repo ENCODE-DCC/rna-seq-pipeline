@@ -11,5 +11,6 @@
     "verify_install.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
     "verify_install.align_ncpus" : 4,
     "verify_install.align_ramGB" : 8,
-    "verify_install.comparison_results_json" : "test_wdl/reference_md5.json"
+    "verify_install.comparison_results_json" : "test_wdl/reference_md5.json",
+    "verify_install.disks" : "local-disk 100 HDD"
 }
