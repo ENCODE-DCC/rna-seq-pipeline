@@ -102,9 +102,4 @@ workflow verify_install {
         output {
             File comparison_result = glob("comparison_result.json")[0]
         }
-
-        runtime {
-            docker: "quay.io/encode-dcc/rna-seq-pipeline:template" 
-        }
-
     }
