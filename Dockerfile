@@ -66,5 +66,7 @@ RUN mkdir -p rna-seq-pipeline/src
 RUN mkdir mount_target
 COPY /src rna-seq-pipeline/src
 ENV PATH="/software/rna-seq-pipeline/src:${PATH}"
+ARG GIT_COMMIT_HASH
+ENV GIT_HASH=${GIT_COMMIT_HASH}
 
 ENTRYPOINT ["/bin/bash", "-c"]
