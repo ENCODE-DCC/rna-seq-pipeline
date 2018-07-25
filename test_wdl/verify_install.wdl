@@ -79,28 +79,10 @@ workflow verify_install {
             disks = disks,
         }
 
-        call compare_md5 { input:
+        call rna.compare_md5 { input:
             inputs = [align.anno_flagstat, align.genome_flagstat, genome_signal.unique[0], 
                       genome_signal.all[0]],
             reference_json = comparison_results_json
         }
     }
 }
-
-
-    ## tasks
-    task compare_md5 {
-    Array[File] inputs
-    File reference_json
-        command {
-            python3 $(which compare_md5.py) \
-                --input_files ${sep=' ' inputs} \
-                --reference_json ${reference_json} \
-                --outfile comparison_result.json
-        }
-
-        output {
-            File comparison_result = glob("comparison_result.json")[0]
-            String comparison_result_string = read_string("comparison_result.json")
-        }
-    }

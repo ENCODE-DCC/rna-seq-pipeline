@@ -180,3 +180,20 @@ workflow rna {
             disks : select_first([disks,"local-disk 100 SSD"])
         }
     }
+
+    task compare_md5 {
+    Array[File] inputs
+    File reference_json
+        command {
+            python3 $(which compare_md5.py) \
+                --input_files ${sep=' ' inputs} \
+                --reference_json ${reference_json} \
+                --outfile comparison_result.json
+        }
+
+        output {
+            File comparison_result = glob("comparison_result.json")[0]
+            String comparison_result_string = read_string("comparison_result.json")
+        }
+    }
+    
