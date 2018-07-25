@@ -44,7 +44,7 @@ pipeline{
                 sh "ls -l"
                 echo "Fetching chromosome 19 restricted index file for STAR from Google Cloud"
                 sh "curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz"
-                sh """test_wdl/test.sh test_wdl/verify_install.wdl test_wdl/verify_install_input.json $TAG
+                sh """test_wdl/test.sh test_wdl/test_wf.wdl test_wdl/PE_unstranded_input.json $TAG
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data[u'match_overall']))" < verify_install.result.json
                    """
             }
