@@ -21,8 +21,9 @@ CROMWELL_JAR=cromwell-32.jar
 BACKEND_CONF=backends/backend.conf
 BACKEND=Local
 PREFIX=$(basename ${WDL} .wdl)
+RESULT_PREFIX=$(basename ${INPUT} .json)
 METADATA=${PREFIX}.metadata.json # metadata
-RESULT=${PREFIX}.result.json # output
+RESULT=${RESULT_PREFIX}.result.json # output
 
 # Write workflow option JSON file
 TMP_WF_OPT=$PREFIX.test_rna_wf_opt.json
