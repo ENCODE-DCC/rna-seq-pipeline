@@ -1,0 +1,16 @@
+{
+    "wf_PE_unstranded.endedness" : "paired",
+    "wf_PE_unstranded.fastqs_R1" : ["test_data/ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz"],
+    "wf_PE_unstranded.fastqs_R2" : ["test_data/ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz"],
+    "wf_PE_unstranded.aligner" : "star",
+    "wf_PE_unstranded.index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+    "wf_PE_unstranded.bamroot" : "PE_unstranded",
+    "wf_PE_unstranded.strandedness" : "unstranded",
+    "wf_PE_unstranded.strandedness_direction" : "unstranded",
+    "wf_PE_unstranded.chrom_sizes" : "test_data/GRCh38_EBV.chrom.sizes",
+    "wf_PE_unstranded.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
+    "wf_PE_unstranded.align_ncpus" : 4,
+    "wf_PE_unstranded.align_ramGB" : 8,
+    "wf_PE_unstranded.comparison_results_json" : "test_wdl/PE_unstranded_reference_md5.json",
+    "wf_PE_unstranded.disks" : "local-disk 15 HDD"
+}
