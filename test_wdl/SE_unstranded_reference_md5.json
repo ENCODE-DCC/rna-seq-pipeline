@@ -1,0 +1,10 @@
+{
+    "rep1SE_unstranded_genome_all.bw" : "e0492e8a695adceca79256018ddcc542",
+    "rep1SE_unstranded_genome_uniq.bw" : "cb3bd359c34ee044f743d8ff6628b168",
+    "rep2SE_unstranded_genome_all.bw" : "1d575d2a5f3998ecb6b7dcd5063b071a",
+    "rep2SE_unstranded_genome_uniq.bw" : "82b660fb62527ebc4fc4cba5c7d3e150",
+    "rep1SE_unstranded_anno_flagstat.txt" : "3956962967f489e36bd0d324544b0bb9",
+    "rep1SE_unstranded_genome_flagstat.txt" : "fd0984518b23c8a7bbb6f90207b9d851",
+    "rep2SE_unstranded_anno_flagstat.txt" : "29470c5f5e96424551cbb1c027a5c6ae",
+    "rep2SE_unstranded_genome_flagstat.txt" : "68e239b95c061e423e31860251dea522"
+}

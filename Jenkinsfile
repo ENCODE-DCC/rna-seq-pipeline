@@ -46,6 +46,9 @@ pipeline{
                 sh "curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz"
                 sh """test_wdl/test.sh test_wdl/test_wf.wdl test_wdl/PE_unstranded_input.json $TAG
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
+                      
+                      test_wdl/test.sh test_wdl/test_wf.wdl test_wdl/SE_unstranded_input.json $TAG 
+                      python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
                    """
             }
         }
