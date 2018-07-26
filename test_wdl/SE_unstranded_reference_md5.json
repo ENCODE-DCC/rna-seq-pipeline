@@ -1,10 +1,10 @@
 {
-    "rep1SE_unstranded_genome_all.bw" : "e0492e8a695adceca79256018ddcc542",
-    "rep1SE_unstranded_genome_uniq.bw" : "cb3bd359c34ee044f743d8ff6628b168",
-    "rep2SE_unstranded_genome_all.bw" : "1d575d2a5f3998ecb6b7dcd5063b071a",
-    "rep2SE_unstranded_genome_uniq.bw" : "82b660fb62527ebc4fc4cba5c7d3e150",
-    "rep1SE_unstranded_anno_flagstat.txt" : "3956962967f489e36bd0d324544b0bb9",
-    "rep1SE_unstranded_genome_flagstat.txt" : "fd0984518b23c8a7bbb6f90207b9d851",
-    "rep2SE_unstranded_anno_flagstat.txt" : "29470c5f5e96424551cbb1c027a5c6ae",
-    "rep2SE_unstranded_genome_flagstat.txt" : "68e239b95c061e423e31860251dea522"
+    "rep1SE_unstranded_genome_all.bw" : "8c628f435871ad013e1ba6be82ed340a",
+    "rep1SE_unstranded_genome_uniq.bw" : "82ccfd365eeb36ae7074a154682bfbd5",
+    "rep2SE_unstranded_genome_all.bw" : "292bc2760860d55f5886d61b51f1078a",
+    "rep2SE_unstranded_genome_uniq.bw" : "40aba217c9e86464ca8b89d091ddaa21",
+    "rep1SE_unstranded_anno_flagstat.txt" : "282c10e27edaa4a35ac51b3eb6a8303a",
+    "rep1SE_unstranded_genome_flagstat.txt" : "019a1a6eb97d8159ae48a842c9203109",
+    "rep2SE_unstranded_anno_flagstat.txt" : "bf18d4ba445c2a37f8d8917dd723ed8a",
+    "rep2SE_unstranded_genome_flagstat.txt" : "e556cf6b88e9a06dddb54f0f7bd3b23a"
 }

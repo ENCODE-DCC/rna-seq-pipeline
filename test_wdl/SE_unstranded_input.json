@@ -1,6 +1,6 @@
 {
     "test_wf.endedness" : "single",
-    "test_wf.fastqs_R1" : ["test_data/rep1_ENCSR510QZW_chr19only.fastq.gz","test_data/rep2_ENCSR510QZW_chr19only.fastq.gz"],
+    "test_wf.fastqs_R1" : ["test_data/rep1_ENCSR510QZW_chr19only_10000_reads.fastq.gz","test_data/rep2_ENCSR510QZW_chr19only_10000_reads.fastq.gz"],
     "test_wf.aligner" : "star",
     "test_wf.bamroot" : "SE_unstranded",
     "test_wf.index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
