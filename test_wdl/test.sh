@@ -15,7 +15,7 @@ WDL=$1
 INPUT=$2
 DOCKER_IMAGE=$3
 
-if [ -f "cromwell-32.jar"]; then
+if [ -f "cromwell-32.jar" ]; then
     echo "cromwell-32.jar already available, skipping download."
 else
     wget -N -c https://github.com/broadinstitute/cromwell/releases/download/32/cromwell-32.jar
