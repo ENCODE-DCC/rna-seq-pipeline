@@ -21,6 +21,11 @@ pipeline{
         stage('Build Image'){
             agent{label 'slave-w-docker-cromwell-60GB-ebs'}
             steps{
+                echo "Checking that unittests pass, before building"
+                sh """cd src
+                      python3 -m unittest discover
+                   """
+                echo "Unittests OK, proceeding." 
                 echo "Building image with tag $TAG from git commit ${env.GIT_COMMIT}"
                 echo "The git commit hash will be available within the image in environment variable GIT_HASH"
                 echo "The branch name will be available within the image in environment variable BUILD_BRANCH"
