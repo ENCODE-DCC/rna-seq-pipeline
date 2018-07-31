@@ -1,0 +1,16 @@
+{
+    "test_wf.endedness" : "paired",
+    "test_wf.fastqs_R1" : ["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R1.fastq.gz", "test_data/ENCSR653DFZ_rep2_chr19_10000reads_R1.fastq.gz"],
+    "test_wf.fastqs_R2" : ["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R2.fastq.gz", "test_data/ENCSR653DFZ_rep2_chr19_10000reads_R2.fastq.gz"],
+    "test_wf.aligner" : "star",
+    "test_wf.index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+    "test_wf.bamroot" : "PE_stranded",
+    "test_wf.strandedness" : "stranded",
+    "test_wf.strandedness_direction" : "reverse",
+    "test_wf.chrom_sizes" : "test_data/GRCh38_EBV.chrom.sizes",
+    "test_wf.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
+    "test_wf.align_ncpus" : 4,
+    "test_wf.align_ramGB" : 8,
+    "test_wf.comparison_results_json" : "test_wdl/PE_stranded_reference_md5.json",
+    "test_wf.disks" : "local-disk 20 HDD"
+}

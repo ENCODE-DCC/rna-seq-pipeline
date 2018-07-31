@@ -49,6 +49,11 @@ pipeline{
                       
                       test_wdl/test.sh test_wdl/test_wf.wdl test_wdl/SE_unstranded_input.json $TAG 
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
+                      
+                      test_wdl/test.sh test_wdl/test_wf.wdl test_wdl/PE_stranded_input.json $TAG
+                      python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
+                      
+
                    """
             }
         }
