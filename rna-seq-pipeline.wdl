@@ -182,7 +182,7 @@ workflow rna {
     }
 
     task compare_md5 {
-    Array[File?] inputs
+    Array[File] inputs
     File reference_json
         command {
             python3 $(which compare_md5.py) \
