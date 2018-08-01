@@ -79,31 +79,9 @@ workflow test_wf {
             disks = disks,
         }
 
-        call concat { input:
-            a = [align.anno_flagstat, align.genome_flagstat],
-            b = genome_signal.unique,
-            c = genome_signal.all,
-        }
-
         call rna.compare_md5 { input:
-            inputs = concat.combined,
+            inputs = flatten([[align.anno_flagstat, align.genome_flagstat], genome_signal.unique, genome_signal.all]),
             reference_json = comparison_results_json,
         }
-    }
-}
-
-# a task to concatenate file arrays to form an input for the compare_md5 step
-
-task concat {
-    Array[File] a
-    Array[File] b
-    Array[File] c
-    command {
-        cat write_lines(a)
-        cat write_lines(b)
-        cat write_lines(c)
-    }
-    output {
-        Array[File] combined = read_lines(stdout())
     }
 }
