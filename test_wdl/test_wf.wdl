@@ -80,8 +80,8 @@ workflow test_wf {
         }
 
         call rna.compare_md5 { input:
-            inputs = [align.anno_flagstat, align.genome_flagstat, genome_signal.unique[0], 
-                      genome_signal.all[0]],
+            inputs = select_all([align.anno_flagstat, align.genome_flagstat, genome_signal.unique[0],
+                     genome_signal.unique[1], genome_signal.all[0], genome_signal.all[1]]),
             reference_json = comparison_results_json
         }
     }

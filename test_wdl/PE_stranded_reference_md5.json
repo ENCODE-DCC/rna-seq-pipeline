@@ -2,5 +2,13 @@
     "rep1PE_stranded_anno_flagstat.txt" : "de263aad99d5f4f0954892aa856da187",
     "rep1PE_stranded_genome_flagstat.txt" : "a47f1018be6ac2386fbc64a6d959c7a4",
     "rep2PE_stranded_anno_flagstat.txt" : "aee4d51d29cd0d5b8ad1306031b7e34b",
-    "rep2PE_stranded_genome_flagstat.txt" : "cc622b63b04723135cb53e095754620f"
+    "rep2PE_stranded_genome_flagstat.txt" : "cc622b63b04723135cb53e095754620f",
+    "rep1PE_stranded_genome_minusUniq.bw" : "bcf19ab41b7966481a14a01f469f4b3b",
+    "rep1PE_stranded_genome_plusUniq.bw" : "fb89b021f072d5d3f60af418005a2d56",
+    "rep1PE_stranded_genome_minusAll.bw" : "04e0b2d0c775f3dbbec53e0962a54ed8",
+    "rep1PE_stranded_genome_plusAll.bw" : "e97210cdb4d3ec8fb8fcc98b1e745f3d",
+    "rep2PE_stranded_genome_minusAll.bw" : "02bf22df207e7d28d84cb7aca6ab37f8",
+    "rep2PE_stranded_genome_plusAll.bw" : "0f5c4d502a3560b942e7640ffda4019a",
+    "rep2PE_stranded_genome_minusUniq.bw" : "82876a4e77641ba5af4b8b58396022e9",
+    "rep2PE_stranded_genome_plusUniq.bw" : "a27151499caf7e7da096f864b3e178d0"
 }
