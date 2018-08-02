@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 # libcurses is a samtools dependency
     libncurses5-dev \ 
 # libboost is a tophat dependency
-    libboost-all-dev \
+#   libboost-all-dev \ removed PIP-356
     r-base-core \
     ghostscript && rm -rf /var/lib/apt/lists/*
 
@@ -47,9 +47,9 @@ RUN unzip bowtie2-2.1.0-linux-x86_64.zip && rm bowtie2-2.1.0-linux-x86_64.zip
 ENV PATH="/software/bowtie2-2.1.0:${PATH}"
 
 # Install tophat 2.0.8
-RUN wget http://ccb.jhu.edu/software/tophat/downloads/tophat-2.0.8.Linux_x86_64.tar.gz
-RUN tar -xzvf tophat-2.0.8.Linux_x86_64.tar.gz && rm tophat-2.0.8.Linux_x86_64.tar.gz
-ENV PATH="/software/tophat-2.0.8.Linux_x86_64:${PATH}" 
+# RUN wget http://ccb.jhu.edu/software/tophat/downloads/tophat-2.0.8.Linux_x86_64.tar.gz removed PIP-356
+# RUN tar -xzvf tophat-2.0.8.Linux_x86_64.tar.gz && rm tophat-2.0.8.Linux_x86_64.tar.gz
+# ENV PATH="/software/tophat-2.0.8.Linux_x86_64:${PATH}" 
 
 # Install RSEM 1.2.23
 RUN wget https://github.com/deweylab/RSEM/archive/v1.2.23.zip
