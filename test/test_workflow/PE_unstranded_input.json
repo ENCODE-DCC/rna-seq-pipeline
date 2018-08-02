@@ -11,6 +11,6 @@
     "test_wf.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
     "test_wf.align_ncpus" : 4,
     "test_wf.align_ramGB" : 8,
-    "test_wf.comparison_results_json" : "test_wdl/PE_unstranded_reference_md5.json",
+    "test_wf.comparison_results_json" : "test/test_workflow/PE_unstranded_reference_md5.json",
     "test_wf.disks" : "local-disk 20 HDD"
 }
