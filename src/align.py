@@ -216,9 +216,10 @@ if __name__ == '__main__':
     parser.add_argument(
         '--aligner',
         type=str,
-        choices=['star', 'tophat'],
-        help='star or tophat',
-        required=True)
+        choices=['star'],
+        help='this is exists for the purpose of extension',
+        required=True,
+        default='star')
     parser.add_argument(
         '--index',
         type=str,
