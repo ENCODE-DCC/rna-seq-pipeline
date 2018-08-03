@@ -84,4 +84,11 @@ workflow test_wf {
             reference_json = comparison_results_json,
         }
     }
+
+    if (length(fastqs_R1) == 2) {
+        call rna.mad_qc { input:
+            quants1 = rsem_quant.genome_signal[0],
+            quants2 = rsem_quant.genome_signal[1],
+        }
+    }
 }

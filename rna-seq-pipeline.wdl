@@ -74,6 +74,15 @@ workflow rna {
             disks = disks,
         }
     }
+
+    # if there are exactly two replicates, calculate the madQC metrics and draw a plot
+
+    if (length(fastqs_R1 == 2)) {
+        call mad_qc { input:
+            quants1 = rsem_quant.genes_results[0],
+            quants2 = rsem_quant.genes_results[1],
+        }
+    }
 }
 
 
@@ -196,4 +205,27 @@ workflow rna {
             String comparison_result_string = read_string("comparison_result.json")
         }
     }
+
+    task mad_qc {
+    File quants1
+    File quants2
+
+        command {
+            python3 $(which mad_qc.py) \
+                --quants1 ${quants1} \
+                --quants2 ${quants2} \
+                --MAD_R_path $(which MAD.R)
+        }
+
+        output {
+            File madQCplot = glob("*_mad_plot.png")[0]
+            File madQCmetrics = glob("*_mad_qc_metrics.json")[0]
+        }
+
+        runtime {
+            cpu: 1
+            memory: "3400 MB"
+            disks: select_first([disks,"local-disk 100 SSD"]) 
+        }
+    }   
     
