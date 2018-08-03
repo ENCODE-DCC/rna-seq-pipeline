@@ -89,6 +89,7 @@ workflow test_wf {
         call rna.mad_qc { input:
             quants1 = rsem_quant.genes_results[0],
             quants2 = rsem_quant.genes_results[1],
+            disks = disks,
         }
     }
 }

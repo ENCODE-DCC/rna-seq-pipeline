@@ -209,6 +209,7 @@ workflow rna {
     task mad_qc {
     File quants1
     File quants2
+    String? disks
 
         command {
             python3 $(which mad_qc.py) \
