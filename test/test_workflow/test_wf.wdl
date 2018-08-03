@@ -87,8 +87,8 @@ workflow test_wf {
 
     if (length(fastqs_R1) == 2) {
         call rna.mad_qc { input:
-            quants1 = rsem_quant.genome_signal[0],
-            quants2 = rsem_quant.genome_signal[1],
+            quants1 = rsem_quant.genes_results[0],
+            quants2 = rsem_quant.genes_results[1],
         }
     }
 }
