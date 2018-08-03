@@ -45,17 +45,15 @@ pipeline{
             agent{label 'slave-w-docker-cromwell-60GB-ebs'}
             steps{
                 echo "Running task level tests."
-                sh "pwd"
-                sh "ls -l"
                 echo "Fetching chromosome 19 restricted index file for STAR from Google Cloud"
                 sh "curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz"
-                sh """test_wdl/test.sh test_wdl/test_wf.wdl test_wdl/PE_unstranded_input.json $TAG
+                sh """test/test_workflow/test.sh test/test_workflow/test_wf.wdl test/test_workflow/PE_unstranded_input.json $TAG
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
                       
-                      test_wdl/test.sh test_wdl/test_wf.wdl test_wdl/SE_unstranded_input.json $TAG 
+                      test/test_workflow/test.sh test/test_workflow/test_wf.wdl test/test_workflow/SE_unstranded_input.json $TAG 
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
                       
-                      test_wdl/test.sh test_wdl/test_wf.wdl test_wdl/PE_stranded_input.json $TAG
+                      test/test_workflow/test.sh test/test_workflow/test_wf.wdl test/test_workflow/PE_stranded_input.json $TAG
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
                    """
             }
