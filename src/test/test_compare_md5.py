@@ -26,3 +26,21 @@ class TestFileWithMd5(unittest.TestCase):
     def test_calculate_md5(self, mock_open):
         obj = compare_md5.FileWithMd5(self.filepath)
         self.assertEqual(obj.md5, '5c7d96a3dd7a87850a2ef34087565a6e')
+
+
+class TestRegularFunctions(unittest.TestCase):
+    def test_flatten_on_empty(self):
+        self.assertEqual(compare_md5.flatten_list([]), [])
+
+    def test_flatten_on_simple_list_of_len_1(self):
+        self.assertEqual(compare_md5.flatten_list([1]), [1])
+
+    def test_flatten_on_simple_list_of_len_2(self):
+        self.assertEqual(compare_md5.flatten_list([1, 'a']), [1, 'a'])
+
+    def test_flatten_on_level_one_nested_nonempty(self):
+        self.assertEqual(
+            compare_md5.flatten_list([[1, 'a'], [2, 'b']]), [1, 'a', 2, 'b'])
+
+    def test_flatten_on_level_one_nested_empty(self):
+        self.assertEqual(compare_md5.flatten_list([[1, 'a'], []]), [1, 'a'])
