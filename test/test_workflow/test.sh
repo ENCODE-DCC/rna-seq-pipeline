@@ -24,9 +24,8 @@ fi
 CROMWELL_JAR=cromwell-32.jar
 BACKEND_CONF=backends/backend.conf
 BACKEND=Local
-PREFIX=$(basename ${WDL} .wdl)
 RESULT_PREFIX=$(basename ${INPUT} .json)
-METADATA=${PREFIX}.metadata.json # metadata
+METADATA=${RESULT_PREFIX}.metadata.json # metadata
 RESULT=${RESULT_PREFIX}.result.json # output
 
 # Write workflow option JSON file
@@ -41,7 +40,4 @@ EOM
 
 java -Dconfig.file=${BACKEND_CONF} -Dbackend.default=${BACKEND} -jar ${CROMWELL_JAR} run ${WDL} -i ${INPUT} -o ${TMP_WF_OPT} -m ${METADATA}
 
-# parse output metadata json
-cat ${METADATA} | python -c "import json,sys;obj=json.load(sys.stdin);overall={'match_overall':all([json.loads(x)['match_overall'] for x in obj['outputs']['${PREFIX}.compare_md5.comparison_result_string']])};print(json.dumps(overall))" > ${RESULT}
-cat ${RESULT}
-rm -f ${METADATA} ${TMP_WF_OPT}
+rm -f ${TMP_WF_OPT}

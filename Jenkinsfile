@@ -47,13 +47,16 @@ pipeline{
                 echo "Running task level tests."
                 echo "Fetching chromosome 19 restricted index file for STAR from Google Cloud"
                 sh "curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz"
-                sh """test/test_workflow/test.sh test/test_workflow/test_wf.wdl test/test_workflow/PE_unstranded_input.json $TAG
+                sh """test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG
+                      python3 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
                       
-                      test/test_workflow/test.sh test/test_workflow/test_wf.wdl test/test_workflow/SE_unstranded_input.json $TAG 
+                      test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG 
+                      python3 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
                       
-                      test/test_workflow/test.sh test/test_workflow/test_wf.wdl test/test_workflow/PE_stranded_input.json $TAG
+                      test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG
+                      python3 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
                       python -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
                    """
             }
