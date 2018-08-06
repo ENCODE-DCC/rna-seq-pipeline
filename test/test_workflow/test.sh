@@ -7,7 +7,7 @@ set -e # exit on error
 
 if [ $# -lt 3 ]; then
   echo "Usage: ./test.sh [WDL] [INPUT_JSON] [DOCKER_IMAGE]"
-  echo "Make sure to have cromwell-32.jar in your \$PATH as an executable (chmod +x)."
+  echo "Make sure to have cromwell-34.jar in your \$PATH as an executable (chmod +x)."
   exit 1
 fi
 
@@ -15,13 +15,13 @@ WDL=$1
 INPUT=$2
 DOCKER_IMAGE=$3
 
-if [ -f "cromwell-32.jar" ]; then
-    echo "cromwell-32.jar already available, skipping download."
+if [ -f "cromwell-34.jar" ]; then
+    echo "cromwell-34.jar already available, skipping download."
 else
-    wget -N -c https://github.com/broadinstitute/cromwell/releases/download/32/cromwell-32.jar
+    wget -N -c https://github.com/broadinstitute/cromwell/releases/download/34/cromwell-34.jar
 fi
 
-CROMWELL_JAR=cromwell-32.jar
+CROMWELL_JAR=cromwell-34.jar
 BACKEND_CONF=backends/backend.conf
 BACKEND=Local
 RESULT_PREFIX=$(basename ${INPUT} .json)
