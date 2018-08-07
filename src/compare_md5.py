@@ -7,6 +7,7 @@ import hashlib
 import os
 import argparse
 import json
+import sys
 
 
 class FileWithMd5(object):
@@ -37,10 +38,36 @@ def get_file_with_md5(filepath):
     return FileWithMd5(filepath)
 
 
+def flatten_list(input_list):
+    if not input_list:
+        return []
+    if isinstance(input_list[0], list):
+        return flatten_list(input_list[0]) + flatten_list(input_list[1:])
+    else:
+        return input_list[:1] + flatten_list(input_list[1:])
+
+
 def main(args):
     with open(args.reference_json) as f:
         reference = json.load(f)
-    files_to_inspect = [get_file_with_md5(file) for file in args.input_files]
+    with open(args.metadata_json) as f:
+        metadata = json.load(f)
+    output = metadata['outputs']
+    # make the output structure flat
+    for key in output:
+        output[key] = flatten_list(output[key])
+
+    # build the list of input files to inspect
+    input_files = []
+    for key in args.keys_to_inspect:
+        try:
+            for item in output[key]:
+                input_files.append(item)
+        except KeyError:
+            print('Key to inspect was not found in the output!')
+            sys.exit(-1)
+
+    files_to_inspect = [get_file_with_md5(file) for file in input_files]
     files_to_inspect_md5 = {
         file.basename: file.md5
         for file in files_to_inspect
@@ -64,7 +91,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_files', nargs='+')
+    parser.add_argument('--keys_to_inspect', nargs='+')
+    parser.add_argument('--metadata_json')
     parser.add_argument('--reference_json')
     parser.add_argument('--outfile')
     args = parser.parse_args()
