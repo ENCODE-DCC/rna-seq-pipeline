@@ -44,3 +44,16 @@ class TestRegularFunctions(unittest.TestCase):
 
     def test_flatten_on_level_one_nested_empty(self):
         self.assertEqual(compare_md5.flatten_list([[1, 'a'], []]), [1, 'a'])
+
+    def test_flatten_deeper(self):
+        self.assertEqual(
+            compare_md5.flatten_list([1, [2, [3, 4, [5, 6]]], 7, [8, 9]]),
+            [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    def test_raises_TypeError_when_called_with_int(self):
+        with self.assertRaises(TypeError):
+            compare_md5.flatten_list(1)
+
+    def test_raises_TypeError_when_called_with_str(self):
+        with self.assertRaises(TypeError):
+            compare_md5.flatten_list('foobar')
