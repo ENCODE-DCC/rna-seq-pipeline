@@ -10,6 +10,5 @@
     "rna.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
     "rna.align_ncpus" : 4,
     "rna.align_ramGB" : 8,
-    "rna.comparison_results_json" : "test/test_workflow/SE_unstranded_reference_md5.json",
     "rna.disks" : "local-disk 20 HDD"
 }

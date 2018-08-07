@@ -6,5 +6,6 @@
     "rep1SE_unstranded_anno_flagstat.txt" : "282c10e27edaa4a35ac51b3eb6a8303a",
     "rep1SE_unstranded_genome_flagstat.txt" : "019a1a6eb97d8159ae48a842c9203109",
     "rep2SE_unstranded_anno_flagstat.txt" : "bf18d4ba445c2a37f8d8917dd723ed8a",
-    "rep2SE_unstranded_genome_flagstat.txt" : "e556cf6b88e9a06dddb54f0f7bd3b23a"
+    "rep2SE_unstranded_genome_flagstat.txt" : "e556cf6b88e9a06dddb54f0f7bd3b23a",
+    "rep1SE_unstranded_anno_rsem-rep2SE_unstranded_anno_rsem_mad_plot.png" : "111a4ec6500cfe8cb847ee97cc57698c"
 }
