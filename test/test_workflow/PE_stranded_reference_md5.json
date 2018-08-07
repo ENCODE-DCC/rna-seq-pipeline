@@ -10,5 +10,7 @@
     "rep2PE_stranded_genome_minusAll.bw" : "02bf22df207e7d28d84cb7aca6ab37f8",
     "rep2PE_stranded_genome_plusAll.bw" : "0f5c4d502a3560b942e7640ffda4019a",
     "rep2PE_stranded_genome_minusUniq.bw" : "82876a4e77641ba5af4b8b58396022e9",
-    "rep2PE_stranded_genome_plusUniq.bw" : "a27151499caf7e7da096f864b3e178d0"
+    "rep2PE_stranded_genome_plusUniq.bw" : "a27151499caf7e7da096f864b3e178d0",
+    "rep1PE_stranded_anno_rsem-rep2PE_stranded_anno_rsem_mad_qc_metrics.json" : "95b4eb12d677aebb9e7015821b5bbaa5",
+    "rep1PE_stranded_anno_rsem-rep2PE_stranded_anno_rsem_mad_plot.png" : "51de8087ab19c41354c1160c337ef707"
 }

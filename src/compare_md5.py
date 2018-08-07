@@ -55,7 +55,10 @@ def main(args):
     output = metadata['outputs']
     # make the output structure flat
     for key in output:
-        output[key] = flatten_list(output[key])
+        if isinstance(output[key], list):
+            output[key] = flatten_list(output[key])
+        else:
+            output[key] = [output[key]]
 
     # build the list of input files to inspect
     input_files = []

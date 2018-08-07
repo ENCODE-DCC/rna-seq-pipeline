@@ -77,7 +77,7 @@ workflow rna {
 
     # if there are exactly two replicates, calculate the madQC metrics and draw a plot
 
-    if (length(fastqs_R1 == 2)) {
+    if (length(fastqs_R1) == 2) {
         call mad_qc { input:
             quants1 = rsem_quant.genes_results[0],
             quants2 = rsem_quant.genes_results[1],
