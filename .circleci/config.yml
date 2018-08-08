@@ -10,9 +10,8 @@ jobs:
         - PIP-360_circleci
     machine:
       # specify the version you desire here
-      #image: circleci/classic:201708-01
-      python:
-        version: 3.4.3
+      image: circleci/classic:201708-01
+
     working_directory: ~/rna-seq-pipeline
 
     steps:
@@ -42,8 +41,7 @@ jobs:
           name: unittests
           command: |
             python --version
-            cd src
-            python -m unittest discover
+            python3 --version
       - run:
           name: build image
           command: |
