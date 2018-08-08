@@ -45,6 +45,7 @@ jobs:
           command: |
             echo "Hello Circle!"
             echo $TAG
+            echo $CIRCLE_BRANCH
       #- store_artifacts:
       #    path: test-reports
       #    destination: test-reports
