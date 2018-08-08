@@ -10,8 +10,9 @@ jobs:
         - PIP-360_circleci
     machine:
       # specify the version you desire here
-      image: circleci/classic:201708-01
-
+      #image: circleci/classic:201708-01
+      python:
+        version: 3.4.3
     working_directory: ~/rna-seq-pipeline
 
     steps:
@@ -40,12 +41,9 @@ jobs:
       - run:
           name: unittests
           command: |
-            pyenv virtualenv 3.4.3 testenv
-            pyenv activate testenv
             python --version
             cd src
             python -m unittest discover
-            pyenv deactivate
       - run:
           name: build image
           command: |
