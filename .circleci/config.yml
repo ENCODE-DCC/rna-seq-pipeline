@@ -13,7 +13,7 @@ jobs:
       image: circleci/classic:201708-01
     # declare environment variables 
     environment:
-      TAG: quay.io/encode-dcc/rna-seq-pipeline:${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM} 
+      TAG: quay.io/encode-dcc/rna-seq-pipeline:$CIRCLE_BRANCH_$CIRCLE_BUILD_NUM 
 
     working_directory: ~/rna-seq-pipeline
 
