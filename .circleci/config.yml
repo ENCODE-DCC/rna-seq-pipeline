@@ -5,6 +5,9 @@
 version: 2
 jobs:
   build:
+    branches:
+      only:
+        - PIP-360_circleci
     machine:
       # specify the version you desire here
       image: circleci/classic:201708-01
