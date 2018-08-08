@@ -41,7 +41,7 @@ jobs:
           name: build image
           command: |
             echo "Hello Circle!"
-            echo quay.io/encode-dcc/rna-seq-pipeline:$CIRCLE_BRANCH_$CIRCLE_BUILD_NUM
+            echo quay.io/encode-dcc/rna-seq-pipeline:${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}
       #- store_artifacts:
       #    path: test-reports
       #    destination: test-reports
