@@ -11,6 +11,8 @@ jobs:
     machine:
       # specify the version you desire here
       image: circleci/classic:201708-01
+      python:
+        version: 3.4.3
 
     working_directory: ~/rna-seq-pipeline
 
