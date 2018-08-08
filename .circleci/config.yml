@@ -11,9 +11,6 @@ jobs:
     machine:
       # specify the version you desire here
       image: circleci/classic:201708-01
-    # declare environment variables 
-    environment:
-      TAG: quay.io/encode-dcc/rna-seq-pipeline:$CIRCLE_BRANCH_$CIRCLE_BUILD_NUM 
 
     working_directory: ~/rna-seq-pipeline
 
@@ -44,8 +41,7 @@ jobs:
           name: build image
           command: |
             echo "Hello Circle!"
-            echo $TAG
-            echo $CIRCLE_BRANCH
+            echo quay.io/encode-dcc/rna-seq-pipeline:$CIRCLE_BRANCH_$CIRCLE_BUILD_NUM
       #- store_artifacts:
       #    path: test-reports
       #    destination: test-reports
