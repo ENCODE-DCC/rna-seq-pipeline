@@ -45,7 +45,7 @@ jobs:
       - run:
           name: build image
           command: |
-            echo "Hello!"
+            echo "Hello Circle!"
       #- store_artifacts:
       #    path: test-reports
       #    destination: test-reports
