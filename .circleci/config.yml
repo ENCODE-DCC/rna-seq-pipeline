@@ -40,8 +40,9 @@ jobs:
       - run:
           name: unittests
           command: |
+            python --version
             cd src
-            python3 -m unittest discover
+            python -m unittest discover
       - run:
           name: build image
           command: |
