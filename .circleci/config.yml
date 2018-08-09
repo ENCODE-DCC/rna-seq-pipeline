@@ -7,9 +7,12 @@ jobs:
   unittests:
     docker:
       - image: circleci/python:3.5
+    
     working_directory: ~/rna-seq-pipeline
+
     steps:
       - checkout
+
       - run:
         command: |
           ls
@@ -17,13 +20,13 @@ jobs:
           python -m unittest discover
 
   build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/buildpack-deps:stable
+    machine:
+      image: circleci/classic:201708-01
+
     working_directory: ~/rna-seq-pipeline
+
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: build image
           command: |
@@ -41,10 +44,9 @@ jobs:
       steps:
         - checkout
         - run:
-          name: get cromwell
+          name: get cromwell-34
           command: |
             wget -N -c https://github.com/broadinstitute/cromwell/releases/download/34/cromwell-34.jar
-            curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
 
 workflows:
   version: 2
@@ -61,11 +63,4 @@ workflows:
           filters:
             branches:
               only: 
-                - PIP-360_circleci
-      - pe-unstranded-test:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
                 - PIP-360_circleci
