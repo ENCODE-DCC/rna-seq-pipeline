@@ -54,4 +54,4 @@ workflows:
   version: 2
   build_workflow:
     jobs:
-      - build:
+      - build
