@@ -4,6 +4,21 @@
 #
 version: 2
 jobs:
+  unittests:
+    docker:
+      - image: circleci/python:3.5
+    
+    working_directory: ~/rna-seq-pipeline
+
+    steps:
+      - checkout
+
+      - run:
+        command: |
+          ls
+          cd src
+          python -m unittest discover
+
   build:
     machine:
       # specify the version you desire here
@@ -54,7 +69,14 @@ workflows:
   version: 2
   build_workflow:
     jobs:
+      - unittests:
+          filters:
+            branches:
+              only:
+                - PIP-360_circleci
       - build:
+          requires:
+            - unittests
           filters:
             branches:
               only: 
