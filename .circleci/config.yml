@@ -14,10 +14,10 @@ jobs:
       - checkout
 
       - run:
-        command: |
-          ls
-          cd src
-          python -m unittest discover
+          command: |
+            ls
+            cd src
+            python -m unittest discover
 
   build:
     machine:
