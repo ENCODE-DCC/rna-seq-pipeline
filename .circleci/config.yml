@@ -41,7 +41,7 @@ jobs:
       steps:
         - checkout
         - run:
-          name: get cromwell-34
+          name: get cromwell
           command: |
             wget -N -c https://github.com/broadinstitute/cromwell/releases/download/34/cromwell-34.jar
             curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
