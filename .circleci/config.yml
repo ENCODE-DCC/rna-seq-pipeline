@@ -40,7 +40,9 @@ jobs:
   pe-unstranded-test:
     machine:
       image: circleci/classic:201708-01
+
     working_directory: ~/rna-seq-pipeline
+    
       steps:
         - checkout
         - run:
