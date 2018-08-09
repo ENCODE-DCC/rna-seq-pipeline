@@ -57,5 +57,4 @@ workflows:
       - build:
         filters:
           branches:
-            only:
-              - PIP-360_circleci
+            only: PIP-360_circleci
