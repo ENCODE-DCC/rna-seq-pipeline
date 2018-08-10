@@ -80,3 +80,10 @@ workflows:
             branches:
               only: 
                 - PIP-360_circleci
+      - test_PE_stranded:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - PIP-360_circleci
