@@ -11,7 +11,7 @@ defaults: &defaults
 make_tag: &make_tag
   name: make docker image tag
   command: |
-    export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}
+    echo "export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
 
 # Jobs
 version: 2
@@ -19,9 +19,10 @@ jobs:
   check_environment:
     <<: *defaults
     steps:
+      - run: *make_tag
       - run:
           command: |
-            *make_tag
+            source ${BASH_ENV}
             echo $CIRCLE_PROJECT_REPONAME
             echo $CIRCLE_WORKFLOW_ID
             echo $CIRCLE_BRANCH
