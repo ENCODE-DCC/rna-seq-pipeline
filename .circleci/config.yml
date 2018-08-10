@@ -1,9 +1,24 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
+# CircleCI 2.0 configuration file
+# for ENCODE RNA-SEQ-PIPELINE
+# Maintainer: Otto Jolanki
+
+# Defaults and functions
+defaults: &defaults
+  docker:
+    - image: circleci/buildpack-deps:xenial-scm
+  working_directory: ~/rna-seq-pipeline
+
+# Jobs
 version: 2
 jobs:
+  check_environment:
+    <<: *defaults
+    steps:
+      - run:
+          command: |
+            echo $CIRCLE_PROJECT_REPONAME
+            echo $CIRCLE_WORKFLOW_ID
+
   unittests:
     docker:
       - image: circleci/python:3.5
@@ -19,11 +34,7 @@ jobs:
             python -m unittest discover
 
   build:
-    docker:
-      - image: circleci/buildpack-deps:xenial-scm
-
-    working_directory: ~/rna-seq-pipeline
-
+    <<: *defaults
     steps:
       - checkout
       - setup_remote_docker
@@ -37,34 +48,7 @@ jobs:
             docker push $TAG
             docker logout
 
-  cache_index_and_cromwell:
-    docker:
-      - image: circleci/buildpack-deps:xenial-scm
-
-    working_directory: ~/rna-seq-pipeline
-
-    steps:
-      - run: mkdir star_index_and_cromwell
-      - run: curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o star_index_and_cromwell/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-      - run: cd star_index_and_cromwell; wget -N -c https://github.com/broadinstitute/cromwell/releases/download/34/cromwell-34.jar
-      - persist_to_workspace:
-          root: star_index_and_cromwell
-          paths:
-            - cromwell-34.jar
-            - GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-
-  restore_workspace_test:
-    docker: 
-      - image: circleci/buildpack-deps:xenial-scm
-    
-    working_directory: ~/rna-seq-pipeline
-
-    steps:
-      - attach_workspace:
-          at: star_index_and_cromwell
-      - run: ls
-      - run: ls star_index_and_cromwell
-
+# Workflow
 workflows:
   version: 2
   build_workflow:
@@ -81,15 +65,4 @@ workflows:
       #      branches:
       #        only: 
       #          - PIP-360_circleci
-      - cache_index_and_cromwell:
-          filters:
-            branches:
-              only:
-                - PIP-360_circleci
-      - restore_workspace_test:
-          requires:
-            - cache_index_and_cromwell
-          filters:
-            branches:
-              only:
-                - PIP-360_circleci
+      - check_environment
