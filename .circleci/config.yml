@@ -15,6 +15,7 @@ jobs:
 
       - run:
           command: |
+            cd src
             python -m unittest discover
 
   build:
