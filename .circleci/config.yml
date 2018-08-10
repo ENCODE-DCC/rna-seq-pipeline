@@ -8,18 +8,23 @@ defaults: &defaults
     - image: circleci/buildpack-deps:xenial-scm
   working_directory: ~/rna-seq-pipeline
 
+make_tag: &make_tag
+  name: make docker image tag
+  command: |
+    export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}
+
 # Jobs
 version: 2
 jobs:
   check_environment:
     <<: *defaults
     steps:
+      - run: *make_tag
       - run:
           command: |
             echo $CIRCLE_PROJECT_REPONAME
             echo $CIRCLE_WORKFLOW_ID
             echo $CIRCLE_BRANCH
-            export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}
             echo $TAG
 
   unittests:
