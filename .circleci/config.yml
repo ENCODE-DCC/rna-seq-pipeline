@@ -8,35 +8,30 @@ defaults: &defaults
     - image: circleci/buildpack-deps:xenial-scm
   working_directory: ~/rna-seq-pipeline
 
+machine_defaults: &machine_defaults
+  machine:
+    image: circleci/classic:201708-
+  working_directory: ~/rna-seq-pipeline
+
 make_tag: &make_tag
   name: make docker image tag
   command: |
     echo "export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
 
+get_star_index: &get_star_index
+  name: get star index for test
+  command: |
+    curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+
 # Jobs
 version: 2
 jobs:
-  check_environment:
-    <<: *defaults
-    steps:
-      - run: *make_tag
-      - run:
-          command: |
-            source ${BASH_ENV}
-            echo $CIRCLE_PROJECT_REPONAME
-            echo $CIRCLE_WORKFLOW_ID
-            echo $CIRCLE_BRANCH
-            echo $TAG
-
   unittests:
     docker:
       - image: circleci/python:3.5
-    
     working_directory: ~/rna-seq-pipeline
-
     steps:
       - checkout
-
       - run:
           command: |
             cd src
@@ -47,15 +42,26 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - run: *make_tag
       - run:
           name: build image
           command: |
-            echo "Building image."
-            export TAG=quay.io/encode-dcc/rna-seq-pipeline:${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}
+            source ${BASH_ENV}
             docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
             docker build --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG .
             docker push $TAG
             docker logout
+
+  test_PE_stranded:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run: 
+          command: |
+            ls test_data
+            echo $TAG
 
 # Workflow
 workflows:
@@ -67,11 +73,10 @@ workflows:
             branches:
               only:
                 - PIP-360_circleci
-      #- build:
-      #    requires:
-      #      - unittests
-      #    filters:
-      #      branches:
-      #        only: 
-      #          - PIP-360_circleci
-      - check_environment
+      - build:
+          requires:
+            - unittests
+          filters:
+            branches:
+              only: 
+                - PIP-360_circleci
