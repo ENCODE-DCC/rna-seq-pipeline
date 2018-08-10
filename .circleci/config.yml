@@ -61,7 +61,7 @@ jobs:
 
     steps:
       - attach_workspace:
-        at: star_index_and_cromwell
+          at: star_index_and_cromwell
       - run: ls
       - run: ls star_index_and_cromwell
 
@@ -74,16 +74,14 @@ workflows:
             branches:
               only:
                 - PIP-360_circleci
-      - build:
-          requires:
-            - unittests
-          filters:
-            branches:
-              only: 
-                - PIP-360_circleci
+      #- build:
+      #    requires:
+      #      - unittests
+      #    filters:
+      #      branches:
+      #        only: 
+      #          - PIP-360_circleci
       - cache_index_and_cromwell:
-          requires:
-            - build
           filters:
             branches:
               only:
