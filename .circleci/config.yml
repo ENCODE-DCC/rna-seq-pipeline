@@ -20,13 +20,14 @@ jobs:
             python -m unittest discover
 
   build:
-    machine:
-      image: circleci/classic:201708-01
+    docker:
+      - image: circleci/buildpack-deps:stable
 
     working_directory: ~/rna-seq-pipeline
 
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: build image
           command: |
