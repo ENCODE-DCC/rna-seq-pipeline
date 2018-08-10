@@ -15,13 +15,11 @@ jobs:
 
       - run:
           command: |
-            ls
-            cd src
             python -m unittest discover
 
   build:
     docker:
-      - image: circleci/buildpack-deps:stable
+      - image: circleci/buildpack-deps:xenial-scm
 
     working_directory: ~/rna-seq-pipeline
 
@@ -38,6 +36,34 @@ jobs:
             docker push $TAG
             docker logout
 
+  cache_index_and_cromwell:
+    docker:
+      - image: circleci/buildpack-deps:xenial-scm
+
+    working_directory: ~/rna-seq-pipeline
+
+    steps:
+      - run: mkdir star_index_and_cromwell
+      - run: curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o star_index_and_cromwell/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+      - run: cd star_index_and_cromwell; wget -N -c https://github.com/broadinstitute/cromwell/releases/download/34/cromwell-34.jar
+      - persist_to_workspace:
+          root: star_index_and_cromwell
+          paths:
+            - cromwell-34.jar
+            - GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+
+  restore_workspace_test:
+    docker: 
+      - image: circleci/buildpack-deps:xenial-scm
+    
+    working_directory: ~/rna-seq-pipeline
+
+    steps:
+      - attach_workspace:
+        at: star_index_and_cromwell
+      - run: ls
+      - run: ls star_index_and_cromwell
+
 workflows:
   version: 2
   build_workflow:
@@ -53,4 +79,18 @@ workflows:
           filters:
             branches:
               only: 
+                - PIP-360_circleci
+      - cache_index_and_cromwell:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - PIP-360_circleci
+      - restore_workspace_test:
+          requires:
+            - cache_index_and_cromwell
+          filters:
+            branches:
+              only:
                 - PIP-360_circleci
