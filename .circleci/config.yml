@@ -108,6 +108,7 @@ workflows:
             branches:
               only:
                 - PIP-360_circleci
+                - dev1
       - build:
           requires:
             - unittests
@@ -115,6 +116,7 @@ workflows:
             branches:
               only:
                 - PIP-360_circleci
+                - dev1
       - test_PE_unstranded:
           requires:
             - build
@@ -122,6 +124,7 @@ workflows:
             branches:
               only:
                 - PIP-360_circleci
+                - dev1
       - test_SE_unstranded:
           requires:
             - build
@@ -129,6 +132,7 @@ workflows:
             branches:
               only:
                 - PIP-360_circleci
+                - dev1
       - test_PE_stranded:
           requires:
             - build
@@ -136,3 +140,4 @@ workflows:
             branches:
               only:
                 - PIP-360_circleci
+                - dev1
