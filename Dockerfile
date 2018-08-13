@@ -23,7 +23,7 @@ ENV PATH="/software:${PATH}"
 RUN wget http://zlib.net/zlib-1.2.11.tar.gz && tar -xvf zlib-1.2.11.tar.gz
 RUN cd zlib-1.2.11 && ./configure && make && make install && rm ../zlib-1.2.11.tar.gz
 
-RUN wget http://bzip.org/1.0.6/bzip2-1.0.6.tar.gz && tar -xvf bzip2-1.0.6.tar.gz
+RUN wget https://github.com/nemequ/bzip2/releases/download/v1.0.6/bzip2-1.0.6.tar.gz && tar -xvf bzip2-1.0.6.tar.gz
 RUN cd bzip2-1.0.6 && make && make install && rm ../bzip2-1.0.6.tar.gz
 
 RUN wget https://tukaani.org/xz/xz-5.2.3.tar.gz && tar -xvf xz-5.2.3.tar.gz

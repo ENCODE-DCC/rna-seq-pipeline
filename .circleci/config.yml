@@ -1,0 +1,143 @@
+# CircleCI 2.0 configuration file
+# for ENCODE RNA-SEQ-PIPELINE
+# Maintainer: Otto Jolanki
+
+# Defaults and functions
+---
+defaults: &defaults
+  docker:
+    - image: circleci/buildpack-deps:xenial-scm
+  working_directory: ~/rna-seq-pipeline
+
+machine_defaults: &machine_defaults
+  machine:
+    image: circleci/classic:201708-01
+  working_directory: ~/rna-seq-pipeline
+
+make_tag: &make_tag
+  name: make docker image tag
+  command: |
+    echo "export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
+
+get_star_index: &get_star_index
+  name: get star index for test
+  command: |
+    curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+
+# Jobs
+version: 2
+jobs:
+  unittests:
+    docker:
+      - image: circleci/python:3.5
+    working_directory: ~/rna-seq-pipeline
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd src
+            python -m unittest discover
+
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: *make_tag
+      - run:
+          name: build image
+          command: |
+            source ${BASH_ENV}
+            echo "pulling template!"
+            docker pull quay.io/encode-dcc/rna-seq-pipeline:template
+            docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
+            docker build --cache-from quay.io/encode-dcc/rna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG -t quay.io/encode-dcc/rna-seq-pipeline:template .
+            docker push $TAG
+            docker push quay.io/encode-dcc/rna-seq-pipeline:template
+            docker logout
+
+  test_PE_unstranded:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG
+            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
+            cat PE_unstranded_input.result.json
+            python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
+
+  test_SE_unstranded:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG
+            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
+            cat SE_unstranded_input.result.json
+            python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
+
+  test_PE_stranded:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG
+            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
+            cat PE_stranded_input.result.json
+            python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
+
+# Workflow
+workflows:
+  version: 2
+  build_workflow:
+    jobs:
+      - unittests:
+          filters:
+            branches:
+              only:
+                - PIP-360_circleci
+                - dev1
+      - build:
+          requires:
+            - unittests
+          filters:
+            branches:
+              only:
+                - PIP-360_circleci
+                - dev1
+      - test_PE_unstranded:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - PIP-360_circleci
+                - dev1
+      - test_SE_unstranded:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - PIP-360_circleci
+                - dev1
+      - test_PE_stranded:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - PIP-360_circleci
+                - dev1
