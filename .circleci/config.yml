@@ -3,6 +3,7 @@
 # Maintainer: Otto Jolanki
 
 # Defaults and functions
+---
 defaults: &defaults
   docker:
     - image: circleci/buildpack-deps:xenial-scm
@@ -58,7 +59,7 @@ jobs:
       - checkout
       - run: *make_tag
       - run: *get_star_index
-      - run: 
+      - run:
           command: |
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG
@@ -86,7 +87,7 @@ jobs:
       - checkout
       - run: *make_tag
       - run: *get_star_index
-      - run: 
+      - run:
           command: |
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG
@@ -109,7 +110,7 @@ workflows:
             - unittests
           filters:
             branches:
-              only: 
+              only:
                 - PIP-360_circleci
       - test_PE_unstranded:
           requires:
@@ -118,14 +119,14 @@ workflows:
             branches:
               only:
                 - PIP-360_circleci
-       - test_SE_unstranded:
+      - test_SE_unstranded:
           requires:
             - build
           filters:
             branches:
               only:
                 - PIP-360_circleci
-       - test_PE_stranded:
+      - test_PE_stranded:
           requires:
             - build
           filters:
