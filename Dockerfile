@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     r-base-core \
     ghostscript && rm -rf /var/lib/apt/lists/*
 
-
 # Stick to Jin's way of organizing the directory structure
 RUN mkdir /software
 WORKDIR /software
@@ -33,6 +32,10 @@ RUN cd xz-5.2.3 && ./configure && make && make install && rm ../xz-5.2.3.tar.gz
 RUN wget https://github.com/alexdobin/STAR/archive/2.5.1b.tar.gz && tar -xzf 2.5.1b.tar.gz
 RUN cd STAR-2.5.1b && make STAR && rm ../2.5.1b.tar.gz
 ENV PATH="/software/STAR-2.5.1b/bin/Linux_x86_64:${PATH}"
+
+# Install Kallisto 0.44.0
+RUN wget https://github.com/pachterlab/kallisto/releases/download/v0.44.0/kallisto_linux-v0.44.0.tar.gz && tar -xzf kallisto_linux-v0.44.0.tar.gz
+ENV PATH="/kallisto_linux-v0.44.0:${PATH}"
 
 # Install Samtools 0.1.19
 RUN wget https://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2 && tar -xvjf samtools-0.1.19.tar.bz2

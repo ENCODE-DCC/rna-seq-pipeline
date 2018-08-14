@@ -109,6 +109,7 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
       - build:
           requires:
             - unittests
@@ -117,6 +118,7 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
       - test_PE_unstranded:
           requires:
             - build
