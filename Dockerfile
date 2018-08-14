@@ -35,7 +35,7 @@ ENV PATH="/software/STAR-2.5.1b/bin/Linux_x86_64:${PATH}"
 
 # Install Kallisto 0.44.0
 RUN wget https://github.com/pachterlab/kallisto/releases/download/v0.44.0/kallisto_linux-v0.44.0.tar.gz && tar -xzf kallisto_linux-v0.44.0.tar.gz
-ENV PATH="/kallisto_linux-v0.44.0:${PATH}"
+ENV PATH="/software/kallisto_linux-v0.44.0:${PATH}"
 
 # Install Samtools 0.1.19
 RUN wget https://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2 && tar -xvjf samtools-0.1.19.tar.bz2
