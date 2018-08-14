@@ -60,7 +60,7 @@ task make_index {
     }
     
     runtime {
-        docker : "quay.io/encode-dcc/rna-seq-pipeline:PIP-361_kallisto_78345ef0-62d2-4e38-93a4-bbf4f01b8448"
+        docker : "quay.io/encode-dcc/rna-seq-pipeline:PIP-361_kallisto_1e0285be-c6ea-43ab-98eb-a43f0809f2f0"
         cpu : ncpu
         memory : "${select_first([memGB,'8'])} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
