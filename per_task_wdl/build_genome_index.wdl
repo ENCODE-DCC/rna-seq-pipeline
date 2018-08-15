@@ -56,11 +56,11 @@ task make_index {
     }
 
     output {
-        File index = glob("*.tgz|*.idx")[0]
+        File index = glob("*.idx")[0]
     }
     
     runtime {
-        docker : "quay.io/encode-dcc/rna-seq-pipeline:PIP-361_kallisto_efe7c229-1ee0-4e1a-b13c-aa57fd148474"
+        docker : "quay.io/encode-dcc/rna-seq-pipeline:PIP-361_kallisto_202ddffa-7631-49be-8a18-d783e5c687f3"
         cpu : ncpu
         memory : "${select_first([memGB,'8'])} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
