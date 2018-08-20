@@ -56,11 +56,11 @@ task make_index {
     }
 
     output {
-        File index = glob("*.idx")[0]
+        File index = if (index_type == "prep_kallisto") then glob("*.idx")[0] else glob("*.tgz")[0]
     }
     
     runtime {
-        docker : "quay.io/encode-dcc/rna-seq-pipeline:PIP-361_kallisto_202ddffa-7631-49be-8a18-d783e5c687f3"
+        docker : "quay.io/encode-dcc/rna-seq-pipeline:template"
         cpu : ncpu
         memory : "${select_first([memGB,'8'])} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
