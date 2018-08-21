@@ -39,7 +39,7 @@ def make_modified_TarInfo(archive, target_dir=''):
         archive.extractall('.', members=make_modified_TarInfo(archive,
         'my_output'))
     """
-    
+
     members = []
     for member in archive.getmembers():
         if member.isfile():
