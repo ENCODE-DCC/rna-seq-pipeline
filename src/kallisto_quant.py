@@ -13,30 +13,12 @@ import shlex
 from abc import ABC, abstractmethod
 import logging
 from logging.config import dictConfig
-# logger config
+import json
 
-config = {
-    'disable_existing_loggers': False,
-    'version': 1,
-    'formatters': {
-        'short': {
-            'format': '%(asctime)s|%(levelname)s|%(name)s: %(message)s'
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'formatter': 'short',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        '': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        }
-    },
-}
+# load logger config
+with open('logger_config.json') as fp:
+    conf = json.load(fp)
+dictConfig(conf)
 
 
 class KallistoQuant(ABC):
@@ -57,6 +39,7 @@ class KallistoQuant(ABC):
         self.output_dir = output_dir
         self.number_of_threads = number_of_threads
         self.strandedness_direction = self.parse_strandedness(strandedness)
+        self.logger = logging.getLogger(__name__)
 
     @property
     @abstractmethod
@@ -71,8 +54,9 @@ class KallistoQuant(ABC):
         command = self.command_template.format(**kwargs)
         return command
 
-    def run(self):
-        subprocess.call(self.command)
+    @property
+    def command(self):
+        return self._command
 
     @staticmethod
     def parse_strandedness(strandedness):
@@ -90,9 +74,11 @@ class KallistoQuant(ABC):
         Raises:
             KeyError if input is not forward, reverse or unstranded
         """
-        strandedness_dict = {'forward': '--fr-stranded',
-                             'reverse': '--rf-stranded',
-                             'unstranded': ''}
+        strandedness_dict = {
+            'forward': '--fr-stranded',
+            'reverse': '--rf-stranded',
+            'unstranded': ''
+        }
 
         return strandedness_dict[strandedness]
 
@@ -119,22 +105,22 @@ class KallistoQuantSingleEnd(KallistoQuant):
     {fastq}'''
 
     def __init__(self, path_to_index, output_dir, number_of_threads,
-                 strandedness, fragment_length, sd_of_fragment_length,
-                 fastq):
+                 strandedness, fragment_length, sd_of_fragment_length, fastqs):
         super().__init__(path_to_index, output_dir, number_of_threads,
                          strandedness)
         self.fragment_length = fragment_length
         self.sd_of_fragment_length = sd_of_fragment_length
         # we actually get only one input
-        self._fastq = fastq[0]
-        self.command = shlex.split(
-            self.format_command_template(path_to_index=self.path_to_index,
-                                         output_dir=self.output_dir,
-                                         number_of_threads=self.number_of_threads,
-                                         strandedness_direction=self.strandedness_direction,
-                                         fragment_length=self.fragment_length,
-                                         sd_of_fragment_length=self.sd_of_fragment_length,
-                                         fastq=self._fastq))
+        self.fastq = fastqs[0]
+        self._command = shlex.split(
+            self.format_command_template(
+                path_to_index=self.path_to_index,
+                output_dir=self.output_dir,
+                number_of_threads=self.number_of_threads,
+                strandedness_direction=self.strandedness_direction,
+                fragment_length=self.fragment_length,
+                sd_of_fragment_length=self.sd_of_fragment_length,
+                fastq=self.fastq))
 
 
 class KallistoQuantPairedEnd(KallistoQuant):
@@ -152,15 +138,27 @@ class KallistoQuantPairedEnd(KallistoQuant):
     {fastq1} {fastq2}'''
 
     def __init__(self, path_to_index, output_dir, number_of_threads,
-                 strandedness, fastq):
+                 strandedness, fastqs):
         super().__init__(path_to_index, output_dir, number_of_threads,
                          strandedness)
-        self.fastq1 = fastq[0]
-        self.fastq2 = fastq[1]
-        self.command = shlex.split(
-            self.format_command_template(path_to_index=self.path_to_index,
-                                         output_dir=self.output_dir,
-                                         number_of_threads=self.number_of_threads,
-                                         strandedness_direction=self.strandedness_direction,
-                                         fastq1=self.fastq1,
-                                         fastq2=self.fastq2))
+        self.fastq1 = fastqs[0]
+        self.fastq2 = fastqs[1]
+        self._command = shlex.split(
+            self.format_command_template(
+                path_to_index=self.path_to_index,
+                output_dir=self.output_dir,
+                number_of_threads=self.number_of_threads,
+                strandedness_direction=self.strandedness_direction,
+                fastq1=self.fastq1,
+                fastq2=self.fastq2))
+
+
+def main(args):
+    pass
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--fastqs', nargs='+', help='Input fastqs, gzipped or uncompressed')
+    main(args)
