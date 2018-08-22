@@ -9,9 +9,34 @@ __license__ = 'MIT'
 
 import argparse
 import subprocess
-import os
 import shlex
 from abc import ABC, abstractmethod
+import logging
+from logging.config import dictConfig
+# logger config
+
+config = {
+    'disable_existing_loggers': False,
+    'version': 1,
+    'formatters': {
+        'short': {
+            'format': '%(asctime)s|%(levelname)s|%(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'formatter': 'short',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        }
+    },
+}
 
 
 class KallistoQuant(ABC):
@@ -40,11 +65,14 @@ class KallistoQuant(ABC):
         """
         pass
 
-    @abstractmethod
-    def format_command_template(self):
+    def format_command_template(self, **kwargs):
         """Method that adds concrete values to the command template
         """
-        pass
+        command = self.command_template.format(**kwargs)
+        return command
+
+    def run(self):
+        subprocess.call(self.command)
 
     @staticmethod
     def parse_strandedness(strandedness):
@@ -100,14 +128,39 @@ class KallistoQuantSingleEnd(KallistoQuant):
         # we actually get only one input
         self._fastq = fastq[0]
         self.command = shlex.split(
-            self.format_command_template(type(self).command_template))
+            self.format_command_template(path_to_index=self.path_to_index,
+                                         output_dir=self.output_dir,
+                                         number_of_threads=self.number_of_threads,
+                                         strandedness_direction=self.strandedness_direction,
+                                         fragment_length=self.fragment_length,
+                                         sd_of_fragment_length=self.sd_of_fragment_length,
+                                         fastq=self._fastq))
 
-    def format_command_template(self, input_template):
-        command = input_template.format(path_to_index=self.path_to_index,
-                                        output_dir=self.output_dir,
-                                        number_of_threads=self.number_of_threads,
-                                        strandedness_direction=self.strandedness_direction,
-                                        fragment_length=self.fragment_length,
-                                        sd_of_fragment_length=self.sd_of_fragment_length,
-                                        fastq=self._fastq)
-        return command
+
+class KallistoQuantPairedEnd(KallistoQuant):
+    """Class that runs kallisto quant in paired-end mode
+
+    Attributes:
+        see superclass
+    """
+
+    command_template = ''' kallisto quant -i {path_to_index} \
+    -o {output_dir} \
+    -t {number_of_threads} \
+    --plaintext \
+    {strandedness_direction} \
+    {fastq1} {fastq2}'''
+
+    def __init__(self, path_to_index, output_dir, number_of_threads,
+                 strandedness, fastq):
+        super().__init__(path_to_index, output_dir, number_of_threads,
+                         strandedness)
+        self.fastq1 = fastq[0]
+        self.fastq2 = fastq[1]
+        self.command = shlex.split(
+            self.format_command_template(path_to_index=self.path_to_index,
+                                         output_dir=self.output_dir,
+                                         number_of_threads=self.number_of_threads,
+                                         strandedness_direction=self.strandedness_direction,
+                                         fastq1=self.fastq1,
+                                         fastq2=self.fastq2))
