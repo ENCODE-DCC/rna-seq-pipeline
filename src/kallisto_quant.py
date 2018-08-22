@@ -84,7 +84,7 @@ class KallistoQuant(ABC):
 
 
 class KallistoQuantSingleEnd(KallistoQuant):
-    """Class that runs kallisto quant in single-ended mode:
+    """Class that sets up kallisto quant run in single-ended mode:
 
     Attributes:
         fragment_length: Int that determines the fragment length of the library
@@ -124,7 +124,7 @@ class KallistoQuantSingleEnd(KallistoQuant):
 
 
 class KallistoQuantPairedEnd(KallistoQuant):
-    """Class that runs kallisto quant in paired-end mode
+    """Class that sets up running kallisto quant in paired-end mode
 
     Attributes:
         see superclass
@@ -153,12 +153,53 @@ class KallistoQuantPairedEnd(KallistoQuant):
                 fastq2=self.fastq2))
 
 
+def get_kallisto_quant_instance(args):
+    if args.endedness == 'paired':
+        return KallistoQuantPairedEnd(args.path_to_index, args.output_dir,
+                                      args.number_of_threads,
+                                      args.strandedness, args.fastqs)
+    elif args.endedness == 'single':
+        return KallistoQuantSingleEnd(args.path_to_index, args.output_dir,
+                                      args.number_of_threads,
+                                      args.strandedness, args.fragment_length,
+                                      args.sd_of_fragment_length, args.fastqs)
+
+
 def main(args):
-    pass
+    logger = logging.getLogger(__name__)
+    kallisto_quantifier = get_kallisto_quant_instance(args)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--fastqs', nargs='+', help='Input fastqs, gzipped or uncompressed')
+    parser.add_argument(
+        '--number_of_threads',
+        type=int,
+        help='Number of parallel threads to use.')
+    parser.add_argument(
+        '--strandedness',
+        type=str,
+        choices=['forward', 'reverse', 'unstranded'])
+    parser.add_argument(
+        '--path_to_index', type=str, help='Path to kallisto index.')
+    parser.add_argument(
+        '--output_dir', type=str, help='Output directory path', default='out')
+    parser.add_argument(
+        '--endedness',
+        type=str,
+        choices=['single', 'paired'],
+        help='Endedness of the experiment. Choices are single or paired')
+    parser.add_argument(
+        '--fragment_length',
+        type=int,
+        help='''In single-ended mode fragment length of the library. \
+                Not needed in paired end mode where it can be inferred \
+                from the data.''')
+    parser.add_argument(
+        '--sd_of_fragment_length',
+        type=float,
+        help='In single-ended mode, the standard deviation of fragment length')
+    args = parser.parse_args()
     main(args)
