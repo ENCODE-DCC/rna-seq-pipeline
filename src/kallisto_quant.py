@@ -14,8 +14,9 @@ from abc import ABC, abstractmethod
 import logging
 from logging.config import dictConfig
 import json
+import sys
 
-# load logger config
+# load logger config and get logger
 with open('logger_config.json') as fp:
     conf = json.load(fp)
 dictConfig(conf)
@@ -57,6 +58,11 @@ class KallistoQuant(ABC):
     @property
     def command(self):
         return self._command
+
+    def run(self):
+        self.logger.info('Running kallisto command: %s',
+                         ' '.join(self.command))
+        subprocess.call(self.command)
 
     @staticmethod
     def parse_strandedness(strandedness):
@@ -110,8 +116,14 @@ class KallistoQuantSingleEnd(KallistoQuant):
                          strandedness)
         self.fragment_length = fragment_length
         self.sd_of_fragment_length = sd_of_fragment_length
-        # we actually get only one input
-        self.fastq = fastqs[0]
+        # we should get only one input fastq
+        try:
+            assert len(fastqs) == 1
+            self.fastq = fastqs[0]
+        except AssertionError:
+            self.logger.exception(
+                'More than one input fastqs in single-ended mode.')
+            sys.exit(1)
         self._command = shlex.split(
             self.format_command_template(
                 path_to_index=self.path_to_index,
@@ -166,8 +178,8 @@ def get_kallisto_quant_instance(args):
 
 
 def main(args):
-    logger = logging.getLogger(__name__)
     kallisto_quantifier = get_kallisto_quant_instance(args)
+    kallisto_quantifier.run()
 
 
 if __name__ == '__main__':
