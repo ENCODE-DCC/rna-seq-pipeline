@@ -24,6 +24,11 @@ get_star_index: &get_star_index
   command: |
     curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
 
+get_kallisto_index: &get_kallisto_index
+  name: get kallisto index for test
+  command: |
+    curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+
 # Jobs
 version: 2
 jobs:
@@ -62,6 +67,7 @@ jobs:
       - checkout
       - run: *make_tag
       - run: *get_star_index
+      - run: *get_kallisto_index
       - run:
           command: |
             source ${BASH_ENV}
@@ -76,6 +82,7 @@ jobs:
       - checkout
       - run: *make_tag
       - run: *get_star_index
+      - run: *get_kallisto_index
       - run:
           command: |
             source ${BASH_ENV}
@@ -90,6 +97,7 @@ jobs:
       - checkout
       - run: *make_tag
       - run: *get_star_index
+      - run: *get_kallisto_index
       - run:
           command: |
             source ${BASH_ENV}
@@ -127,6 +135,7 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
       - test_SE_unstranded:
           requires:
             - build
@@ -135,6 +144,7 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
       - test_PE_stranded:
           requires:
             - build
@@ -143,3 +153,4 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
