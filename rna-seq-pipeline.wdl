@@ -219,8 +219,8 @@ workflow rna {
                 --strandedness ${strandedness_direction} \
                 --path_to_index ${kallisto_index} \
                 --endedness ${endedness} \
-                ${"--fragment_length" + fragment_length} \
-                ${"--sd_of_fragment_length" + sd_of_fragment_length}
+                ${"--fragment_length " + fragment_length} \
+                ${"--sd_of_fragment_length " + sd_of_fragment_length}
         }
 
         output {
