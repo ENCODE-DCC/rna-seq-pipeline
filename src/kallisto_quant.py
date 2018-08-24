@@ -13,12 +13,31 @@ import shlex
 from abc import ABC, abstractmethod
 import logging
 from logging.config import dictConfig
-import json
 import sys
 
-# load logger config and get logger
-with open('logger_config.json') as fp:
-    conf = json.load(fp)
+# load logger config
+conf = {
+    'disable_existing_loggers': False,
+    'formatters': {
+        'short': {
+            'format': '%(asctime)s|%(levelname)s|%(name)s: %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'short',
+            'level': 'INFO'
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO'
+        }
+    },
+    'version': 1
+}
 dictConfig(conf)
 
 
@@ -96,8 +115,7 @@ class KallistoQuantSingleEnd(KallistoQuant):
         fragment_length: Int that determines the fragment length of the library
         sd_of_fragment_length: Double that determines the standard deviation of
              the fragment_length.
-        fastq: list with the path to input fastq. List because parsing in wdl
-            is a pain..
+        fastq: list with the path to input fastq.
     """
 
     command_template = '''kallisto quant -i {path_to_index} \
@@ -197,7 +215,10 @@ if __name__ == '__main__':
     parser.add_argument(
         '--path_to_index', type=str, help='Path to kallisto index.')
     parser.add_argument(
-        '--output_dir', type=str, help='Output directory path', default='out')
+        '--output_dir',
+        type=str,
+        help='Output directory path',
+        default='kallisto_out')
     parser.add_argument(
         '--endedness',
         type=str,
