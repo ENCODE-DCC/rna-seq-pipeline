@@ -83,7 +83,7 @@ workflow rna {
             endedness = endedness,
             strandedness_direction = strandedness_direction,
             disks = disks,
-            output_prefix = "rep"+(i+1)+bamroot,
+            out_prefix = "rep"+(i+1)+bamroot,
         }
     }
 
@@ -209,7 +209,7 @@ workflow rna {
         String strandedness_direction
         Int number_of_threads
         Int ramGB
-        String output_prefix
+        String out_prefix
         Int? fragment_length
         Float? sd_of_fragment_length
         String? disks
@@ -222,7 +222,8 @@ workflow rna {
                 --path_to_index ${kallisto_index} \
                 --endedness ${endedness} \
                 ${"--fragment_length " + fragment_length} \
-                ${"--sd_of_fragment_length " + sd_of_fragment_length}
+                ${"--sd_of_fragment_length " + sd_of_fragment_length} \
+                ${"--out_prefix " + out_prefix}
         }
 
         output {

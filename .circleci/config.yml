@@ -72,7 +72,7 @@ jobs:
           command: |
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG
-            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
+            python3.4 src/compare_md5.py --keys_to_inspect rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
             cat PE_unstranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
 
@@ -87,7 +87,7 @@ jobs:
           command: |
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG
-            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
+            python3.4 src/compare_md5.py --keys_to_inspect rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
             cat SE_unstranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
 
@@ -102,7 +102,7 @@ jobs:
           command: |
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG
-            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
+            python3.4 src/compare_md5.py --keys_to_inspect rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
             cat PE_stranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
 
