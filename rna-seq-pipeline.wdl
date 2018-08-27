@@ -83,6 +83,7 @@ workflow rna {
             endedness = endedness,
             strandedness_direction = strandedness_direction,
             disks = disks,
+            output_prefix = "rep"+(i+1)+bamroot,
         }
     }
 
@@ -208,6 +209,7 @@ workflow rna {
         String strandedness_direction
         Int number_of_threads
         Int ramGB
+        String output_prefix
         Int? fragment_length
         Float? sd_of_fragment_length
         String? disks
@@ -224,7 +226,7 @@ workflow rna {
         }
 
         output {
-            File quants = glob("kallisto_out/abundance.tsv")[0]
+            File quants = glob("kallisto_out/*_abundance.tsv")[0]
         }
 
         runtime {

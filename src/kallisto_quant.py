@@ -14,6 +14,7 @@ from abc import ABC, abstractmethod
 import logging
 from logging.config import dictConfig
 import sys
+import os
 
 # load logger config
 conf = {
@@ -54,12 +55,13 @@ class KallistoQuant(ABC):
     """
 
     def __init__(self, path_to_index, output_dir, number_of_threads,
-                 strandedness):
+                 strandedness, out_prefix):
         self.path_to_index = path_to_index
         self.output_dir = output_dir
         self.number_of_threads = number_of_threads
         self.strandedness_direction = self.parse_strandedness(strandedness)
         self.logger = logging.getLogger(__name__)
+        self.out_prefix = out_prefix
 
     @property
     @abstractmethod
@@ -107,6 +109,13 @@ class KallistoQuant(ABC):
 
         return strandedness_dict[strandedness]
 
+    def rename_output(self):
+        kallisto_out_absolute = os.path.join(os.getcwd(), self.output_dir)
+        os.rename(
+            os.path.join(kallisto_out_absolute, 'abundance.tsv'),
+            os.path.join(kallisto_out_absolute,
+                         self.out_prefix + '_abundance.tsv'))
+
 
 class KallistoQuantSingleEnd(KallistoQuant):
     """Class that sets up kallisto quant run in single-ended mode:
@@ -129,9 +138,10 @@ class KallistoQuantSingleEnd(KallistoQuant):
     {fastq}'''
 
     def __init__(self, path_to_index, output_dir, number_of_threads,
-                 strandedness, fragment_length, sd_of_fragment_length, fastqs):
+                 strandedness, fragment_length, sd_of_fragment_length, fastqs,
+                 out_prefix):
         super().__init__(path_to_index, output_dir, number_of_threads,
-                         strandedness)
+                         strandedness, out_prefix)
         self.fragment_length = fragment_length
         self.sd_of_fragment_length = sd_of_fragment_length
         # we should get only one input fastq
@@ -168,9 +178,9 @@ class KallistoQuantPairedEnd(KallistoQuant):
     {fastq1} {fastq2}'''
 
     def __init__(self, path_to_index, output_dir, number_of_threads,
-                 strandedness, fastqs):
+                 strandedness, fastqs, out_prefix):
         super().__init__(path_to_index, output_dir, number_of_threads,
-                         strandedness)
+                         strandedness, out_prefix)
         self.fastq1 = fastqs[0]
         self.fastq2 = fastqs[1]
         self._command = shlex.split(
@@ -185,19 +195,20 @@ class KallistoQuantPairedEnd(KallistoQuant):
 
 def get_kallisto_quant_instance(args):
     if args.endedness == 'paired':
-        return KallistoQuantPairedEnd(args.path_to_index, args.output_dir,
-                                      args.number_of_threads,
-                                      args.strandedness, args.fastqs)
+        return KallistoQuantPairedEnd(
+            args.path_to_index, args.output_dir, args.number_of_threads,
+            args.strandedness, args.fastqs, args.out_prefix)
     elif args.endedness == 'single':
-        return KallistoQuantSingleEnd(args.path_to_index, args.output_dir,
-                                      args.number_of_threads,
-                                      args.strandedness, args.fragment_length,
-                                      args.sd_of_fragment_length, args.fastqs)
+        return KallistoQuantSingleEnd(
+            args.path_to_index, args.output_dir, args.number_of_threads,
+            args.strandedness, args.fragment_length,
+            args.sd_of_fragment_length, args.fastqs, args.out_prefix)
 
 
 def main(args):
     kallisto_quantifier = get_kallisto_quant_instance(args)
     kallisto_quantifier.run()
+    kallisto_quantifier.rename_output()
 
 
 if __name__ == '__main__':
@@ -234,5 +245,10 @@ if __name__ == '__main__':
         '--sd_of_fragment_length',
         type=float,
         help='In single-ended mode, the standard deviation of fragment length')
+    parser.add_argument(
+        '--out_prefix',
+        type=str,
+        help='Prefix for output. Prefix foo outputs to foo_abundances.tsv',
+        default='')
     args = parser.parse_args()
     main(args)
