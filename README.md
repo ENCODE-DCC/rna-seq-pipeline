@@ -1,5 +1,7 @@
 ENCODE RNA-seq pipeline
 =================================================
+[![CircleCI](https://circleci.com/gh/ENCODE-DCC/rna-seq-pipeline/tree/dev1.svg?style=svg)](https://circleci.com/gh/ENCODE-DCC/rna-seq-pipeline/tree/dev1)
+
 [![Docker Repository on Quay](https://quay.io/repository/encode-dcc/rna-seq-pipeline/status "Docker Repository on Quay")](https://quay.io/repository/encode-dcc/rna-seq-pipeline)
 
 OVERVIEW
