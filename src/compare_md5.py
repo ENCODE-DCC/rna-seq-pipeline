@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-'''
+"""
 Script for comparing md5 sums of results to a reference json.
-'''
+"""
+
+__author__ = 'Otto Jolanki'
+__version__ = '0.1.0'
+__license__ = 'MIT'
 
 import hashlib
 import os
@@ -11,6 +15,15 @@ import sys
 
 
 class FileWithMd5(object):
+    """Class that implements a file with its md5 sum.
+
+    Attributes:
+        filepath: The path to the file.
+        basename: The basename of the filepath
+        __md5: string that contains the md5 sum of the file. Calculated once when needed
+               the first time, and then looked up.
+    """
+
     def __init__(self, filepath):
         self.filepath = filepath
         self.basename = os.path.basename(filepath)
@@ -39,6 +52,15 @@ def get_file_with_md5(filepath):
 
 
 def flatten_list(input_list):
+    """Flattens a nested list.
+
+    Args:
+        input_list: A (possibly) nested list.
+
+    Returns:
+        A flattened list, preserving order.
+    """
+
     if not input_list:
         return []
     if isinstance(input_list[0], list):

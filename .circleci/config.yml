@@ -24,6 +24,11 @@ get_star_index: &get_star_index
   command: |
     curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
 
+get_kallisto_index: &get_kallisto_index
+  name: get kallisto index for test
+  command: |
+    curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+
 # Jobs
 version: 2
 jobs:
@@ -62,11 +67,12 @@ jobs:
       - checkout
       - run: *make_tag
       - run: *get_star_index
+      - run: *get_kallisto_index
       - run:
           command: |
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG
-            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
+            python3.4 src/compare_md5.py --keys_to_inspect rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
             cat PE_unstranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
 
@@ -76,11 +82,12 @@ jobs:
       - checkout
       - run: *make_tag
       - run: *get_star_index
+      - run: *get_kallisto_index
       - run:
           command: |
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG
-            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
+            python3.4 src/compare_md5.py --keys_to_inspect rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
             cat SE_unstranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
 
@@ -90,11 +97,12 @@ jobs:
       - checkout
       - run: *make_tag
       - run: *get_star_index
+      - run: *get_kallisto_index
       - run:
           command: |
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG
-            python3.4 src/compare_md5.py --keys_to_inspect rna.align.genome_flagstat rna.align.anno_flagstat rna.genome_signal.all rna.genome_signal.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
+            python3.4 src/compare_md5.py --keys_to_inspect rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
             cat PE_stranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
 
@@ -109,6 +117,7 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
       - build:
           requires:
             - unittests
@@ -117,6 +126,7 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
       - test_PE_unstranded:
           requires:
             - build
@@ -125,6 +135,7 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
       - test_SE_unstranded:
           requires:
             - build
@@ -133,6 +144,7 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto
       - test_PE_stranded:
           requires:
             - build
@@ -141,3 +153,4 @@ workflows:
               only:
                 - PIP-360_circleci
                 - dev1
+                - PIP-361_kallisto

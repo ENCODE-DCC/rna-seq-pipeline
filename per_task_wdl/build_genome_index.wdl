@@ -3,32 +3,28 @@
 
 workflow build_index {
     # Inputs
-    # reference genome in gzipped fasta
-    File reference_genome
+    # reference genome or transcriptome (in prep_kallisto mode)in gzipped fasta
+    File reference_sequence
     # spikeins in gzipped fasta 
     File? spikeins
     # annotation in gzipped gtf
-    File annotation
-    # Tiny fastq use to fake an alignment, required for complete tophat build.
-    # Available in   
-    File? tiny_fq
+    File? annotation
     # annotation version (e.g 'v24')
-    String anno_version
+    String? anno_version
     # genome (e.g 'GRCh38')
-    String genome
+    String? genome
     # Flavor of the index that gets built
     # available options:
-    # prep_rsem, prep_srna, prep_star, prep_tophat
+    # prep_rsem, prep_srna, prep_star, prep_kallisto
     String index_type
     Int ncpu = 8
     Int? memGB
     String? disks
 
     call make_index { input:
-        reference_genome = reference_genome,
+        reference_sequence = reference_sequence,
         spikeins = spikeins,
         annotation = annotation,
-        tiny_fq = tiny_fq,
         anno_version = anno_version,
         genome = genome,
         index_type = index_type,
@@ -39,12 +35,11 @@ workflow build_index {
 }
 
 task make_index {
-    File reference_genome
+    File reference_sequence
     File? spikeins
-    File annotation
-    File? tiny_fq
-    String anno_version
-    String genome
+    File? annotation
+    String? anno_version
+    String? genome
     String index_type
     Int ncpu
     Int? memGB
@@ -52,20 +47,20 @@ task make_index {
     
     command {
         $(which ${index_type + ".sh"}) \
-            ${reference_genome} \
+            ${reference_sequence} \
             ${spikeins} \
             ${annotation} \
-            ${tiny_fq} \
             ${anno_version} \
             ${genome} \
             ${ncpu}
     }
 
     output {
-        File index = glob("*.tgz")[0]
+        File index = if (index_type == "prep_kallisto") then glob("*.idx")[0] else glob("*.tgz")[0]
     }
     
     runtime {
+        docker : "quay.io/encode-dcc/rna-seq-pipeline:template"
         cpu : ncpu
         memory : "${select_first([memGB,'8'])} GB"
         disks : select_first([disks,"local-disk 100 SSD"])

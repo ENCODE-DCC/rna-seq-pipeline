@@ -37,6 +37,8 @@ workflow rna {
 
     Int align_ramGB
 
+
+
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
     scatter (i in range(length(fastqs_))) {
@@ -53,7 +55,7 @@ workflow rna {
             disks = disks,
         }
 
-        call bam_to_signals as genome_signal { input:
+        call bam_to_signals { input:
             input_bam = align.genomebam,
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
@@ -72,6 +74,16 @@ workflow rna {
             ncpus = align_ncpus,
             ramGB = align_ramGB,
             disks = disks,
+        }
+    }
+
+    scatter (i in range(length(fastqs_))) {
+        call kallisto { input:
+            fastqs = fastqs_[i],
+            endedness = endedness,
+            strandedness_direction = strandedness_direction,
+            disks = disks,
+            out_prefix = "rep"+(i+1)+bamroot,
         }
     }
 
@@ -190,19 +202,38 @@ workflow rna {
         }
     }
 
-    task compare_md5 {
-    Array[File] inputs
-    File reference_json
+    task kallisto {
+        Array[File] fastqs
+        File kallisto_index
+        String endedness
+        String strandedness_direction
+        Int number_of_threads
+        Int ramGB
+        String out_prefix
+        Int? fragment_length
+        Float? sd_of_fragment_length
+        String? disks
+
         command {
-            python3 $(which compare_md5.py) \
-                --input_files ${sep=' ' inputs} \
-                --reference_json ${reference_json} \
-                --outfile comparison_result.json
+            python3 $(which kallisto_quant.py) \
+                --fastqs ${sep=' ' fastqs} \
+                --number_of_threads ${number_of_threads} \
+                --strandedness ${strandedness_direction} \
+                --path_to_index ${kallisto_index} \
+                --endedness ${endedness} \
+                ${"--fragment_length " + fragment_length} \
+                ${"--sd_of_fragment_length " + sd_of_fragment_length} \
+                ${"--out_prefix " + out_prefix}
         }
 
         output {
-            File comparison_result = glob("comparison_result.json")[0]
-            String comparison_result_string = read_string("comparison_result.json")
+            File quants = glob("kallisto_out/*_abundance.tsv")[0]
+        }
+
+        runtime {
+            cpu: number_of_threads
+            memory: "${ramGB} GB" 
+            disks: select_first([disks, "local-disk 100 SSD"])
         }
     }
 

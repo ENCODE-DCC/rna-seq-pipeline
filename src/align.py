@@ -26,7 +26,7 @@ def make_aligner(args):
 
 
 def make_modified_TarInfo(archive, target_dir=''):
-    '''
+    """
     Input: archive TarFile object
     Input: target_dir string
     Returns a list of modified TarInfo objects that are files, whose
@@ -38,7 +38,8 @@ def make_modified_TarInfo(archive, target_dir=''):
     with tarfile.open('index.tgz', 'r:gz') as archive:
         archive.extractall('.', members=make_modified_TarInfo(archive,
         'my_output'))
-    '''
+    """
+
     members = []
     for member in archive.getmembers():
         if member.isfile():
