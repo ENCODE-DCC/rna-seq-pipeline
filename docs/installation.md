@@ -1,24 +1,28 @@
-INSTALLATION
-=============
-To run the pipeline you need to install following software.
+# INSTALLATION
 
-Java 8
--------
-Java is required to run execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution).
+To run the pipeline you need to install following software. Running the pipeline on Google Cloud or DNA Nexus requires additional setup detailed below.
+
+## Java 8
+
+Java is required to run execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) and WDL-to-DNANexus compiler [dxWDL](https://github.com/dnanexus/dxWDL).
 To check which Java version you already have, run:
 ```bash
-java -version
+  $ java -version
 ```
 You are looking for 1.8 or higher. If the requirement is not fulfilled follow installation instructions for [mac](https://java.com/en/download/help/mac_install.xml) or
 [linux](http://openjdk.java.net/install/) or use your favorite installation method.
 
-Docker
---------
-Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed. 
-Follow instructions for [mac](https://docs.docker.com/docker-for-mac/install/) or [linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/#upgrade-docker-after-using-the-convenience-script)
+## Docker
 
-Google Cloud
---------------
+Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed. 
+Follow instructions for [mac](https://docs.docker.com/docker-for-mac/install/) or [linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/#upgrade-docker-after-using-the-convenience-script).
+
+##Singularity
+
+If for some reason (most likely because of limitations on your HPC resource) you cannot run Docker, install [singularity](https://www.sylabs.io/guides/2.6/user-guide/installation.html) and have a look at [HOWTO](howto.md#local-with-singularity) for an example of how to run pipeline with singularity. Pipeline requires singularity version `>=2.5.2`, the link takes you to version `2.6.0`.
+
+## Google Cloud
+
 If you are intending to run the pipeline on Google Cloud platform, the following setup is needed:
 
 1. Sign up for a Google account.
@@ -43,15 +47,31 @@ If you are intending to run the pipeline on Google Cloud platform, the following
       unset GOOGLE_APPLICATION_CREDENTIALS
     ```
 
-7. Set your default Google Cloud Project. Pipeline will provision instances on this project.
+9. Set your default Google Cloud Project. Pipeline will provision instances on this project.
     ```
       $ gcloud config set project [YOUR_PROJECT_NAME]
     ```
 
-DNA Nexus
------------
-If you are intending to run the pipeline on DNA Nexus, the following setup is needed:
+* For an example on how to run the pipeline on Google Cloud, see [HOWTO](howto.md#google-cloud).
+
+## DNA Nexus
+
+If you are intending to build and run the pipeline on DNA Nexus, the following setup is needed:
 
 1. Sign up for a [DNANexus account](https://platform.dnanexus.com/register).
 
 2. Create a new [DX project](https://platform.dnanexus.com/projects) with name `[YOUR_PROJECT_NAME]` by clicking on "+New Project" on the top left.
+
+3. Install [DNA Nexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK). Run `dx login` to log in to the platform using your credentials.
+
+4. Download dxWDL:
+    ```bash 
+      $ wget https://github.com/dnanexus/dxWDL/releases/download/0.75/dxWDL-0.75.jar
+    ```
+
+5. Make dxWDL executable:
+    ```bash
+      $ chmod 755 dxWDL-0.75.jar
+    ```
+
+* For an example on how to run the pipeline on DNA Nexus, see [HOWTO](howto.md#dna-nexus)
