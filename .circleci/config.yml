@@ -114,43 +114,33 @@ workflows:
       - unittests:
           filters:
             branches:
-              only:
-                - PIP-360_circleci
-                - dev1
-                - PIP-361_kallisto
+              ignore:
+                - PIP-371_markdown
       - build:
           requires:
             - unittests
           filters:
             branches:
-              only:
-                - PIP-360_circleci
-                - dev1
-                - PIP-361_kallisto
+              ignore:
+                - PIP-371_markdown
       - test_PE_unstranded:
           requires:
             - build
           filters:
             branches:
-              only:
-                - PIP-360_circleci
-                - dev1
-                - PIP-361_kallisto
+              ignore:
+                - PIP-371_markdown
       - test_SE_unstranded:
           requires:
             - build
           filters:
             branches:
-              only:
-                - PIP-360_circleci
-                - dev1
-                - PIP-361_kallisto
+              ignore:
+                - PIP-371_markdown
       - test_PE_stranded:
           requires:
             - build
           filters:
             branches:
-              only:
-                - PIP-360_circleci
-                - dev1
-                - PIP-361_kallisto
+              ignore:
+                - PIP-371_markdown
