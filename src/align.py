@@ -51,7 +51,7 @@ def make_modified_TarInfo(archive, target_dir=''):
 
 def get_flagstats(input_path, output_path):
     command = 'samtools flagstat {infile}'.format(infile=input_path)
-    output = subprocess.getoutput(command)
+    output = subprocess.getoutput(command) + '\n'
     with open(output_path, 'w') as f:
         f.write(output)
 
