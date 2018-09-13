@@ -28,13 +28,27 @@ METADATA=${RESULT_PREFIX}.metadata.json # metadata
 RESULT=${RESULT_PREFIX}.result.json # output
 
 if [ $4 = "docker" ]; then
-    # Write workflow option JSON file
+    # Write workflow option JSON file for docker
     BACKEND=Local
     TMP_WF_OPT=$RESULT_PREFIX.test_rna_wf_opt.json
     cat > $TMP_WF_OPT << EOM
     {
         "default_runtime_attributes" : {
             "docker" : "$DOCKER_IMAGE"
+        }
+    }
+EOM
+fi
+
+if [ $4 = "singularity" ]; then
+    # Write workflow option JSON file for singularity
+    BACKEND=singularity
+    TMP_WF_OPT=$RESULT_PREFIX.test_rna_wf_opt.json
+    SINGULARITY_IMAGE=$(echo ${DOCKER_IMAGE} | sed 's/quay\.io\/encode-dcc\///g' | sed 's/:/-/' | sed 's/$/\.simg/')
+    cat > $TMP_WF_OPT << EOM
+    {
+        "default_runtime_attributes" : {
+            "singularity_container" : "~/.singularity/$SINGULARITY_IMAGE"
         }
     }
 EOM

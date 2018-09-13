@@ -29,6 +29,22 @@ get_kallisto_index: &get_kallisto_index
   command: |
     curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 
+install_singularity: &install_singularity
+  name: install singularity
+  command: |
+    sudo apt-get update
+    sudo apt-get install \
+    python \
+    dh-autoreconf \
+    build-essential \
+    libarchive-dev
+    wget https://github.com/singularityware/singularity/releases/download/2.6.0/singularity-2.6.0.tar.gz
+    tar xvf singularity-2.6.0.tar.gz
+    cd singularity-2.6.0
+    ./configure --prefix=/usr/local --sysconfdir=/etc
+    make
+    sudo make install
+    singularity --version
 # Jobs
 version: 2
 jobs:
@@ -106,11 +122,21 @@ jobs:
             cat PE_stranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
 
+  test_singularity_install:
+    <<: *machine_defaults
+    steps:
+      - run: *install_singularity
+
 # Workflow
 workflows:
   version: 2
   build_workflow:
     jobs:
+      - test_singularity_install:
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown
       - unittests:
           filters:
             branches:
