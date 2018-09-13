@@ -37,7 +37,7 @@ if [ $4 = "docker" ]; then
             "docker" : "$DOCKER_IMAGE"
         }
     }
-    EOM
+EOM
 fi
 
 java -Dconfig.file=${BACKEND_CONF} -Dbackend.default=${BACKEND} -jar ${CROMWELL_JAR} run ${WDL} -i ${INPUT} -o ${TMP_WF_OPT} -m ${METADATA}
