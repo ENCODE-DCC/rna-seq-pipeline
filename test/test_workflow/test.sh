@@ -42,8 +42,7 @@ fi
 
 if [ $4 = "singularity" ]; then
     #build singularity container
-    SINGULARITY_PULLFOLDER=~/.singularity 
-    singularity pull docker://${DOCKER_IMAGE}
+    SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://${DOCKER_IMAGE}
     # Write workflow option JSON file for singularity
     BACKEND=singularity
     TMP_WF_OPT=$RESULT_PREFIX.test_rna_wf_opt.json
