@@ -37,7 +37,8 @@ install_singularity: &install_singularity
     python \
     dh-autoreconf \
     build-essential \
-    libarchive-dev
+    libarchive-dev \
+    squashfs-tools
     wget https://github.com/singularityware/singularity/releases/download/2.6.0/singularity-2.6.0.tar.gz
     tar xvf singularity-2.6.0.tar.gz
     cd singularity-2.6.0
