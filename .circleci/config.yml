@@ -61,7 +61,7 @@ jobs:
             docker push quay.io/encode-dcc/rna-seq-pipeline:template
             docker logout
 
-  test_PE_unstranded:
+  test_PE_unstranded_docker:
     <<: *machine_defaults
     steps:
       - checkout
@@ -76,7 +76,7 @@ jobs:
             cat PE_unstranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
 
-  test_SE_unstranded:
+  test_SE_unstranded_docker:
     <<: *machine_defaults
     steps:
       - checkout
@@ -91,7 +91,7 @@ jobs:
             cat SE_unstranded_input.result.json
             python3.4 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
 
-  test_PE_stranded:
+  test_PE_stranded_docker:
     <<: *machine_defaults
     steps:
       - checkout
@@ -123,21 +123,21 @@ workflows:
             branches:
               ignore:
                 - PIP-371_markdown
-      - test_PE_unstranded:
+      - test_PE_unstranded_docker:
           requires:
             - build
           filters:
             branches:
               ignore:
                 - PIP-371_markdown
-      - test_SE_unstranded:
+      - test_SE_unstranded_docker:
           requires:
             - build
           filters:
             branches:
               ignore:
                 - PIP-371_markdown
-      - test_PE_stranded:
+      - test_PE_stranded_docker:
           requires:
             - build
           filters:
