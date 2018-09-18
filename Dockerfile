@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     r-base-core \
     ghostscript && rm -rf /var/lib/apt/lists/*
 
+# Add mountpoint directory
+RUN mkdir /data
 # Stick to Jin's way of organizing the directory structure
 RUN mkdir /software
 WORKDIR /software
