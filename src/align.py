@@ -51,9 +51,9 @@ def make_modified_TarInfo(archive, target_dir=''):
 
 def get_flagstats(input_path, output_path):
     command = 'samtools flagstat {infile}'.format(infile=input_path)
-    output = subprocess.getoutput(command) + '\n'
+    process = subprocess.run(shlex.split(command), stdout=subprocess.PIPE)
     with open(output_path, 'w') as f:
-        f.write(output)
+        f.write(process.stdout.decode())
 
 
 class StarAligner(ABC):
