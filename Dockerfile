@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     r-base-core \
     ghostscript && rm -rf /var/lib/apt/lists/*
 
+# Add mountpoint directory
+RUN mkdir /data
 # Stick to Jin's way of organizing the directory structure
 RUN mkdir /software
 WORKDIR /software
@@ -39,6 +41,8 @@ ENV PATH="/software/kallisto_linux-v0.44.0:${PATH}"
 
 # Install Samtools 0.1.19
 RUN wget https://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2 && tar -xvjf samtools-0.1.19.tar.bz2
+# Bzip unloads the directory with privs 750 instead of 755. This trips singularity that runs as an unprivileged user.
+RUN chmod 755 samtools-0.1.19
 RUN cd samtools-0.1.19 && make && rm ../samtools-0.1.19.tar.bz2
 ENV PATH="/software/samtools-0.1.19:${PATH}"
 
