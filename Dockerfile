@@ -44,16 +44,11 @@ RUN chmod 755 samtools-0.1.19
 RUN cd samtools-0.1.19 && make && rm ../samtools-0.1.19.tar.bz2
 ENV PATH="/software/samtools-0.1.19:${PATH}"
 
-# Install Bowtie2 2.1.0
-# RUN wget http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.1.0/bowtie2-2.1.0-linux-x86_64.zip
-# RUN unzip bowtie2-2.1.0-linux-x86_64.zip && rm bowtie2-2.1.0-linux-x86_64.zip
-# ENV PATH="/software/bowtie2-2.1.0:${PATH}"
-
-# Install RSEM 1.2.23
-RUN wget https://github.com/deweylab/RSEM/archive/v1.2.23.zip
-RUN unzip v1.2.23.zip && rm v1.2.23.zip
-RUN cd RSEM-1.2.23 && make
-ENV PATH="/software/RSEM-1.2.23:${PATH}"
+# Install RSEM 1.2.31
+RUN wget https://github.com/deweylab/RSEM/archive/v1.2.31.zip
+RUN unzip v1.2.31.zip && rm v1.2.31.zip
+RUN cd RSEM-1.2.31 && make
+ENV PATH="/software/RSEM-1.2.31:${PATH}"
 
 # Install BedGraphToBigWig and bedSort
 RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig && chmod +x bedGraphToBigWig
