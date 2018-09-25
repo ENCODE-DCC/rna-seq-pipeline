@@ -45,9 +45,9 @@ RUN cd samtools-0.1.19 && make && rm ../samtools-0.1.19.tar.bz2
 ENV PATH="/software/samtools-0.1.19:${PATH}"
 
 # Install Bowtie2 2.1.0
-RUN wget http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.1.0/bowtie2-2.1.0-linux-x86_64.zip
-RUN unzip bowtie2-2.1.0-linux-x86_64.zip && rm bowtie2-2.1.0-linux-x86_64.zip
-ENV PATH="/software/bowtie2-2.1.0:${PATH}"
+# RUN wget http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.1.0/bowtie2-2.1.0-linux-x86_64.zip
+# RUN unzip bowtie2-2.1.0-linux-x86_64.zip && rm bowtie2-2.1.0-linux-x86_64.zip
+# ENV PATH="/software/bowtie2-2.1.0:${PATH}"
 
 # Install RSEM 1.2.23
 RUN wget https://github.com/deweylab/RSEM/archive/v1.2.23.zip
