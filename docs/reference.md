@@ -112,3 +112,6 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 
 ## Outputs
 
+1. `DNANexus`: If you choose to use `dxWDL` and run pipelines on DNANexus platform, then output will be stored on the specified output directory without any subdirectories.
+
+2. `Cromwell`: `Cromwell` will store outputs for each task under directory `cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]`. For all tasks `[IDX]` means a zero-based index for each replicate.

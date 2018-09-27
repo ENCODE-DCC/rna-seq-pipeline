@@ -316,10 +316,125 @@ The default SLURM partition is `normal`. If you want to use some other partition
 
 # BUILDING INDEXES
 
+Most likely you will not need to do build STAR or RSEM indexes if you are working with humans or mice and are using standard spikeins. STAR indexes can be downloaded [here](https://www.encodeproject.org/references/ENCSR314WMD/) and RSEM indexes [here](https://www.encodeproject.org/references/ENCSR219BJA/). Genome references used in building the aforementioned indexes can be found [here](https://www.encodeproject.org/references/ENCSR425FOI/).
+
 ## Merge Annotation
+
+This step precludes the STAR and RSEM index building steps. This step takes a gene annotation (e.g. gencode.v19.annotation.gtf.gz) gzipped gtf file, the corresponding tRNA gzipped gtf and a spike-in set (e.g. ERCC) gzipped fasta file and combines them into a single merged annotation gzipped gtf file. This file will be used as input to all three 'prep' indexing steps.
+
+The goal is to run Merge Annotation step on a local machine using Docker.
+
+1. Get the code and move to the repo directory:
+
+```bash
+  $ git clone https://github.com/ENCODE-DCC/rna-seq-pipeline
+  $ cd rna-seq-pipeline
+```
+
+2. Find input file `merge_anno_input.json` in folder `input_json_templates/per_task_inputs`. The file looks like this:
+
+```
+{
+    "merge_anno.annotation" : "test_data/gencode.v24.primary_assembly.annotation.gtf.gz",
+    "merge_anno.tRNA" : "test_data/gencode.v24.tRNAs.gtf.gz",
+    "merge_anno.spikeins" : "test_data/ERCC_phiX.fa.gz",
+    "merge_anno.output_filename" : "merged_annotation.gtf.gz"
+} 
+```
+There is no need to edit this file.
+
+3. Run the pipeline:
+
+```bash
+  $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=Local cromwell-34.jar run per_task_wdl/merge_anno.wdl -i input_json_templates/per_task_inputs/merge_anno_input.json -o workflow_opts/docker.json
+```
+
+4. Find output in `cromwell-executions/merge_anno/[RUNHASH]`
 
 ## Build STAR Index
 
+The goal is to build on the [previous step](howto.md#merge-annotation) and build a STAR index, restricted to chromosome 19, using a local machine with Docker. 
+
+1. Make sure you have run the [previous step](howto.md#merge-annotation) and have located the output (`merged_annotation.gtf.gz`) of that step.  
+
+2. Find the input file `build_index_STAR.json` in `input_json_templates/per_task_inputs`. The file looks like this:
+
+```
+{
+  "build_index.reference_sequence" : "test_data/GRCh38_no_alt_analysis_set_GCA_000001405.15_onlychr19.fa.gz",
+  "build_index.spikeins" : "test_data/ERCC_phiX.fa.gz",
+  "build_index.annotation" : "[path-to-output]/gencodeV24pri-tRNAs-ERCC-phiX_onlychr19_and_spikeins.gtf.gz",
+  "build_index.anno_version" : "v24",
+  "build_index.genome" : "GRCh38",
+  "build_index.index_type" : "prep_star"
+}
+```
+
+Open the file in your favorite text editor, and replace `[path-to-output]` with the path to the merged annotation file produced in the [previous step](howto.md#merge-annotation).
+
+3. Run the pipeline:
+
+```bash
+  $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=Local cromwell-34.jar run per_task_wdl/build_genome_index.wdl -i input_json_templates/per_task_inputs/build_index_STAR.json -o workflow_opts/docker.json
+```
+
+4. Find output in `cromwell-executions/build_genome_index/[RUNHASH]`
+
 ## Build RSEM Index
 
+The goal is to build on the [previous step](howto.md#merge-annotation) and build a RSEM index, restricted to chromosome 19, using a local machine with Docker. 
+
+1. Make sure you have run the [previous step](howto.md#merge-annotation) and have located the output (`merged_annotation.gtf.gz`) of that step.  
+
+2. Find the input file `build_index_RSEM.json` in `input_json_templates/per_task_inputs`. The file looks like this:
+
+```
+{
+  "build_index.reference_sequence" : "test_data/GRCh38_no_alt_analysis_set_GCA_000001405.15_onlychr19.fa.gz",
+  "build_index.spikeins" : "test_data/ERCC_phiX.fa.gz",
+  "build_index.annotation" : "[path-to-output]/gencodeV24pri-tRNAs-ERCC-phiX_onlychr19_and_spikeins.gtf.gz",
+  "build_index.anno_version" : "v24",
+  "build_index.genome" : "GRCh38",
+  "build_index.index_type" : "prep_rsem"
+}
+```
+
+Open the file in your favorite text editor, and replace `[path-to-output]` with the path to the merged annotation file produced in the [previous step](howto.md#merge-annotation).
+
+3. Run the pipeline:
+
+```bash
+  $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=Local cromwell-34.jar run per_task_wdl/build_genome_index.wdl -i input_json_templates/per_task_inputs/build_index_RSEM.json -o workflow_opts/docker.json
+```
+
+4. Find output in `cromwell-executions/build_genome_index/[RUNHASH]`
+
 ## Build Kallisto Index
+
+The goal is to build index for Kallisto using a local machine with Docker.
+
+1. Get the code and move to the repo directory:
+
+```bash
+  $ git clone https://github.com/ENCODE-DCC/rna-seq-pipeline
+  $ cd rna-seq-pipeline
+```
+
+2. Find the input file `build_index_Kallisto.json` in `input_json_templates/per_task_inputs`. The file looks like this:
+
+```
+{
+    "build_index.reference_sequence" : "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix.fa.gz",
+    "build_index.index_type" : "prep_kallisto",
+}
+```
+
+As you can see, this file has less inputs than [STAR](howto.md#build-star-index) and [RSEM](howto.md#build-rsem-index) steps. The reason for this is that when building index kallisto uses only the transcriptome, and does not need annotations. Additionally the spikein sequences are concatenated into the reference file, instead of providing  them in a separate input. The inputs used in this example are [ERCC spikes](https://www.encodeproject.org/files/ENCFF001RTP/) and [Human cDNA](ftp://ftp.ensembl.org/pub/current_fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz), which is restricted to chromosome 19.
+
+3. Run the pipeline:
+
+```bash
+  $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=Local cromwell-34.jar run per_task_wdl/build_genome_index.wdl -i input_json_templates/per_task_inputs/build_index_Kallisto.json -o workflow_opts/docker.json
+```
+
+4. Find output in `cromwell-executions/build_genome_index/[RUNHASH]`
