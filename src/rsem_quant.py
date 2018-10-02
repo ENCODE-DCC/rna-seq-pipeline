@@ -7,13 +7,27 @@ __author__ = 'Otto Jolanki'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-import argparse
 from align import make_modified_TarInfo
-import subprocess
-import shlex
-import tarfile
-import re
+import argparse
+import logging
 import os
+import re
+import shlex
+import subprocess
+import tarfile
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+filehandler = logging.FileHandler('rsem_quant.log')
+filehandler.setLevel(logging.DEBUG)
+consolehandler = logging.StreamHandler()
+consolehandler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
+filehandler.setFormatter(formatter)
+consolehandler.setFormatter(formatter)
+logger.addHandler(consolehandler)
+logger.addHandler(filehandler)
 
 RSEM_COMMAND = '''rsem-calculate-expression --bam \
 --estimate-rspd \
@@ -61,6 +75,7 @@ def main(args):
             paired_end=format_endedness(args.endedness),
             anno_bam=args.anno_bam,
             bam_root=bam_root))
+    logger.info('Running RSEM command %s', ' '.join(rsem_call))
     subprocess.call(rsem_call)
 
 

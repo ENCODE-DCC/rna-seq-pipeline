@@ -1,0 +1,18 @@
+{
+    "rna.endedness" : "paired",
+    "rna.fastqs_R1" : ["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R1.fastq.gz", "test_data/ENCSR653DFZ_rep2_chr19_10000reads_R1.fastq.gz"],
+    "rna.fastqs_R2" : ["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R2.fastq.gz", "test_data/ENCSR653DFZ_rep2_chr19_10000reads_R2.fastq.gz"],
+    "rna.aligner" : "star",
+    "rna.index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+    "rna.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
+    "rna.kallisto.kallisto_index" : "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+    "rna.bamroot" : "PE_stranded",
+    "rna.strandedness" : "stranded",
+    "rna.strandedness_direction" : "reverse",
+    "rna.chrom_sizes" : "test_data/GRCh38_EBV.chrom.sizes",
+    "rna.align_ncpus" : 2,
+    "rna.align_ramGB" : 4,
+    "rna.disks" : "local-disk 20 HDD",
+    "rna.kallisto.number_of_threads" : 2,
+    "rna.kallisto.ramGB" : 4
+}

@@ -31,9 +31,13 @@ workflow rna {
     # libraryid: identifier which will be added to bam headers
     String? libraryid
 
+    String? disks
+
     Int align_ncpus
 
     Int align_ramGB
+
+
 
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
@@ -48,13 +52,17 @@ workflow rna {
             bamroot = "rep"+(i+1)+bamroot,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
+            disks = disks,
         }
 
-        call bam_to_signals as genome_signal { input:
+        call bam_to_signals { input:
             input_bam = align.genomebam,
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
             bamroot = "rep"+(i+1)+bamroot+"_genome",
+            ncpus = align_ncpus,
+            ramGB = align_ramGB,
+            disks = disks,
         }
 
         call rsem_quant { input:
@@ -65,6 +73,26 @@ workflow rna {
             read_strand = strandedness_direction,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
+            disks = disks,
+        }
+    }
+
+    scatter (i in range(length(fastqs_))) {
+        call kallisto { input:
+            fastqs = fastqs_[i],
+            endedness = endedness,
+            strandedness_direction = strandedness_direction,
+            disks = disks,
+            out_prefix = "rep"+(i+1)+bamroot,
+        }
+    }
+
+    # if there are exactly two replicates, calculate the madQC metrics and draw a plot
+
+    if (length(fastqs_R1) == 2) {
+        call mad_qc { input:
+            quants1 = rsem_quant.genes_results[0],
+            quants2 = rsem_quant.genes_results[1],
         }
     }
 }
@@ -81,6 +109,7 @@ workflow rna {
         String bamroot
         Int ncpus
         Int ramGB
+        String? disks
 
         command {
             python3 $(which align.py) \
@@ -101,11 +130,13 @@ workflow rna {
             File genome_flagstat = glob("*_genome_flagstat.txt")[0]
             File anno_flagstat = glob("*_anno_flagstat.txt")[0]
             File log = glob("*_Log.final.out")[0]
+            File python_log = glob("align.log")[0]
         }
 
         runtime {
-          docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-          dx_instance_type : "mem3_ssd1_x16"
+          cpu: ncpus
+          memory: "${ramGB} GB"
+          disks : select_first([disks,"local-disk 100 SSD"])
         }
     }
 
@@ -114,6 +145,10 @@ workflow rna {
         File chrom_sizes
         String strandedness
         String bamroot
+        Int ncpus
+        Int ramGB
+        String? disks
+
 
         command {
             python3 $(which bam_to_signals.py) \
@@ -126,11 +161,13 @@ workflow rna {
         output {
             Array[File] unique = glob("*niq.bw")
             Array[File] all = glob("*ll.bw")
+            File python_log = glob("bam_to_signals.log")[0]
         }
 
         runtime {
-            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-            dx_instance_type : "mem3_ssd1_x16"
+            cpu: ncpus
+            memory: "${ramGB} GB"
+            disks : select_first([disks,"local-disk 100 SSD"])
         }
     }
 
@@ -142,6 +179,7 @@ workflow rna {
         Int rnd_seed
         Int ncpus
         Int ramGB
+        String? disks
 
         command {
             python3 $(which rsem_quant.py) \
@@ -157,10 +195,74 @@ workflow rna {
         output {
             File genes_results = glob("*.genes.results")[0]
             File isoforms_results = glob("*.isoforms.results")[0]
+            File python_log = glob("rsem_quant.log")[0]
         }
 
         runtime {
-            docker : "quay.io/encode-dcc/rna-seq-pipeline:latest"
-            dx_instance_type : "mem3_ssd1_x16"
+            cpu: ncpus
+            memory: "${ramGB} GB"
+            disks : select_first([disks,"local-disk 100 SSD"])
         }
     }
+
+    task kallisto {
+        Array[File] fastqs
+        File kallisto_index
+        String endedness
+        String strandedness_direction
+        Int number_of_threads
+        Int ramGB
+        String out_prefix
+        Int? fragment_length
+        Float? sd_of_fragment_length
+        String? disks
+
+        command {
+            python3 $(which kallisto_quant.py) \
+                --fastqs ${sep=' ' fastqs} \
+                --number_of_threads ${number_of_threads} \
+                --strandedness ${strandedness_direction} \
+                --path_to_index ${kallisto_index} \
+                --endedness ${endedness} \
+                ${"--fragment_length " + fragment_length} \
+                ${"--sd_of_fragment_length " + sd_of_fragment_length} \
+                ${"--out_prefix " + out_prefix}
+        }
+
+        output {
+            File quants = glob("kallisto_out/*_abundance.tsv")[0]
+            File python_log = glob("kallisto_quant.log")[0]
+        }
+
+        runtime {
+            cpu: number_of_threads
+            memory: "${ramGB} GB" 
+            disks: select_first([disks, "local-disk 100 SSD"])
+        }
+    }
+
+    task mad_qc {
+    File quants1
+    File quants2
+    String? disks
+
+        command {
+            python3 $(which mad_qc.py) \
+                --quants1 ${quants1} \
+                --quants2 ${quants2} \
+                --MAD_R_path $(which MAD.R)
+        }
+
+        output {
+            File madQCplot = glob("*_mad_plot.png")[0]
+            File madQCmetrics = glob("*_mad_qc_metrics.json")[0]
+            File python_log = glob("mad_qc.log")[0]
+        }
+
+        runtime {
+            cpu: 1
+            memory: "3400 MB"
+            disks: select_first([disks,"local-disk 100 SSD"]) 
+        }
+    }   
+    
