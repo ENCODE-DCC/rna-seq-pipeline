@@ -18,9 +18,13 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 filehandler = logging.FileHandler('mad_qc.log')
 filehandler.setLevel(logging.DEBUG)
+consolehandler = logging.StreamHandler()
+consolehandler.setLevel(logging.INFO)
 formatter = logging.Formatter(
     '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
 filehandler.setFormatter(formatter)
+consolehandler.setFormatter(formatter)
+logger.addHandler(consolehandler)
 logger.addHandler(filehandler)
 
 MADQC_CMD = 'Rscript {path_to_madR} {quants_1} {quants_2}'
