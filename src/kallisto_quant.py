@@ -7,39 +7,26 @@ __author__ = 'Otto Jolanki'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-import argparse
-import subprocess
-import shlex
 from abc import ABC, abstractmethod
+import argparse
 import logging
-from logging.config import dictConfig
-import sys
 import os
+import shlex
+import subprocess
+import sys
 
-# load logger config
-conf = {
-    'disable_existing_loggers': False,
-    'formatters': {
-        'short': {
-            'format': '%(asctime)s|%(levelname)s|%(name)s: %(message)s'
-        }
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'short',
-            'level': 'INFO'
-        }
-    },
-    'loggers': {
-        '': {
-            'handlers': ['console'],
-            'level': 'INFO'
-        }
-    },
-    'version': 1
-}
-dictConfig(conf)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+filehandler = logging.FileHandler('kallisto_quant.log')
+filehandler.setLevel(logging.DEBUG)
+consolehandler = logging.StreamHandler()
+consolehandler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
+filehandler.setFormatter(formatter)
+consolehandler.setFormatter(formatter)
+logger.addHandler(consolehandler)
+logger.addHandler(filehandler)
 
 
 class KallistoQuant(ABC):
@@ -60,7 +47,6 @@ class KallistoQuant(ABC):
         self.output_dir = output_dir
         self.number_of_threads = number_of_threads
         self.strandedness_direction = self.parse_strandedness(strandedness)
-        self.logger = logging.getLogger(__name__)
         self.out_prefix = out_prefix
 
     @property
@@ -81,8 +67,7 @@ class KallistoQuant(ABC):
         return self._command
 
     def run(self):
-        self.logger.info('Running kallisto command: %s',
-                         ' '.join(self.command))
+        logger.info('Running kallisto command: %s', ' '.join(self.command))
         subprocess.call(self.command)
 
     @staticmethod
@@ -149,7 +134,7 @@ class KallistoQuantSingleEnd(KallistoQuant):
             assert len(fastqs) == 1
             self.fastq = fastqs[0]
         except AssertionError:
-            self.logger.exception(
+            logger.exception(
                 'More than one input fastqs in single-ended mode.')
             sys.exit(1)
         self._command = shlex.split(

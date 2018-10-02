@@ -130,6 +130,7 @@ workflow rna {
             File genome_flagstat = glob("*_genome_flagstat.txt")[0]
             File anno_flagstat = glob("*_anno_flagstat.txt")[0]
             File log = glob("*_Log.final.out")[0]
+            File python_log = glob("align.log")[0]
         }
 
         runtime {
@@ -160,6 +161,7 @@ workflow rna {
         output {
             Array[File] unique = glob("*niq.bw")
             Array[File] all = glob("*ll.bw")
+            File python_log = glob("bam_to_signals.log")[0]
         }
 
         runtime {
@@ -193,6 +195,7 @@ workflow rna {
         output {
             File genes_results = glob("*.genes.results")[0]
             File isoforms_results = glob("*.isoforms.results")[0]
+            File python_log = glob("rsem_quant.log")[0]
         }
 
         runtime {
@@ -228,6 +231,7 @@ workflow rna {
 
         output {
             File quants = glob("kallisto_out/*_abundance.tsv")[0]
+            File python_log = glob("kallisto_quant.log")[0]
         }
 
         runtime {
@@ -252,6 +256,7 @@ workflow rna {
         output {
             File madQCplot = glob("*_mad_plot.png")[0]
             File madQCmetrics = glob("*_mad_qc_metrics.json")[0]
+            File python_log = glob("mad_qc.log")[0]
         }
 
         runtime {

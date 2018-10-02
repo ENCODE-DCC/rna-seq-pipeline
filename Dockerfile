@@ -54,7 +54,6 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedSort && chmod 
 
 RUN mkdir -p rna-seq-pipeline/src
 COPY /src rna-seq-pipeline/src
-COPY logger_config.json /software/
 ENV PATH="/software/rna-seq-pipeline/src:${PATH}"
 ARG GIT_COMMIT_HASH
 ENV GIT_HASH=${GIT_COMMIT_HASH}

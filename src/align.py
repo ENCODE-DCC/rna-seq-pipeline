@@ -7,20 +7,36 @@ __author__ = 'Otto Jolanki'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-import argparse
-import tarfile
 from abc import ABC, abstractmethod
-import subprocess
-import shlex
+import argparse
+import logging
 import os
+import shlex
+import subprocess
+import tarfile
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+filehandler = logging.FileHandler('align.log')
+filehandler.setLevel(logging.DEBUG)
+consolehandler = logging.StreamHandler()
+consolehandler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
+filehandler.setFormatter(formatter)
+consolehandler.setFormatter(formatter)
+logger.addHandler(consolehandler)
+logger.addHandler(filehandler)
 
 
 def make_aligner(args):
     if args.aligner == 'star':
         if args.endedness == 'single':
+            logger.info('Creating a single-ended aligner.')
             return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB,
                                           args.indexdir, args.bamroot)
         elif args.endedness == 'paired':
+            logger.info('Creating a paired-end aligner.')
             return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB,
                                         args.indexdir, args.bamroot)
 
@@ -51,16 +67,17 @@ def make_modified_TarInfo(archive, target_dir=''):
 
 def get_flagstats(input_path, output_path):
     command = 'samtools flagstat {infile}'.format(infile=input_path)
+    logger.info('Getting samtools flagstats for %s', input_path)
     process = subprocess.run(shlex.split(command), stdout=subprocess.PIPE)
     with open(output_path, 'w') as f:
         f.write(process.stdout.decode())
 
 
 class StarAligner(ABC):
-    '''
+    """
     Abstract base class that gathers aspects common to both PE and SE
     Star aligning jobs.
-    '''
+    """
 
     def __init__(self, ncpus, ramGB, indexdir, bamroot):
         self.ncpus = ncpus
@@ -69,8 +86,7 @@ class StarAligner(ABC):
         self.bamroot = bamroot
 
     def run(self):
-        print('running command:')
-        print(self.command)
+        logger.info('running STAR command %s', ' '.join(self.command))
         subprocess.call(self.command)
 
     @property
@@ -99,15 +115,16 @@ class StarAligner(ABC):
         rsem_valid = rsem_output.decode().strip().split('\n')[-1].endswith(
             'is valid!')
         if rsem_valid:
-            print('Transcriptome bam is already rsem-sorted.')
+            logger.info('Transcriptome bam is already rsem-sorted.')
             os.rename(
                 os.path.join(cwd, 'Aligned.toTranscriptome.out.bam'),
                 os.path.join(cwd, self.bamroot + '_anno.bam'))
         else:
-            print('Rsem-sorting transcriptome bam.')
+            logger.info('Transcriptome bam is not rsem-sorted.')
             rsem_sort_cmd = 'convert-sam-for-rsem {input} {output}'.format(
                 input='Aligned.toTranscriptome.out.bam',
                 output=self.bamroot + '_anno')
+            logger.info('Running %s', rsem_sort_cmd)
             subprocess.call(shlex.split(rsem_sort_cmd))
 
 
@@ -195,7 +212,6 @@ class PairedEndStarAligner(StarAligner):
 
 
 def main(args):
-    print('running {}-end {} aligner'.format(args.endedness, args.aligner))
     with tarfile.open(args.index, 'r:gz') as archive:
         archive.extractall()
     aligner = make_aligner(args)
