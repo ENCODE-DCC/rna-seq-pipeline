@@ -130,6 +130,7 @@ workflow rna {
             File genome_flagstat = glob("*_genome_flagstat.txt")[0]
             File anno_flagstat = glob("*_anno_flagstat.txt")[0]
             File log = glob("*_Log.final.out")[0]
+            File python_log = glob("align.log")[0]
         }
 
         runtime {
