@@ -8,8 +8,18 @@ __version__ = '0.1.0'
 __license__ = 'MIT'
 
 import argparse
-import subprocess
+import logging
 import shlex
+import subprocess
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+filehandler = logging.FileHandler('bam_to_signals.log')
+filehandler.setLevel(logging.DEBUG)
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
+filehandler.setFormatter(formatter)
+logger.addHandler(filehandler)
 
 STAR_COMMAND = '''STAR --runMode inputAlignmentsFromBAM \
                 --inputBAMfile {input_bam} \
@@ -40,7 +50,7 @@ def main(args):
 def call_star(input_bam, strandedness):
     command = STAR_COMMAND.format(
         input_bam=input_bam, strandedness=strandedness.capitalize())
-    print(command)
+    logger.info('Running STAR command %s', command)
     subprocess.call(shlex.split(command))
 
 
@@ -48,11 +58,12 @@ def call_bg_to_bw(input_bg, chrom_sizes, out_fn):
     # sort bedgraph
     bedgraph_cmd = 'bedSort {input_bg} {output_bg}'.format(
         input_bg=input_bg, output_bg=input_bg)
+    logger.info('Sorting bedgraph: %s', bedgraph_cmd)
     subprocess.call(shlex.split(bedgraph_cmd))
     # make bigwig
     command = 'bedGraphToBigWig {input_bg} {chrom_sizes} {out_fn}'.format(
         input_bg=input_bg, chrom_sizes=chrom_sizes, out_fn=out_fn)
-    print(command)
+    logger.info('Building bigWig: %s', command)
     subprocess.call(shlex.split(command))
 
 
