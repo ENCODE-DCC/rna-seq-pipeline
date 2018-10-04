@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
     r-base-core \
     ghostscript && rm -rf /var/lib/apt/lists/*
 
+RUN pip3 install pandas
+
 # Add mountpoint directory
 RUN mkdir /data
 # Stick to Jin's way of organizing the directory structure
