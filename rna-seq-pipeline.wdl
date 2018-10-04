@@ -196,6 +196,7 @@ workflow rna {
             File genes_results = glob("*.genes.results")[0]
             File isoforms_results = glob("*.isoforms.results")[0]
             File python_log = glob("rsem_quant.log")[0]
+            File number_of_genes = glob("*_number_of_genes_detected.json")[0]
         }
 
         runtime {

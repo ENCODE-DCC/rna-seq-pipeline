@@ -9,8 +9,10 @@ __license__ = 'MIT'
 
 from align import make_modified_TarInfo
 import argparse
+import json
 import logging
 import os
+import pandas as pd
 import re
 import shlex
 import subprocess
@@ -60,6 +62,20 @@ def format_endedness(endedness):
         return ''
 
 
+def calculate_number_of_genes_detected(quant_tsv):
+    """Calculates number of rows where value on the column TPM is greater than 1.
+
+    Args:
+        quant_tsv: filename of a .tsv of RSEM quants
+
+    Returns:
+        int number_of_genes_detected: number of entries > 1 in TPM column
+    """
+    quants = pd.read_csv(quant_tsv, sep='\t')
+    number_of_genes_detected = sum(quants['TPM'] > 1)
+    return number_of_genes_detected
+
+
 def main(args):
     remove_bam_from_end_re = re.compile('\.bam$')
     bam_root = remove_bam_from_end_re.sub('', os.path.basename(args.anno_bam))
@@ -77,6 +93,14 @@ def main(args):
             bam_root=bam_root))
     logger.info('Running RSEM command %s', ' '.join(rsem_call))
     subprocess.call(rsem_call)
+    gene_quant_fn = str(bam_root) + '_rsem.genes.results'
+    number_of_genes_detected = calculate_number_of_genes_detected(
+        gene_quant_fn)
+    number_of_genes_detected_dict = {
+        'number_of_genes_detected': number_of_genes_detected
+    }
+    with open(str(bam_root) + '_number_of_genes_detected.json', 'w') as f:
+        json.dump(number_of_genes_detected_dict, f)
 
 
 if __name__ == '__main__':
