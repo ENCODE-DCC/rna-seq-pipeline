@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-'''
+"""
 unittests for compare_md5.py
-'''
+"""
 
 import unittest
 from unittest.mock import patch
