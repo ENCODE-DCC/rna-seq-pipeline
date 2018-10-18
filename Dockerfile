@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     ghostscript && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install pandas
+RUN pip3 install pysam
 
 # Add mountpoint directory
 RUN mkdir /data
