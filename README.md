@@ -16,9 +16,17 @@ HOWTO
 ------
 Howto guides [here](docs/howto.md)
 
-TUTORIALS
+INPUTS
+--------
+Description of the pipeline [inputs](docs/reference.md#inputs)
+
+OUTPUTS
+--------
+Description of the pipeline [outputs](docs/reference.md#outputs)
+
+FAQ
 -----------
-Tutorials [here](docs/tutorials.md)
+FAQ [here](docs/FAQ.md)
 
 REFERENCE
 ----------

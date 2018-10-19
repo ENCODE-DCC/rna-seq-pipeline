@@ -63,7 +63,8 @@ A typical input file looks like this:
     "rna.align_ramGB" : 4,
     "rna.disks" : "local-disk 20 HDD",
     "rna.kallisto.number_of_threads" : 2,
-    "rna.kallisto.ramGB" : 4
+    "rna.kallisto.ramGB" : 4,
+    "rna.rna_qc.tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv"
 }
 ```
 
@@ -80,7 +81,7 @@ Assume you are running a paired end experiment with 3 replicates. The fastq file
 `"rna.fastqs_R2" : ["replicate1_read2.fastq.gz", "replicate2_read2.fastq.gz", "replicate3_read2.fastq.gz"]`  
 Note that it is very important that the replicates are in same order in both lists, this correspondence is used for pairing correct files with each other.
 
-* `rna.aligner` 
+* `rna.aligner` Use `star` aligner, possibly extended to use others in future.
 * `rna.index` Is the index for STAR aligner. 
 * `rna.rsem_index` Is the index for RSEM quantifier.
 * `rna.kallisto.kallisto_index` Is the index for Kallisto quantifier.
@@ -95,9 +96,9 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 * `rna.chrom_sizes` Is the file containing the chromosome sizes. You can find and download the files from [ENCODE portal](https://www.encodeproject.org/references/ENCSR425FOI/).
 * `rna.align_ncpus` How many cpus are available for STAR alignment and RSEM quantification.
 * `rna.align_ramGB` How many GBs of memory are available for STAR alignment and RSEM quantification.
-* `rna.disks` How much disk space is available for pipeline.
+* `rna.disks` How much disk space is available for pipeline. You can also specify the type of disk, `HDD` for a spinning disk and `SSD` for a solid state drive.
 * `rna.kallisto.number_of_threads` How many cpus are available for Kallisto quantification.
-* `rna.kallisto.ramGB` How many GBs of memory are available for Kallisto quantification. You can also specify the type of disk, `HDD` for a spinning disk and `SSD` for a solid state drive. 
+* `rna.kallisto.ramGB` How many GBs of memory are available for Kallisto quantification.
 
 #### Example:
 
@@ -109,9 +110,56 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 
 * `rna.kallisto.fragment_length` Is the average fragment length.
 * `rna.kallisto.sd_of_fragment_length` Is the standard deviation of the fragment lengths.
+* `rna.rna_qc.tr_id_to_gene_type_tsv` rna_qc task calculates the number of reads by gene type. For this a tsv file that contains a mapping from transcript IDs to gene types is provided. For GRCh38, hg19, and mm10 with ERCC (ambion 1) and PhiX spikes the tsv is provided in this repo. If you are using some other annotation, you can use code [here](https://github.com/ENCODE-DCC/transcript_id_to_gene_type_mapping) to build your own.
 
 ## Outputs
 
 1. `DNANexus`: If you choose to use `dxWDL` and run pipelines on DNANexus platform, then output will be stored on the specified output directory without any subdirectories.
 
 2. `Cromwell`: `Cromwell` will store outputs for each task under directory `cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]`. For all tasks `[IDX]` means a zero-based index for each replicate.
+
+### Output files
+
+#### Task Align
+
+* `Genome bam`, file name ends with `_genome.bam`. Bam aligned to genome.
+* `Anno bam`, file name ends with `_anno.bam`. Bam aligned to annotation.
+* `Genome flagstat` file name ends with `_genome_flagstat.txt`. Samtools flagstats on the genome bam.
+* `Anno flagstat` file name ends with `_anno_flagstat.txt`. Samtools flagstats on anno bam.
+* `STAR run log` file name ends with `_Log.final.out`. STAR run log.
+* `Python log` file name is `align.log`. This file contains possible additional information on the pipeline step.
+
+#### Task Kallisto
+
+* `Kallisto quants`, file name ends with `_abundance.tsv`. Kallisto quantifications.
+* `Python log` file name is `kallisto_quant.log`. This file contains possible additional information on the pipeline step.
+
+#### Task Bam to Signals
+
+In case of an stranded run, the plus and minus strand signal tracks are separated (there will be four tracks per replicate).
+
+* `Unique BigWig`, file name ends with `niq.bw`. Contains the signal track of the uniquely mapped reads.
+* `All BigWig`, the file name ends with `ll.bw`. Contains the signal track of all reads.
+* `Python log` file name is `bam_to_signals.log`. This file contains possible additional information on the pipeline step.
+
+#### Task RSEM Quant
+
+* `Genes results`, file name ends with `genes.results`. Contains gene quantifications.
+* `Isoforms results`, file name ends with `isoforms.results`. Contains isoform quantifications.
+* `Number of genes`, file name ends with `_number_of_genes_detected.json`. Contains the number of genes detected, which is determined as `TPM` value being greater than `1`.
+* `Python log` file name is `rsem_quant.log`. This file contains possible additional information on the pipeline step.
+
+### Task Mad QC
+
+This step is run if and only if the number of replicates is 2.
+
+* `Mad QC plot`, file name ends with `_mad_plot.png`. Contains the MAD QC plot.
+* `Mad QC metrics` file name ends with `_mad_qc_metrics.json`. Contains MAD QC metrics.
+* `Python log` file name is `mad_qc.log`. This file contains possible additional information on the pipeline step.
+
+### Task RNA QC
+
+This step calculates additional metrics. At this time the only metric is to calculate reads by gene type. It is very **IMPORTANT** to look at the `Python log` of this step to see that the transcriptome bam did not contain any transcripts that are not present in the transcript ID to gene type mapping tsv. In case that happens, make sure you are using the STAR aligner and RSEM quantifier indexes you think you are using, and that all the other references are correct!
+
+* `RNA QC`, file name ends with `qc.json`. Contains additional QC metrics. For now the reads by gene type.
+* `Python log` file name is `rna_qc.log`. This file contains **IMPORTANT** information on the pipeline step.
