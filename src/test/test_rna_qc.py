@@ -45,6 +45,17 @@ class TestQCMetricRecord(unittest.TestCase):
         self.obj_b = rna_qc.QCMetric('b', {3: 4})
         self.qc_record = rna_qc.QCMetricRecord()
 
+    def test_init_from_list_not_unique(self):
+        metrics = [self.obj_a1, self.obj_a2]
+        with self.assertRaises(AssertionError):
+            rna_qc.QCMetricRecord(metrics)
+
+    def test_init_from_list_success(self):
+        metrics = [self.obj_a1, self.obj_b]
+        record = rna_qc.QCMetricRecord(metrics)
+        self.assertEqual(record.metrics[0], self.obj_a1)
+        self.assertEqual(record.metrics[1], self.obj_b)
+
     def test_add(self):
         self.assertEqual(len(self.qc_record), 0)
         self.qc_record.add(self.obj_a1)

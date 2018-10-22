@@ -69,6 +69,13 @@ class QCMetricRecord(object):
     def __init__(self, metrics=None):
         if metrics is None:
             self._metrics = []
+        else:
+            # names must be unique
+            names = [metric.name for metric in metrics]
+            assert len(names) == len(
+                set(names)), 'Names of metrics have to be unique'
+            metrics.sort()
+            self._metrics = metrics
 
     @property
     def metrics(self):
