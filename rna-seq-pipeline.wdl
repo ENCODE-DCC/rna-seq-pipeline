@@ -99,7 +99,7 @@ workflow rna {
     scatter (i in range(length(align.annobam))) {
         call rna_qc { input:
             input_bam = align.annobam[i],
-            output_filename = "rep"+i+"qc.json",
+            output_filename = "rep"+(i+1)+"qc.json",
             disks = disks,
         }
     }
