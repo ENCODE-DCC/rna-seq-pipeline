@@ -14,7 +14,7 @@ import os
 import shlex
 import subprocess
 
-from collections import OrderedDict
+from rna_qc import QCMetric, QCMetricRecord
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -55,14 +55,14 @@ def main(args):
     logger.info('Running madQC command %s', run_cmd)
     mad_output = subprocess.check_output(shlex.split(run_cmd))
     os.rename('MAplot.png', plot_output_filename)
-    qc_metrics = {}
-    mad_r_metric = OrderedDict(
-        sorted(json.loads(mad_output.decode()).items(), key=lambda x: x[0]))
-    qc_metrics['MAD.R'] = mad_r_metric
+    qc_record = QCMetricRecord()
+    mad_r_metric = json.loads(mad_output.decode())
+    mad_r_metric_obj = QCMetric('MAD.R', mad_r_metric)
+    qc_record.add(mad_r_metric_obj)
     qc_output_fn = '{basename_1}-{basename_2}_mad_qc_metrics.json'.format(
         basename_1=quant_basename1, basename_2=quant_basename2)
     with open(qc_output_fn, 'w') as f:
-        json.dump(qc_metrics, f)
+        json.dump(qc_record.to_ordered_dict(), f)
 
 
 if __name__ == '__main__':

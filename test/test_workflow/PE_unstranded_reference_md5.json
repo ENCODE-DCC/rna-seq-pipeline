@@ -4,5 +4,6 @@
     "rep1PE_unstranded_genome_uniq.bw" : "9d873d1615c2ee4514f231d1e2e2ff7e",
     "rep1PE_unstranded_genome_all.bw" : "b74635ecc6935a33dd0c7c239d1717bd",
     "rep1PE_unstranded_abundance.tsv" : "2e319b57db723e97a1df81547854fed9",
-    "rep1PE_unstranded_anno_number_of_genes_detected.json" : "b424ed9c27f731b3842200aa076f9e5e"
+    "rep1PE_unstranded_anno_number_of_genes_detected.json" : "b424ed9c27f731b3842200aa076f9e5e",
+    "rep1qc.json" : "bd4693de3918fc67db5cf005b52be0c5"
 }
