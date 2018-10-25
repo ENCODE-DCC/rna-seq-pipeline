@@ -95,6 +95,14 @@ workflow rna {
             quants2 = rsem_quant.genes_results[1],
         }
     }
+
+    scatter (i in range(length(align.annobam))) {
+        call rna_qc { input:
+            input_bam = align.annobam[i],
+            output_filename = "rep"+i+"qc.json",
+            disks = disks,
+        }
+    }
 }
 
 
@@ -267,3 +275,26 @@ workflow rna {
         }
     }   
     
+    task rna_qc {
+        File input_bam
+        File tr_id_to_gene_type_tsv
+        String output_filename
+        String? disks
+
+        command {
+            python3 $(which rna_qc.py) \
+                --input_bam ${input_bam} \
+                --tr_id_to_gene_type_tsv ${tr_id_to_gene_type_tsv} \
+                --output_filename ${output_filename}
+        }
+
+        output {
+            File rnaQC = glob("*.json")[0]
+        }
+
+        runtime {
+            cpu: 1
+            memory: "1024 MB"
+            disks: select_first([disks, "local-disk 100 SSD"]) 
+        }
+    }

@@ -7,7 +7,8 @@ import unittest
 from collections import OrderedDict
 from io import StringIO
 from unittest.mock import patch
-
+from pysam import AlignmentFile
+from pysam import AlignedSegment
 
 class TestQCMetric(unittest.TestCase):
     def test_type_check(self):
