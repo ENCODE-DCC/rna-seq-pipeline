@@ -10,8 +10,9 @@
     "rep1SE_unstranded_anno_rsem-rep2SE_unstranded_anno_rsem_mad_plot.png" : "06a82fe46e07b88cfd58f64d01a1e6a9",
     "rep1SE_unstranded_abundance.tsv" : "07de1950ee4bf5fabd4daa92c0ccd423",
     "rep2SE_unstranded_abundance.tsv" : "1efd28ac45dc29b609a01342554d2a9f",
-    "rep1SE_unstranded_anno_number_of_genes_detected.json" : "46d9c80c4bc5b6089461bec9cd32e449",
-    "rep2SE_unstranded_anno_number_of_genes_detected.json" : "b494cad5f1437aa2ac77055973c5aa17",
+    "rep1SE_unstranded_anno_number_of_genes_detected.json" : "e5763e2407983d565c1a12b2d4f4f03b",
+    "rep2SE_unstranded_anno_number_of_genes_detected.json" : "afddf3799f03f27be72f69f5c1fb40b2",
     "rep1qc.json" : "46e640d5d670761ea8b0bfc47db1f10e",
-    "rep2qc.json" : "5e9cc78f2a0223dd09a880e8a0d1db62"
+    "rep2qc.json" : "5e9cc78f2a0223dd09a880e8a0d1db62",
+    "rep1SE_unstranded_anno_rsem-rep2SE_unstranded_anno_rsem_mad_qc_metrics.json" : "d1585b513886921bf3c3e2af58726ea8"
 }
