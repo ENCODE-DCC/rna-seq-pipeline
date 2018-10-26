@@ -14,5 +14,6 @@
     "rna.align_ramGB" : 4,
     "rna.disks" : "local-disk 20 HDD",
     "rna.kallisto.number_of_threads" : 2,
-    "rna.kallisto.ramGB" : 4    
+    "rna.kallisto.ramGB" : 4,
+    "rna.rna_qc.tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv"  
 }

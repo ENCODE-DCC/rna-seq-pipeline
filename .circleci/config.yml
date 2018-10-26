@@ -9,6 +9,11 @@ defaults: &defaults
     - image: circleci/buildpack-deps:xenial-scm
   working_directory: ~/rna-seq-pipeline
 
+python_defaults: &python_defaults
+  docker:
+    - image: quay.io/encode-dcc/rna-seq-pipeline:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}
+  working_directory: ~/rna-seq-pipeline
+
 machine_defaults: &machine_defaults
   machine:
     image: circleci/classic:latest
@@ -50,15 +55,13 @@ install_singularity: &install_singularity
 version: 2
 jobs:
   unittests:
-    docker:
-      - image: circleci/python:3.5
-    working_directory: ~/rna-seq-pipeline
+    <<: *python_defaults
     steps:
       - checkout
       - run:
           command: |
             cd src
-            python -m unittest discover
+            python3 -m unittest discover
 
   build:
     <<: *defaults
@@ -90,7 +93,7 @@ jobs:
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
             cat PE_unstranded_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
 
@@ -106,7 +109,7 @@ jobs:
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
             cat SE_unstranded_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
 
@@ -122,7 +125,7 @@ jobs:
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
             cat PE_stranded_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
 
@@ -139,7 +142,7 @@ jobs:
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG singularity
-            python3 src/compare_md5.py --keys_to_inspect rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
             cat PE_unstranded_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
           no_output_timeout: 30m
@@ -157,7 +160,7 @@ jobs:
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG singularity
-            python3 src/compare_md5.py --keys_to_inspect rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
             cat SE_unstranded_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
           no_output_timeout: 30m
@@ -175,7 +178,7 @@ jobs:
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG singularity
-            python3 src/compare_md5.py --keys_to_inspect rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
             cat PE_stranded_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
           no_output_timeout: 30m
@@ -185,14 +188,14 @@ workflows:
   version: 2
   build_workflow:
     jobs:
-      - unittests:
+      - build:
           filters:
             branches:
               ignore:
                 - PIP-371_markdown
-      - build:
+      - unittests:
           requires:
-            - unittests
+            - build
           filters:
             branches:
               ignore:

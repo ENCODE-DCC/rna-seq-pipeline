@@ -7,14 +7,17 @@ __author__ = 'Otto Jolanki'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-from align import make_modified_TarInfo
 import argparse
+import json
 import logging
 import os
+import pandas as pd
 import re
 import shlex
 import subprocess
 import tarfile
+from align import make_modified_TarInfo
+from rna_qc import QCMetric, QCMetricRecord
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -44,13 +47,19 @@ rsem_index/rsem \
 
 
 def strand_to_fwd_prob(strand):
-    if strand == 'forward':
-        return 1
-    if strand == 'reverse':
-        return 0
-    if strand == 'unstranded':
-        return 0.5
-    raise ValueError('Strand must be forward, reverse or unstranded')
+    """Converts strand into a numeric value that RSEM understands.
+
+    Args:
+        strand: string 'forward', 'reverse', 'unstranded'
+
+    Returns:
+        numeric value corresponding the forward strand probability
+
+    Raises:
+        KeyError if strand is not 'forward', 'reverse' or 'unstranded'
+    """
+    conversion = {'forward': 1, 'unstranded': 0.5, 'reverse': 0}
+    return conversion[strand]
 
 
 def format_endedness(endedness):
@@ -58,6 +67,22 @@ def format_endedness(endedness):
         return '--paired-end'
     else:
         return ''
+
+
+def calculate_number_of_genes_detected(quant_tsv, threshold_of_detection=1):
+    """Calculates number of rows where value on the column TPM is greater than
+    the threshold_of_detection.
+
+    Args:
+        quant_tsv: filename of a .tsv of RSEM quants
+
+    Returns:
+        int number_of_genes_detected: number of entries > threshold_of_detection
+        in TPM column
+    """
+    quants = pd.read_csv(quant_tsv, sep='\t')
+    number_of_genes_detected = sum(quants['TPM'] > threshold_of_detection)
+    return number_of_genes_detected
 
 
 def main(args):
@@ -77,6 +102,18 @@ def main(args):
             bam_root=bam_root))
     logger.info('Running RSEM command %s', ' '.join(rsem_call))
     subprocess.call(rsem_call)
+    gene_quant_fn = str(bam_root) + '_rsem.genes.results'
+    number_of_genes_detected = calculate_number_of_genes_detected(
+        gene_quant_fn)
+    number_of_genes_detected_dict = {
+        'number_of_genes_detected': number_of_genes_detected
+    }
+    qc_record = QCMetricRecord()
+    number_of_genes_QC = QCMetric('number_of_genes_detected', number_of_genes_detected_dict)
+    qc_record.add(number_of_genes_QC)
+
+    with open(str(bam_root) + '_number_of_genes_detected.json', 'w') as f:
+        json.dump(qc_record.to_ordered_dict(), f)
 
 
 if __name__ == '__main__':

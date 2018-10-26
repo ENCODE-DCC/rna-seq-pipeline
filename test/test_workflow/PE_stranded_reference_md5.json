@@ -11,7 +11,12 @@
     "rep2PE_stranded_genome_plusAll.bw" : "0f5c4d502a3560b942e7640ffda4019a",
     "rep2PE_stranded_genome_minusUniq.bw" : "82876a4e77641ba5af4b8b58396022e9",
     "rep2PE_stranded_genome_plusUniq.bw" : "a27151499caf7e7da096f864b3e178d0",
-    "rep1PE_stranded_anno_rsem-rep2PE_stranded_anno_rsem_mad_plot.png" : "51de8087ab19c41354c1160c337ef707",
+    "rep1PE_stranded_anno_rsem-rep2PE_stranded_anno_rsem_mad_plot.png" : "1d30c776326377be24e68b056ce57405",
+    "rep1PE_stranded_anno_rsem-rep2PE_stranded_anno_rsem_mad_qc_metrics.json" : "acc5dfbba14837082a9cc283d18a4b0c",
     "rep1PE_stranded_abundance.tsv" : "66620fd42cf8c91984565d478e0ced6a",
-    "rep2PE_stranded_abundance.tsv" : "978043aa488549b864bdb1da1ef8e51b"
+    "rep2PE_stranded_abundance.tsv" : "978043aa488549b864bdb1da1ef8e51b",
+    "rep1PE_stranded_anno_number_of_genes_detected.json" : "0fe77b2bd349f7e3fe6cc84d1117f694",
+    "rep2PE_stranded_anno_number_of_genes_detected.json" : "372623d436e5cf297e03bd6d3472ffd7",
+    "rep1qc.json" : "3f868f57d62913694e06be2e5e20249a",
+    "rep2qc.json" : "7637c3f7a2d7f1ddb813869fe2c043d8"
 }

@@ -7,11 +7,25 @@ __author__ = 'Otto Jolanki'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-import hashlib
-import os
 import argparse
+import hashlib
 import json
+import logging
+import os
 import sys
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+filehandler = logging.FileHandler('compare_md5.log')
+filehandler.setLevel(logging.DEBUG)
+consolehandler = logging.StreamHandler()
+consolehandler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
+filehandler.setFormatter(formatter)
+consolehandler.setFormatter(formatter)
+logger.addHandler(consolehandler)
+logger.addHandler(filehandler)
 
 
 class FileWithMd5(object):
@@ -20,8 +34,8 @@ class FileWithMd5(object):
     Attributes:
         filepath: The path to the file.
         basename: The basename of the filepath
-        __md5: string that contains the md5 sum of the file. Calculated once when needed
-               the first time, and then looked up.
+        __md5: string that contains the md5 sum of the file. Calculated once
+        when needed the first time, and then looked up.
     """
 
     def __init__(self, filepath):
@@ -89,7 +103,7 @@ def main(args):
             for item in output[key]:
                 input_files.append(item)
         except KeyError:
-            print('Key to inspect was not found in the output!')
+            logger.exception('Key %s was not found in the output!', key)
             sys.exit(-1)
 
     files_to_inspect = [get_file_with_md5(file) for file in input_files]
@@ -105,7 +119,7 @@ def main(args):
             md5_match_by_file[key] = match
             match_overall &= match
     except KeyError:
-        print('key not found')
+        logger.exception('Key %s not found', key)
         match_overall = False
         md5_match_by_file['match_overall'] = False
     else:
