@@ -290,6 +290,7 @@ workflow rna {
 
         output {
             File rnaQC = glob("*.json")[0]
+            File python_log = glob("rna_qc.log")[0]
         }
 
         runtime {

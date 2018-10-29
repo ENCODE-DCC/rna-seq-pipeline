@@ -182,9 +182,13 @@ def get_gene_type_counts(tr_to_gene_type_map, bampath):
         if read.is_secondary or read.is_unmapped or read.is_qcfail or read.is_duplicate:
             continue
         else:
-            reference_name = read.reference_name
-            gene_type = tr_to_gene_type_map[reference_name]
-            reads_by_gene_type[gene_type] += 1
+            try:
+                reference_name = read.reference_name
+                gene_type = tr_to_gene_type_map[reference_name]
+                reads_by_gene_type[gene_type] += 1
+            except KeyError:
+                logger.exception('Transcript ID %s not found in mapping!',
+                                 read.reference_name)
     return reads_by_gene_type
 
 
