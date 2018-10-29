@@ -178,6 +178,7 @@ def get_gene_type_counts(tr_to_gene_type_map, bampath):
     """
     bamfile = pysam.AlignmentFile(bampath, 'rb')
     reads_by_gene_type = {key: 0 for key in set(tr_to_gene_type_map.values())}
+    reads_by_gene_type.update({'transcript_id_not_found': 0})
     for read in bamfile.fetch(until_eof=True):
         if read.is_secondary or read.is_unmapped or read.is_qcfail or read.is_duplicate:
             continue
@@ -189,6 +190,7 @@ def get_gene_type_counts(tr_to_gene_type_map, bampath):
             except KeyError:
                 logger.exception('Transcript ID %s not found in mapping!',
                                  read.reference_name)
+                reads_by_gene_type['transcript_id_not_found'] += 1
     return reads_by_gene_type
 
 
