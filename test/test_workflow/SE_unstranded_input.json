@@ -16,5 +16,7 @@
     "rna.kallisto.ramGB" : 4,
     "rna.kallisto.fragment_length" : 250,
     "rna.kallisto.sd_of_fragment_length" : 10,
-    "rna.rna_qc.tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv"
+    "rna.rna_qc.tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.bam_to_signals.ncpus" : 1,
+    "rna.bam_to_signals.ramGB" : 2
 }

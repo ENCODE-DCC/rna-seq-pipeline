@@ -60,8 +60,6 @@ workflow rna {
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
             bamroot = "rep"+(i+1)+bamroot+"_genome",
-            ncpus = align_ncpus,
-            ramGB = align_ramGB,
             disks = disks,
         }
 
