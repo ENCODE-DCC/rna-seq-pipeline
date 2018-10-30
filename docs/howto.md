@@ -73,7 +73,9 @@ Make sure you have completed the steps for installation and Google Cloud setup d
     "rna.disks" : "local-disk 20 HDD",
     "rna.kallisto.number_of_threads" : 2,
     "rna.kallisto.ramGB" : 4,
-    "rna.rna_qc.tr_id_to_gene_type_tsv" : "gs://[YOUR_BUCKET_NAME]/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv"
+    "rna.rna_qc.tr_id_to_gene_type_tsv" : "gs://[YOUR_BUCKET_NAME]/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.bam_to_signals.ncpus" : 1,
+    "rna.bam_to_signals.ramGB" : 2
 }
 ```
 
@@ -133,7 +135,9 @@ The goal is to run a Single Ended, non strand specific experiment on a local com
     "rna.kallisto.ramGB" : 4,
     "rna.kallisto.fragment_length" : 250,
     "rna.kallisto.sd_of_fragment_length" : 10,
-    "rna.rna_qc.tr_id_to_gene_type_tsv" : "<path-to-repo>/rna-seq-pipeline/transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv"
+    "rna.rna_qc.tr_id_to_gene_type_tsv" : "<path-to-repo>/rna-seq-pipeline/transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.bam_to_signals.ncpus" : 1,
+    "rna.bam_to_signals.ramGB" : 2
 }
 ```
 
@@ -191,7 +195,9 @@ The goal is to run a Paired End, non strand specific experiment on DNA Nexus pla
     "rna.disks" : "local-disk 20 HDD",
     "kallisto.number_of_threads" : 2,
     "kallisto.ramGB" : 4,
-    "rna_qc.tr_id_to_gene_type_tsv" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv"    
+    "rna_qc.tr_id_to_gene_type_tsv" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "bam_to_signals.ncpus" : 1,
+    "bam_to_signals.ramGB" : 2
 }
 ```
 

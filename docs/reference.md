@@ -64,7 +64,9 @@ A typical input file looks like this:
     "rna.disks" : "local-disk 20 HDD",
     "rna.kallisto.number_of_threads" : 2,
     "rna.kallisto.ramGB" : 4,
-    "rna.rna_qc.tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv"
+    "rna.rna_qc.tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.bam_to_signals.ncpus" : 1,
+    "rna.bam_to_signals.ramGB" : 2
 }
 ```
 
@@ -111,7 +113,8 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 * `rna.kallisto.fragment_length` Is the average fragment length.
 * `rna.kallisto.sd_of_fragment_length` Is the standard deviation of the fragment lengths.
 * `rna.rna_qc.tr_id_to_gene_type_tsv` rna_qc task calculates the number of reads by gene type. For this a tsv file that contains a mapping from transcript IDs to gene types is provided. For GRCh38, hg19, and mm10 with ERCC (ambion 1) and PhiX spikes the tsv is provided in this repo. If you are using some other annotation, you can use code [here](https://github.com/ENCODE-DCC/transcript_id_to_gene_type_mapping) to build your own.
-
+* `rna.bam_to_signals.ncpus` Is the number of cpus given to bam_to_signals task.
+* `rna.bam_to_signals.ramGB` Is the amount of memory in GB given to bam_to_signals task.
 ## Outputs
 
 1. `DNANexus`: If you choose to use `dxWDL` and run pipelines on DNANexus platform, then output will be stored on the specified output directory without any subdirectories.
