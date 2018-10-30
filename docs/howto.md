@@ -12,6 +12,7 @@ Before following these instructions, make sure you have completed installation a
 [DNA Nexus](howto.md#dna-nexus)  
 [Local with Singularity](howto.md#local-with-singularity)  
 [Sherlock with Singularity](howto.md#sherlock-with-singularity)  
+[SLURM](howto.md#slurm)
 
 ## Building indexes
 
@@ -322,6 +323,44 @@ The default SLURM partition is `normal`. If you want to use some other partition
 ```
 
 8. See the outputs in `cromwell-executions/rna/[RUNHASH]`.
+
+# SLURM
+
+Using a generic SLURM cluster should be quite similar to the Stanford Sherlock (which is a SLURM machine of a specific kind). The main differences are the you must (most likely) [install](installation.md#singularity) singularity, and edit `workflow_opts/slurm.json` to include your information, and the directories that contain your input data.
+
+* Singularity version has to be `>=2.5.2`
+
+The `slurm.json` template file looks like this:
+
+```
+{
+    "default_runtime_attributes" : {
+      "slurm_partition": "[YOUR_SLURM_PARTITION]",
+      "slurm_account": "[YOUR_SLURM_ACCOUNT]",
+      "singularity_container" : "~/.singularity/rna-seq-pipeline-template.simg",
+      "singularity_command_options" : "--bind /your/,[DATA_DIR1],[DATA_DIR2],..."
+    }
+}
+```
+
+1. Setup your partition, account and data:
+
+Set your partition/account in workflow_opts/slurm.json. If your SLURM cluster does not require either user's partition or account information, then remove them from this file. Otherwise, `YOUR_SLURM_PARTITON` or `YOUR_SLURM_ACCOUNT` will be used internally for `srun ... --partition YOUR_SLURM_PARTITION` and `srun ... --account YOUR_SLURM_PARTITION`, respectively.
+
+2. Build the singularity image:
+
+```bash
+  $ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:template
+```
+
+3. Run the pipeline:
+
+```bash
+  $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=slurm_singularity cromwell-34.jar run rna-seq-pipeline.wdl -i [INPUT] -o workflow_opts/slurm.json
+```
+
+
+On the `"singularity_command_options"` line, add the paths to the directories that contain your input data. This is comma separated, and can include several items.
 
 # BUILDING INDEXES
 
