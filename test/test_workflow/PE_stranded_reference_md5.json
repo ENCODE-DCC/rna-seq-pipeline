@@ -17,6 +17,6 @@
     "rep2PE_stranded_abundance.tsv" : "978043aa488549b864bdb1da1ef8e51b",
     "rep1PE_stranded_anno_number_of_genes_detected.json" : "0fe77b2bd349f7e3fe6cc84d1117f694",
     "rep2PE_stranded_anno_number_of_genes_detected.json" : "372623d436e5cf297e03bd6d3472ffd7",
-    "rep1qc.json" : "52b4c5266918672b8d1b68d5076c3c02",
-    "rep2qc.json" : "df4ccf99aab7e9c03449b7dd443b57da"
+    "rep1PE_stranded_qc.json" : "52b4c5266918672b8d1b68d5076c3c02",
+    "rep2PE_stranded_qc.json" : "df4ccf99aab7e9c03449b7dd443b57da"
 }
