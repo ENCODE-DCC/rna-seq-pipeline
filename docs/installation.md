@@ -1,10 +1,10 @@
 # INSTALLATION
 
-To run the pipeline you need to install following software. Running the pipeline on Google Cloud or DNA Nexus requires additional setup detailed below.
+To run the pipeline you need to install following software. Running the pipeline on Google Cloud or DNAnexus requires additional setup detailed below.
 
 ## Java 8
 
-Java is required to run execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) and WDL-to-DNANexus compiler [dxWDL](https://github.com/dnanexus/dxWDL).
+Java is required to run execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) and WDL-to-DNAnexus compiler [dxWDL](https://github.com/dnanexus/dxWDL).
 To check which Java version you already have, run:
 ```bash
   $ java -version
@@ -54,15 +54,15 @@ If you are intending to run the pipeline on Google Cloud platform, the following
 
 * For an example on how to run the pipeline on Google Cloud, see [HOWTO](howto.md#google-cloud).
 
-## DNA Nexus
+## DNAnexus
 
-If you are intending to build and run the pipeline on DNA Nexus, the following setup is needed:
+If you are intending to build and run the pipeline on DNAnexus, the following setup is needed:
 
-1. Sign up for a [DNANexus account](https://platform.dnanexus.com/register).
+1. Sign up for a [DNAnexus account](https://platform.dnanexus.com/register).
 
 2. Create a new [DX project](https://platform.dnanexus.com/projects) with name `[YOUR_PROJECT_NAME]` by clicking on "+New Project" on the top left.
 
-3. Install [DNA Nexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK). Run `dx login` to log in to the platform using your credentials.
+3. Install [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK). Run `dx login` to log in to the platform using your credentials.
 
 4. Download dxWDL:
     ```bash 
@@ -74,4 +74,4 @@ If you are intending to build and run the pipeline on DNA Nexus, the following s
       $ chmod 755 dxWDL-0.75.jar
     ```
 
-* For an example on how to run the pipeline on DNA Nexus, see [HOWTO](howto.md#dna-nexus)
+* For an example on how to run the pipeline on DNAnexus, see [HOWTO](howto.md#dna-nexus)

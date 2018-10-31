@@ -9,7 +9,7 @@ Before following these instructions, make sure you have completed installation a
 
 [Google Cloud](howto.md#google-cloud)  
 [Local with Docker](howto.md#local-with-docker)  
-[DNA Nexus](howto.md#dna-nexus)  
+[DNAnexus](howto.md#dna-nexus)  
 [Local with Singularity](howto.md#local-with-singularity)  
 [Sherlock with Singularity](howto.md#sherlock-with-singularity)  
 [SLURM](howto.md#slurm)
@@ -154,9 +154,9 @@ Replace `[PATH_TO_REPO]` with the location you cloned the code into.
 5. See the outputs in `cromwell-executions/rna/[RUNHASH]`. See [reference](reference.md) for details about the output directory structure.
 
 
-## DNA Nexus
+## DNAnexus
 
-The goal is to run a Paired End, non strand specific experiment on DNA Nexus platform. Before starting, make sure you have created a DNA Nexus account, created a new project `[YOUR_PROJECT_NAME]`, installed the [DNA Nexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK), and downloaded dxWDL as detailed in the [installation instructions](installation.md#dna-nexus).
+The goal is to run a Paired End, non strand specific experiment on DNAnexus platform. Before starting, make sure you have created a DNAnexus account, created a new project `[YOUR_PROJECT_NAME]`, installed the [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK), and downloaded dxWDL as detailed in the [installation instructions](installation.md#dna-nexus).
 
 1. Get the code and move to the repo directory:
 
@@ -172,9 +172,9 @@ The goal is to run a Paired End, non strand specific experiment on DNA Nexus pla
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx 
 ``` 
 
-3. Go to [DNA Nexus website](https://www.dnanexus.com) and navigate to `[YOUR_PROJECT_NAME]`. Create a `test_run` directory with subdirectories `inputs`, `output`, `reference` and `workflow` (You can organize the directories any way you want, but this is one way to keep organized).
+3. Go to [DNAnexus website](https://www.dnanexus.com) and navigate to `[YOUR_PROJECT_NAME]`. Create a `test_run` directory with subdirectories `inputs`, `output`, `reference` and `workflow` (You can organize the directories any way you want, but this is one way to keep organized).
 
-4. Upload files from `test_data` folder into your DNA Nexus project. Put `ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz` and `ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz` into `inputs` folder. Put `GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz`, `GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz`, `Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx` and `GRCh38_EBV.chrom.sizes` into `reference` folder.
+4. Upload files from `test_data` folder into your DNAnexus project. Put `ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz` and `ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz` into `inputs` folder. Put `GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz`, `GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz`, `Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx` and `GRCh38_EBV.chrom.sizes` into `reference` folder.
 
 5. Setup the `input.json`: 
     Copy the following into `input.json` in your favorite text editor.
@@ -210,11 +210,11 @@ Replace `[YOUR_PROJECT_NAME]` with the actual name of the project you created.
   $ java -jar dxWDL-0.75.jar compile rna-seq-pipeline.wdl -project [YOUR_PROJECT_NAME] -f -folder /test_run/workflow -defaults input.json -extras workflow_opts/docker.json
 ```
 
-7. Go to DNANexus [project page](https://platform.dnanexus.com/projects) and click on your project.
+7. Go to DNAnexus [project page](https://platform.dnanexus.com/projects) and click on your project.
 
 8. Move to the directory `/test_run/workflow`
 
-9. You will find a DNA Nexus workflow called `rna` with all inputs and parameters defined. Click the `rna` workflow, and in the window that opens click `Workflow Actions` button in the upper right corner, and from the dropdown menu choose `Set output folder` and set `/test_run/output` as the output folder.
+9. You will find a DNAnexus workflow called `rna` with all inputs and parameters defined. Click the `rna` workflow, and in the window that opens click `Workflow Actions` button in the upper right corner, and from the dropdown menu choose `Set output folder` and set `/test_run/output` as the output folder.
 
 10. Click the green `Run as Analysis` button to start the pipeline. You will be automatically redirected into the Monitor tab, where you can observe the pipeline run.
 
