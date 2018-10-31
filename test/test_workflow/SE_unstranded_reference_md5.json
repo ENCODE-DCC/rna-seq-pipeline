@@ -12,7 +12,7 @@
     "rep2SE_unstranded_abundance.tsv" : "1efd28ac45dc29b609a01342554d2a9f",
     "rep1SE_unstranded_anno_number_of_genes_detected.json" : "e5763e2407983d565c1a12b2d4f4f03b",
     "rep2SE_unstranded_anno_number_of_genes_detected.json" : "afddf3799f03f27be72f69f5c1fb40b2",
-    "rep1qc.json" : "304a158935325e2cd87ac01e663a3315",
-    "rep2qc.json" : "a156e94d66a01d6184b1d08e7ca69294",
+    "rep1SE_unstranded_qc.json" : "304a158935325e2cd87ac01e663a3315",
+    "rep2SE_unstranded_qc.json" : "a156e94d66a01d6184b1d08e7ca69294",
     "rep1SE_unstranded_anno_rsem-rep2SE_unstranded_anno_rsem_mad_qc_metrics.json" : "d1585b513886921bf3c3e2af58726ea8"
 }
