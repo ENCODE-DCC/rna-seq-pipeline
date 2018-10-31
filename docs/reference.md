@@ -125,44 +125,44 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 
 #### Task Align
 
-* `Genome bam`, file name ends with `_genome.bam`. Bam aligned to genome.
-* `Anno bam`, file name ends with `_anno.bam`. Bam aligned to annotation.
-* `Genome flagstat` file name ends with `_genome_flagstat.txt`. Samtools flagstats on the genome bam.
-* `Anno flagstat` file name ends with `_anno_flagstat.txt`. Samtools flagstats on anno bam.
-* `STAR run log` file name ends with `_Log.final.out`. STAR run log.
+* `Genome bam`, file name matches `*_genome.bam`. Bam aligned to genome.
+* `Anno bam`, file name matches `*_anno.bam`. Bam aligned to annotation.
+* `Genome flagstat` file name matches `*_genome_flagstat.txt`. Samtools flagstats on the genome bam.
+* `Anno flagstat` file name matches `*_anno_flagstat.txt`. Samtools flagstats on anno bam.
+* `STAR run log` file name matches `*_Log.final.out`. STAR run log.
 * `Python log` file name is `align.log`. This file contains possible additional information on the pipeline step.
 
 #### Task Kallisto
 
-* `Kallisto quants`, file name ends with `_abundance.tsv`. Kallisto quantifications.
+* `Kallisto quants`, file name matches `*_abundance.tsv`. Kallisto quantifications.
 * `Python log` file name is `kallisto_quant.log`. This file contains possible additional information on the pipeline step.
 
 #### Task Bam to Signals
 
 In case of an stranded run, the plus and minus strand signal tracks are separated (there will be four tracks per replicate).
 
-* `Unique BigWig`, file name ends with `niq.bw`. Contains the signal track of the uniquely mapped reads.
-* `All BigWig`, the file name ends with `ll.bw`. Contains the signal track of all reads.
+* `Unique BigWig`, file name matches `*niq.bw`. Contains the signal track of the uniquely mapped reads.
+* `All BigWig`, the file name matches `*ll.bw`. Contains the signal track of all reads.
 * `Python log` file name is `bam_to_signals.log`. This file contains possible additional information on the pipeline step.
 
 #### Task RSEM Quant
 
-* `Genes results`, file name ends with `genes.results`. Contains gene quantifications.
-* `Isoforms results`, file name ends with `isoforms.results`. Contains isoform quantifications.
-* `Number of genes`, file name ends with `_number_of_genes_detected.json`. Contains the number of genes detected, which is determined as `TPM` value being greater than `1`.
+* `Genes results`, file name matches `*.genes.results`. Contains gene quantifications.
+* `Isoforms results`, file name matches `*.isoforms.results`. Contains isoform quantifications.
+* `Number of genes`, file name matches `*_number_of_genes_detected.json`. Contains the number of genes detected, which is determined as `TPM` value being greater than `1`.
 * `Python log` file name is `rsem_quant.log`. This file contains possible additional information on the pipeline step.
 
 ### Task Mad QC
 
 This step is run if and only if the number of replicates is 2.
 
-* `Mad QC plot`, file name ends with `_mad_plot.png`. Contains the MAD QC plot.
-* `Mad QC metrics` file name ends with `_mad_qc_metrics.json`. Contains MAD QC metrics.
+* `Mad QC plot`, file name matches `*_mad_plot.png`. Contains the MAD QC plot.
+* `Mad QC metrics` file name matches `*_mad_qc_metrics.json`. Contains MAD QC metrics.
 * `Python log` file name is `mad_qc.log`. This file contains possible additional information on the pipeline step.
 
 ### Task RNA QC
 
 This step calculates additional metrics. At this time the only metric is to calculate reads by gene type. It is very **IMPORTANT** to look at the `Python log` of this step to see that the transcriptome bam did not contain any transcripts that are not present in the transcript ID to gene type mapping tsv. In case that happens, make sure you are using the STAR aligner and RSEM quantifier indexes you think you are using, and that all the other references are correct!
 
-* `RNA QC`, file name ends with `qc.json`. Contains additional QC metrics. For now the reads by gene type.
+* `RNA QC`, file name matches `*.json`. Contains additional QC metrics. For now the reads by gene type.
 * `Python log` file name is `rna_qc.log`. This file contains **IMPORTANT** information on the pipeline step.

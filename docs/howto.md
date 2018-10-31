@@ -120,15 +120,15 @@ The goal is to run a Single Ended, non strand specific experiment on a local com
 ```
 {
     "rna.endedness" : "single",
-    "rna.fastqs_R1" : ["<path-to-repo>/rna-seq-pipeline/test_data/rep1_ENCSR510QZW_chr19only_10000_reads.fastq.gz","<path-to-repo>/rna-seq-pipeline/test_data/rep2_ENCSR510QZW_chr19only_10000_reads.fastq.gz"],
+    "rna.fastqs_R1" : ["[PATH_TO_REPO]/rna-seq-pipeline/test_data/rep1_ENCSR510QZW_chr19only_10000_reads.fastq.gz","<path-to-repo>/rna-seq-pipeline/test_data/rep2_ENCSR510QZW_chr19only_10000_reads.fastq.gz"],
     "rna.aligner" : "star",
     "rna.bamroot" : "SE_unstranded",
-    "rna.index" : "<path-to-repo>/rna-seq-pipeline/test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
-    "rna.rsem_index" : "<path-to-repo>/rna-seq-pipeline/test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
-    "rna.kallisto.kallisto_index" : "<path-to-repo>/rna-seq-pipeline/test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+    "rna.index" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+    "rna.rsem_index" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
+    "rna.kallisto.kallisto_index" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
     "rna.strandedness" : "unstranded",
     "rna.strandedness_direction" : "unstranded",
-    "rna.chrom_sizes" : "<path-to-repo>/rna-seq-pipeline/test_data/GRCh38_EBV.chrom.sizes",
+    "rna.chrom_sizes" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/GRCh38_EBV.chrom.sizes",
     "rna.align_ncpus" : 2,
     "rna.align_ramGB" : 4,
     "rna.disks" : "local-disk 20 HDD",
@@ -136,13 +136,13 @@ The goal is to run a Single Ended, non strand specific experiment on a local com
     "rna.kallisto.ramGB" : 4,
     "rna.kallisto.fragment_length" : 250,
     "rna.kallisto.sd_of_fragment_length" : 10,
-    "rna.rna_qc.tr_id_to_gene_type_tsv" : "<path-to-repo>/rna-seq-pipeline/transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.rna_qc.tr_id_to_gene_type_tsv" : "[PATH_TO_REPO]/rna-seq-pipeline/transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
     "rna.bam_to_signals.ncpus" : 1,
     "rna.bam_to_signals.ramGB" : 2
 }
 ```
 
-    Replace `<path-to-repo>` with the location you cloned the code into.
+Replace `[PATH_TO_REPO]` with the location you cloned the code into.
 
 
 4. Run the pipeline:
