@@ -1,9 +1,0 @@
-{
-    "rna.fastqs_R1" : ["dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FBB8Jk80g45j6zY82Z1XKGKY", "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FBB8Jk80g45kJqz2894FX57Z", "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FBB8Jk80g45vf4163b5fJJ1x"],
-    "rna.fastqs_R2" : ["dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FBB8Jk80g45qvFV483fy2gx1", "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FBB8Jk80g45vf4163b5fJJ1q", "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FBB8Jk80g45XZbjX3Zybj19K"],
-    "rna.aligner" : "star",
-    "rna.index" : "dx://project-FBG4zQQ0jFfbkqzJGQQkgZYv:file-FB32zQ80jb2KkBZg165FZj31",
-    "rna.endedness" : "paired",
-    "rna.align_ncpus" : 16,
-    "rna.align_ramGB" : 120
-}
