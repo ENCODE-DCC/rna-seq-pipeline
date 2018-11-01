@@ -25,7 +25,7 @@ Before following these instructions, make sure you have completed installation a
 
 ## Google Cloud
 
-The goal is to run a Paired End, strand specific experiment on Google Cloud Platform.
+The goal is to run a paired-end, strand-specific experiment on Google Cloud Platform.
 Make sure you have completed the steps for installation and Google Cloud setup described in the [installation instructions](installation.md#google-cloud). The following assumes your Google Cloud project is `[YOUR_PROJECT]`, you have created a bucket into `gs://[YOUR_BUCKET_NAME]`, and also directories `inputs`, `output` and `reference` in the bucket.
 
 1. Get the code and move to the repo directory:
@@ -95,7 +95,7 @@ Replace `[YOUR_PROJECT]` with the project id of the project you created, and `[Y
 
 ## Local with Docker
 
-The goal is to run a Single Ended, non strand specific experiment on a local computer. 
+The goal is to run a single-end, non-strand-specific experiment on a local computer. 
 
 1. Get the code:
 
@@ -156,7 +156,7 @@ Replace `[PATH_TO_REPO]` with the location you cloned the code into.
 
 ## DNAnexus
 
-The goal is to run a Paired End, non strand specific experiment on DNAnexus platform. Before starting, make sure you have created a DNAnexus account, created a new project `[YOUR_PROJECT_NAME]`, installed the [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK), and downloaded dxWDL as detailed in the [installation instructions](installation.md#dna-nexus).
+The goal is to run a paired-end, non-strand-specific experiment on DNAnexus platform. Before starting, make sure you have created a DNAnexus account, created a new project `[YOUR_PROJECT_NAME]`, installed the [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK), and downloaded dxWDL as detailed in the [installation instructions](installation.md#dna-nexus).
 
 1. Get the code and move to the repo directory:
 
@@ -223,7 +223,7 @@ Replace `[YOUR_PROJECT_NAME]` with the actual name of the project you created.
 
 ## Local with Singularity
 
-The goal is to run Single End non strand specific experiment locally using singularity.
+The goal is to run single-end non-strand-specific experiment locally using singularity.
 
 1. Make sure you have singularity version greater or equal to `2.5.2` installed in your system. 
 
@@ -256,7 +256,7 @@ $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=singularity cr
 
 ## Sherlock with Singularity
 
-The goal is to run a paired end, strand specific experiment on Sherlock using singularity.
+The goal is to run a paired-end, strand-specific experiment on Sherlock using singularity.
 
 1. SSH into Sherlock's login node:
 
@@ -326,7 +326,7 @@ The default SLURM partition is `normal`. If you want to use some other partition
 
 # SLURM
 
-Using a generic SLURM cluster should be quite similar to the Stanford Sherlock (which is a SLURM machine of a specific kind). The main differences are the you must (most likely) [install](installation.md#singularity) singularity, and edit `workflow_opts/slurm.json` to include your information, and the directories that contain your input data.
+Using a generic SLURM cluster should be quite similar to the Stanford Sherlock (which is a SLURM machine of a specific kind). The main differences are that you must (most likely) [install](installation.md#singularity) singularity, and edit `workflow_opts/slurm.json` to include your information, and the directories that contain your input data.
 
 * Singularity version has to be `>=2.5.2`
 
