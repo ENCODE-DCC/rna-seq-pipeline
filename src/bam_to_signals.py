@@ -34,7 +34,14 @@ STAR_COMMAND = '''STAR --runMode inputAlignmentsFromBAM \
 
 def main(args):
     print(args)
-    call_star(args.bamfile, args.strandedness)
+    star_return_code = call_star(args.bamfile, args.strandedness)
+    
+    try:
+        assert star_return_code == 0
+    except AssertionError:
+        logger.exception('Building bedGraph had a problem, most likely out of memory.')
+        raise
+        
     if args.strandedness == 'stranded':
         call_bg_to_bw('Signal.UniqueMultiple.str1.out.bg', args.chrom_sizes,
                       args.bamroot + '_minusAll.bw')
@@ -55,7 +62,8 @@ def call_star(input_bam, strandedness):
     command = STAR_COMMAND.format(
         input_bam=input_bam, strandedness=strandedness.capitalize())
     logger.info('Running STAR command %s', command)
-    subprocess.call(shlex.split(command))
+    return_code = subprocess.call(shlex.split(command))
+    return return_code
 
 
 def call_bg_to_bw(input_bg, chrom_sizes, out_fn):
