@@ -11,6 +11,7 @@ import argparse
 import logging
 import shlex
 import subprocess
+import sys
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -41,7 +42,8 @@ def main(args):
     except AssertionError:
         logger.exception('Building bedGraph had a problem, most likely out of memory.')
         raise
-        
+        sys.exit(1)
+
     if args.strandedness == 'stranded':
         call_bg_to_bw('Signal.UniqueMultiple.str1.out.bg', args.chrom_sizes,
                       args.bamroot + '_minusAll.bw')
