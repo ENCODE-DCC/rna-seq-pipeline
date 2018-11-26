@@ -41,7 +41,6 @@ def main(args):
         assert star_return_code == 0
     except AssertionError:
         logger.exception('Building bedGraph had a problem, most likely out of memory.')
-        raise
         sys.exit(1)
 
     if args.strandedness == 'stranded':
