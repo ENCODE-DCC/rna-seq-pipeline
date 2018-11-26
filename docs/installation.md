@@ -19,7 +19,7 @@ Follow instructions for [mac](https://docs.docker.com/docker-for-mac/install/) o
 
 ## Singularity
 
-If for some reason (most likely because of limitations on your HPC resource) you cannot run Docker, install [singularity](https://www.sylabs.io/guides/2.6/user-guide/installation.html) and have a look at [HOWTO](howto.md#local-with-singularity) for an example of how to run pipeline with singularity. Pipeline requires singularity version `>=2.5.2`, the link takes you to version `2.6.0`.
+If for some reason you cannot run Docker, install [singularity](https://www.sylabs.io/guides/2.6/user-guide/installation.html) and have a look at [HOWTO](howto.md#local-with-singularity) for an example of how to run pipeline with singularity. Pipeline requires singularity version `>=2.5.2`, the link takes you to version `2.6.0`.
 
 ## Google Cloud
 
@@ -32,7 +32,7 @@ If you are intending to run the pipeline on Google Cloud platform, the following
 5. Create a [Google Cloud Storage bucket](https://console.cloud.google.com/storage/browser) `gs://[YOUR_BUCKET_NAME]` by clicking on a button "CREATE BUCKET" and create it to store pipeline outputs.
 6. Find and enable following APIs in your [API Manager](https://console.developers.google.com/apis/library). Click a back button on your web brower after enabling each.
     * Compute Engine API
-    * Google Cloud Storage (DO NOT click on "Create credentials")
+    * Google Cloud Storage
     * Google Cloud Storage JSON API
     * Genomics API
 

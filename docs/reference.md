@@ -93,7 +93,7 @@ Note that it is very important that the replicates are in same order in both lis
 
 Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixed by `rep1FOO` and outputs from second replicate would be prefixed by `rep2FOO` etc.
 
-* `rna.strandedness` Indicates whether the experiment is `stranded` or `unstranded`.
+* `rna.strandedness` Indicates whether the experiment is `stranded` or `unstranded`. If this is `stranded`, then the `rna.strandedness_direction` should be set to `forward` or `reverse`.
 * `rna.strandedness_direction` Indicates the direction of strandedness. Options are `forward`, `reverse` and `unstranded`.
 * `rna.chrom_sizes` Is the file containing the chromosome sizes. You can find and download the files from [ENCODE portal](https://www.encodeproject.org/references/ENCSR425FOI/).
 * `rna.align_ncpus` How many cpus are available for STAR alignment and RSEM quantification.
@@ -106,15 +106,17 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 
 Assume you want to allocate 100 gigabytes of spinning hard drive. In this case you would enter `"local-disk 100 HDD"`. If you want to allocate 111 gigabytes of solid state drive space, enter `"local-disk 111 SSD"`.
 
+* `rna.rna_qc.tr_id_to_gene_type_tsv` rna_qc task calculates the number of reads by gene type. For this a tsv file that contains a mapping from transcript IDs to gene types is provided. For GRCh38, hg19, and mm10 with ERCC (ambion 1) and PhiX spikes the tsv is provided in this repo. If you are using some other annotation, you can use code [here](https://github.com/ENCODE-DCC/transcript_id_to_gene_type_mapping) to build your own.
+* `rna.bam_to_signals.ncpus` Is the number of cpus given to bam_to_signals task.
+* `rna.bam_to_signals.ramGB` Is the amount of memory in GB given to bam_to_signals task.
+
 #### Additional inputs when running single-ended experiments:
 
 Kallisto quantifier makes use of average fragment lenghts and standard deviations of those lengths. In the case of paired end experiments, those values can be calculated from the data, but in case of single-ended experiment those values must be provided.
 
 * `rna.kallisto.fragment_length` Is the average fragment length.
 * `rna.kallisto.sd_of_fragment_length` Is the standard deviation of the fragment lengths.
-* `rna.rna_qc.tr_id_to_gene_type_tsv` rna_qc task calculates the number of reads by gene type. For this a tsv file that contains a mapping from transcript IDs to gene types is provided. For GRCh38, hg19, and mm10 with ERCC (ambion 1) and PhiX spikes the tsv is provided in this repo. If you are using some other annotation, you can use code [here](https://github.com/ENCODE-DCC/transcript_id_to_gene_type_mapping) to build your own.
-* `rna.bam_to_signals.ncpus` Is the number of cpus given to bam_to_signals task.
-* `rna.bam_to_signals.ramGB` Is the amount of memory in GB given to bam_to_signals task.
+
 ## Outputs
 
 1. `DNAnexus`: If you choose to use `dxWDL` and run pipelines on DNAnexus platform, then output will be stored on the specified output directory without any subdirectories.
@@ -152,7 +154,7 @@ In case of an stranded run, the plus and minus strand signal tracks are separate
 * `Number of genes`, file name matches `*_number_of_genes_detected.json`. Contains the number of genes detected, which is determined as `TPM` value being greater than `1`.
 * `Python log` file name is `rsem_quant.log`. This file contains possible additional information on the pipeline step.
 
-### Task Mad QC
+#### Task Mad QC
 
 This step is run if and only if the number of replicates is 2.
 
@@ -160,9 +162,9 @@ This step is run if and only if the number of replicates is 2.
 * `Mad QC metrics` file name matches `*_mad_qc_metrics.json`. Contains MAD QC metrics.
 * `Python log` file name is `mad_qc.log`. This file contains possible additional information on the pipeline step.
 
-### Task RNA QC
+#### Task RNA QC
 
 This step calculates additional metrics. At this time the only metric is to calculate reads by gene type. It is very **IMPORTANT** to look at the `Python log` of this step to see that the transcriptome bam did not contain any transcripts that are not present in the transcript ID to gene type mapping tsv. In case that happens, make sure you are using the STAR aligner and RSEM quantifier indexes you think you are using, and that all the other references are correct!
 
-* `RNA QC`, file name matches `*.json`. Contains additional QC metrics. For now the reads by gene type.
+* `RNA QC`, file name matches `*_qc.json`. Contains additional QC metrics. For now the reads by gene type.
 * `Python log` file name is `rna_qc.log`. This file contains **IMPORTANT** information on the pipeline step.
