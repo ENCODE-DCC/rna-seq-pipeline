@@ -32,11 +32,21 @@ workflow rna {
     String? libraryid
 
     String? disks
+    
 
+    ## task level variables that are defined globally to make them visible to DNANexus UI
+
+    # ALIGN
     Int align_ncpus
-
     Int align_ramGB
 
+    # KALLISTO
+
+    Int kallisto_number_of_threads
+    Int kallisto_ramGB
+    File kallisto_index
+    Int? kallisto_fragment_length
+    Float? kallisto_sd_of_fragment_length
 
 
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
@@ -80,6 +90,11 @@ workflow rna {
             fastqs = fastqs_[i],
             endedness = endedness,
             strandedness_direction = strandedness_direction,
+            kallisto_index = kallisto_index,
+            number_of_threads = kallisto_number_of_threads,
+            ramGB = kallisto_ramGB,
+            fragment_length = kallisto_fragment_length,
+            sd_of_fragment_length = kallisto_sd_of_fragment_length,
             disks = disks,
             out_prefix = "rep"+(i+1)+bamroot,
         }
