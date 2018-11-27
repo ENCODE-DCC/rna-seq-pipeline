@@ -48,6 +48,15 @@ workflow rna {
     Int? kallisto_fragment_length
     Float? kallisto_sd_of_fragment_length
 
+    # BAM_TO_SIGNALS
+
+    Int bam_to_signals_ncpus
+    Int bam_to_signals_ramGB
+
+    # RSEM_QUANT
+
+    Int rsem_ncpus
+    Int rsem_ramGB
 
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
@@ -70,6 +79,8 @@ workflow rna {
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
             bamroot = "rep"+(i+1)+bamroot+"_genome",
+            ncpus = bam_to_signals_ncpus,
+            ramGB = bam_to_signals_ramGB,
             disks = disks,
         }
 
@@ -79,8 +90,8 @@ workflow rna {
             anno_bam = align.annobam,
             endedness = endedness,
             read_strand = strandedness_direction,
-            ncpus = align_ncpus,
-            ramGB = align_ramGB,
+            ncpus = rsem_ncpus,
+            ramGB = rsem_ramGB,
             disks = disks,
         }
     }
