@@ -11,8 +11,6 @@ workflow rna {
     Array[File] fastqs_R2 = [] 
     # aligner: star for now, more added if/when needed
     String aligner
-    # index: aligner index (tar.gz)
-    File index
     # bamroot: root name for output bams. For example foo_bar will
     # create foo_bar_genome.bam and foo_bar_anno.bam
     String bamroot 
@@ -22,23 +20,20 @@ workflow rna {
     String strandedness_direction
     # chrom_sizes: chromosome sizes file
     File chrom_sizes 
-    # rsem_index: location of the RSEM index archive (tar.gz)
-    File rsem_index
-    # rnd_seed: random seed used for rsem
-    Int rnd_seed = 12345
-    # indexdir: where to extract the star index, relative to cwd
-    String? indexdir
-    # libraryid: identifier which will be added to bam headers
-    String? libraryid
-
     String? disks
     
 
     ## task level variables that are defined globally to make them visible to DNANexus UI
 
     # ALIGN
+    # index: aligner index (tar.gz)
+    File align_index
     Int align_ncpus
     Int align_ramGB
+    # indexdir: where to extract the star index, relative to cwd
+    String? indexdir
+    # libraryid: identifier which will be added to bam headers
+    String? libraryid
 
     # KALLISTO
 
@@ -55,16 +50,26 @@ workflow rna {
 
     # RSEM_QUANT
 
+    # rsem_index: location of the RSEM index archive (tar.gz)
+    File rsem_index
+    # rnd_seed: random seed used for rsem
+    Int rnd_seed = 12345
     Int rsem_ncpus
     Int rsem_ramGB
 
+    # RNA_QC
+
+    File rna_qc_tr_id_to_gene_type_tsv
+
+    ## WORKFLOW BEGINS
+    
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
     scatter (i in range(length(fastqs_))) {
         call align { input:
             endedness = endedness,
             fastqs = fastqs_[i],
-            index = index,
+            index = align_index,
             aligner = aligner,
             indexdir = indexdir,
             libraryid = libraryid,
@@ -123,6 +128,7 @@ workflow rna {
     scatter (i in range(length(align.annobam))) {
         call rna_qc { input:
             input_bam = align.annobam[i],
+            tr_id_to_gene_type_tsv = rna_qc_tr_id_to_gene_type_tsv,
             output_filename = "rep"+(i+1)+bamroot+"_qc.json",
             disks = disks,
         }
