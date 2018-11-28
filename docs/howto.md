@@ -9,7 +9,7 @@ Before following these instructions, make sure you have completed installation a
 
 [Google Cloud](howto.md#google-cloud)  
 [Local with Docker](howto.md#local-with-docker)  
-[DNAnexus](howto.md#dna-nexus)  
+[DNAnexus](howto.md#dnanexus)  
 [Local with Singularity](howto.md#local-with-singularity)  
 [Sherlock with Singularity](howto.md#sherlock-with-singularity)  
 [SLURM](howto.md#slurm)
@@ -62,21 +62,23 @@ Make sure you have completed the steps for installation and Google Cloud setup d
     "rna.fastqs_R1" : ["gs://[YOUR_BUCKET_NAME]/inputs/ENCSR653DFZ_rep1_chr19_10000reads_R1.fastq.gz", "gs://[YOUR_BUCKET_NAME]/inputs/ENCSR653DFZ_rep2_chr19_10000reads_R1.fastq.gz"],
     "rna.fastqs_R2" : ["gs://[YOUR_BUCKET_NAME]/inputs/ENCSR653DFZ_rep1_chr19_10000reads_R2.fastq.gz", "gs://[YOUR_BUCKET_NAME]/inputs/ENCSR653DFZ_rep2_chr19_10000reads_R2.fastq.gz"],
     "rna.aligner" : "star",
-    "rna.index" : "gs://[YOUR_BUCKET_NAME]/reference/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+    "rna.align_index" : "gs://[YOUR_BUCKET_NAME]/reference/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
     "rna.rsem_index" : "gs://[YOUR_BUCKET_NAME]/reference/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
-    "rna.kallisto.kallisto_index" : "gs://[YOUR_BUCKET_NAME]/reference/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+    "rna.kallisto_index" : "gs://[YOUR_BUCKET_NAME]/reference/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
     "rna.bamroot" : "PE_stranded",
     "rna.strandedness" : "stranded",
     "rna.strandedness_direction" : "reverse",
     "rna.chrom_sizes" : "gs://[YOUR_BUCKET_NAME]/reference/GRCh38_EBV.chrom.sizes",
     "rna.align_ncpus" : 2,
     "rna.align_ramGB" : 4,
+    "rna.rsem_ncpus" : 2,
+    "rna.rsem_ramGB" : 4,
     "rna.disks" : "local-disk 20 HDD",
-    "rna.kallisto.number_of_threads" : 2,
-    "rna.kallisto.ramGB" : 4,
-    "rna.rna_qc.tr_id_to_gene_type_tsv" : "gs://[YOUR_BUCKET_NAME]/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
-    "rna.bam_to_signals.ncpus" : 1,
-    "rna.bam_to_signals.ramGB" : 2
+    "rna.kallisto_number_of_threads" : 2,
+    "rna.kallisto_ramGB" : 4,
+    "rna.rna_qc_tr_id_to_gene_type_tsv" : "gs://[YOUR_BUCKET_NAME]/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.bam_to_signals_ncpus" : 1,
+    "rna.bam_to_signals_ramGB" : 2
 }
 ```
 
@@ -123,22 +125,24 @@ The other data that is required to complete this recipe is included in the repos
     "rna.fastqs_R1" : ["[PATH_TO_REPO]/rna-seq-pipeline/test_data/rep1_ENCSR510QZW_chr19only_10000_reads.fastq.gz","<path-to-repo>/rna-seq-pipeline/test_data/rep2_ENCSR510QZW_chr19only_10000_reads.fastq.gz"],
     "rna.aligner" : "star",
     "rna.bamroot" : "SE_unstranded",
-    "rna.index" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+    "rna.align_index" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
     "rna.rsem_index" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
-    "rna.kallisto.kallisto_index" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+    "rna.kallisto_index" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
     "rna.strandedness" : "unstranded",
     "rna.strandedness_direction" : "unstranded",
     "rna.chrom_sizes" : "[PATH_TO_REPO]/rna-seq-pipeline/test_data/GRCh38_EBV.chrom.sizes",
     "rna.align_ncpus" : 2,
     "rna.align_ramGB" : 4,
+    "rna.rsem_ncpus" : 2,
+    "rna.rsem_ramGB" : 4,
     "rna.disks" : "local-disk 20 HDD",
-    "rna.kallisto.number_of_threads" : 2,
-    "rna.kallisto.ramGB" : 4,
-    "rna.kallisto.fragment_length" : 250,
-    "rna.kallisto.sd_of_fragment_length" : 10,
-    "rna.rna_qc.tr_id_to_gene_type_tsv" : "[PATH_TO_REPO]/rna-seq-pipeline/transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
-    "rna.bam_to_signals.ncpus" : 1,
-    "rna.bam_to_signals.ramGB" : 2
+    "rna.kallisto_number_of_threads" : 2,
+    "rna.kallisto_ramGB" : 4,
+    "rna.kallisto_fragment_length" : 250,
+    "rna.kallisto_sd_of_fragment_length" : 10,
+    "rna.rna_qc_tr_id_to_gene_type_tsv" : "[PATH_TO_REPO]/rna-seq-pipeline/transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.bam_to_signals_ncpus" : 1,
+    "rna.bam_to_signals_ramGB" : 2
 }
 ```
 
@@ -155,6 +159,25 @@ Replace `[PATH_TO_REPO]` with the location you cloned the code into.
 
 
 ## DNAnexus
+
+### Use Pre-Built workflow from ENCODE public project
+
+1. Create a new [DNANexus project](https://platform.dnanexus.com/projects) by clicking on "+New Project" on the top left.
+
+2. Navigate to ENCODE public project on the platform of your choice, either [AWS](https://platform.dnanexus.com/projects/BKpvFg00VBPV975PgJ6Q03v6/data/RNA-seq/workflows) or [Azure](https://platform.dnanexus.com/projects/F6K911Q9xyfgJ36JFzv03Z5J/data/RNA-seq/workflows).
+
+3. Go to the folder of the pipeline version you want to use. Select all of the folder contents by ticking the square box. Click the copy icon on top right corner of the screen, select your project and copy the workflow into a folder there.
+
+4. Navigate to your project and find the copy of the workflow there. Click on the workflow named `rna`.
+
+5. Enter input fastq files using the UI, and fill in pipeline parameters.
+
+6. Enter the output folder using the `Workflow actions` menu button. 
+
+7. Run the pipeline by clicking the green `Run as Analysis` button, and you will be automatically redirected in to `Monitor` tab, where you can observe the pipeline progress.
+
+
+### Build your own workflow
 
 The goal is to run a paired-end, non-strand-specific experiment on DNAnexus platform. Before starting, make sure you have created a DNAnexus account, created a new project `[YOUR_PROJECT_NAME]`, installed the [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK), and downloaded dxWDL as detailed in the [installation instructions](installation.md#dna-nexus).
 
@@ -184,21 +207,23 @@ The goal is to run a paired-end, non-strand-specific experiment on DNAnexus plat
     "rna.fastqs_R1" : ["dx://[YOUR_PROJECT_NAME]:test_run/inputs/ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz"],
     "rna.fastqs_R2" : ["dx://[YOUR_PROJECT_NAME]:test_run/inputs/ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz"],
     "rna.aligner" : "star",
-    "rna.index" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+    "rna.align_index" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
     "rna.rsem_index" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
-    "kallisto.kallisto_index" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+    "rna.kallisto_index" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
     "rna.bamroot" : "PE_unstranded",
     "rna.strandedness" : "unstranded",
     "rna.strandedness_direction" : "unstranded",
     "rna.chrom_sizes" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/GRCh38_EBV.chrom.sizes",
     "rna.align_ncpus" : 2,
     "rna.align_ramGB" : 4,
+    "rna.rsem_ncpus" : 2,
+    "rna.rsem_ramGB" : 4,
     "rna.disks" : "local-disk 20 HDD",
-    "kallisto.number_of_threads" : 2,
-    "kallisto.ramGB" : 4,
-    "rna_qc.tr_id_to_gene_type_tsv" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
-    "bam_to_signals.ncpus" : 1,
-    "bam_to_signals.ramGB" : 2
+    "rna.kallisto_number_of_threads" : 2,
+    "rna.kallisto_ramGB" : 4,
+    "rna.rna_qc_tr_id_to_gene_type_tsv" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.bam_to_signals_ncpus" : 1,
+    "rna.bam_to_signals_ramGB" : 2
 }
 ```
 

@@ -52,9 +52,8 @@ A typical input file looks like this:
     "rna.fastqs_R1" : ["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R1.fastq.gz", "test_data/ENCSR653DFZ_rep2_chr19_10000reads_R1.fastq.gz"],
     "rna.fastqs_R2" : ["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R2.fastq.gz", "test_data/ENCSR653DFZ_rep2_chr19_10000reads_R2.fastq.gz"],
     "rna.aligner" : "star",
-    "rna.index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+    "rna.align_index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
     "rna.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
-    "rna.kallisto.kallisto_index" : "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
     "rna.bamroot" : "PE_stranded",
     "rna.strandedness" : "stranded",
     "rna.strandedness_direction" : "reverse",
@@ -62,11 +61,14 @@ A typical input file looks like this:
     "rna.align_ncpus" : 2,
     "rna.align_ramGB" : 4,
     "rna.disks" : "local-disk 20 HDD",
-    "rna.kallisto.number_of_threads" : 2,
-    "rna.kallisto.ramGB" : 4,
-    "rna.rna_qc.tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
-    "rna.bam_to_signals.ncpus" : 1,
-    "rna.bam_to_signals.ramGB" : 2
+    "rna.kallisto_index" : "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+    "rna.kallisto_number_of_threads" : 2,
+    "rna.kallisto_ramGB" : 4,
+    "rna.rna_qc_tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+    "rna.bam_to_signals_ncpus" : 1,
+    "rna.bam_to_signals_ramGB" : 2,
+    "rna.rsem_ncpus" : 2,
+    "rna.rsem_ramGB" : 4
 }
 ```
 
@@ -84,9 +86,9 @@ Assume you are running a paired end experiment with 3 replicates. The fastq file
 Note that it is very important that the replicates are in same order in both lists, this correspondence is used for pairing correct files with each other.
 
 * `rna.aligner` Use `star` aligner, possibly extended to use others in future.
-* `rna.index` Is the index for STAR aligner. 
+* `rna.align_index` Is the index for STAR aligner. 
 * `rna.rsem_index` Is the index for RSEM quantifier.
-* `rna.kallisto.kallisto_index` Is the index for Kallisto quantifier.
+* `rna.kallisto_index` Is the index for Kallisto quantifier.
 * `rna.bamroot` This is a prefix that gets added into the output filenames. Additionally the files are prefixed with information of the replicate they originate from.
 
 #### Example:
@@ -96,26 +98,28 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 * `rna.strandedness` Indicates whether the experiment is `stranded` or `unstranded`. If this is `stranded`, then the `rna.strandedness_direction` should be set to `forward` or `reverse`.
 * `rna.strandedness_direction` Indicates the direction of strandedness. Options are `forward`, `reverse` and `unstranded`.
 * `rna.chrom_sizes` Is the file containing the chromosome sizes. You can find and download the files from [ENCODE portal](https://www.encodeproject.org/references/ENCSR425FOI/).
-* `rna.align_ncpus` How many cpus are available for STAR alignment and RSEM quantification.
-* `rna.align_ramGB` How many GBs of memory are available for STAR alignment and RSEM quantification.
+* `rna.align_ncpus` How many cpus are available for STAR alignment.
+* `rna.align_ramGB` How many GBs of memory are available for STAR alignment.
+* `rna.align_ncpus` How many cpus are available for RSEM quantification.
+* `rna.align_ramGB` How many GBs of memory are available for RSEM quantification.
 * `rna.disks` How much disk space is available for pipeline. You can also specify the type of disk, `HDD` for a spinning disk and `SSD` for a solid state drive.
-* `rna.kallisto.number_of_threads` How many cpus are available for Kallisto quantification.
-* `rna.kallisto.ramGB` How many GBs of memory are available for Kallisto quantification.
+* `rna.kallisto_number_of_threads` How many threads are available for Kallisto quantification.
+* `rna.kallisto_ramGB` How many GBs of memory are available for Kallisto quantification.
 
 #### Example:
 
 Assume you want to allocate 100 gigabytes of spinning hard drive. In this case you would enter `"local-disk 100 HDD"`. If you want to allocate 111 gigabytes of solid state drive space, enter `"local-disk 111 SSD"`.
 
-* `rna.rna_qc.tr_id_to_gene_type_tsv` rna_qc task calculates the number of reads by gene type. For this a tsv file that contains a mapping from transcript IDs to gene types is provided. For GRCh38, hg19, and mm10 with ERCC (ambion 1) and PhiX spikes the tsv is provided in this repo. If you are using some other annotation, you can use code [here](https://github.com/ENCODE-DCC/transcript_id_to_gene_type_mapping) to build your own.
-* `rna.bam_to_signals.ncpus` Is the number of cpus given to bam_to_signals task.
-* `rna.bam_to_signals.ramGB` Is the amount of memory in GB given to bam_to_signals task.
+* `rna.rna_qc_tr_id_to_gene_type_tsv` rna_qc task calculates the number of reads by gene type. For this a tsv file that contains a mapping from transcript IDs to gene types is provided. For GRCh38, hg19, and mm10 with ERCC (ambion 1) and PhiX spikes the tsv is provided in this repo. If you are using some other annotation, you can use code [here](https://github.com/ENCODE-DCC/transcript_id_to_gene_type_mapping) to build your own.
+* `rna.bam_to_signals_ncpus` Is the number of cpus given to bam_to_signals task.
+* `rna.bam_to_signals_ramGB` Is the amount of memory in GB given to bam_to_signals task.
 
 #### Additional inputs when running single-ended experiments:
 
 Kallisto quantifier makes use of average fragment lenghts and standard deviations of those lengths. In the case of paired end experiments, those values can be calculated from the data, but in case of single-ended experiment those values must be provided.
 
-* `rna.kallisto.fragment_length` Is the average fragment length.
-* `rna.kallisto.sd_of_fragment_length` Is the standard deviation of the fragment lengths.
+* `rna.kallisto_fragment_length` Is the average fragment length.
+* `rna.kallisto_sd_of_fragment_length` Is the standard deviation of the fragment lengths.
 
 ## Outputs
 
