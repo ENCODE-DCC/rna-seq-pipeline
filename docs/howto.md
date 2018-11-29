@@ -73,12 +73,17 @@ Make sure you have completed the steps for installation and Google Cloud setup d
     "rna.align_ramGB" : 4,
     "rna.rsem_ncpus" : 2,
     "rna.rsem_ramGB" : 4,
-    "rna.disks" : "local-disk 20 HDD",
     "rna.kallisto_number_of_threads" : 2,
     "rna.kallisto_ramGB" : 4,
     "rna.rna_qc_tr_id_to_gene_type_tsv" : "gs://[YOUR_BUCKET_NAME]/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
     "rna.bam_to_signals_ncpus" : 1,
-    "rna.bam_to_signals_ramGB" : 2
+    "rna.bam_to_signals_ramGB" : 2,
+    "rna.align_disk" : "local-disk 20 HDD",
+    "rna.kallisto_disk" : "local-disk 20 HDD",
+    "rna.rna_qc_disk" : "local-disk 20 HDD",
+    "rna.bam_to_signals_disk" : "local-disk 20 HDD",
+    "rna.mad_qc_disk" : "local-disk 20 HDD",
+    "rna.rsem_disk" : "local-disk 20 HDD"    
 }
 ```
 
@@ -135,14 +140,20 @@ The other data that is required to complete this recipe is included in the repos
     "rna.align_ramGB" : 4,
     "rna.rsem_ncpus" : 2,
     "rna.rsem_ramGB" : 4,
-    "rna.disks" : "local-disk 20 HDD",
     "rna.kallisto_number_of_threads" : 2,
     "rna.kallisto_ramGB" : 4,
     "rna.kallisto_fragment_length" : 250,
     "rna.kallisto_sd_of_fragment_length" : 10,
     "rna.rna_qc_tr_id_to_gene_type_tsv" : "[PATH_TO_REPO]/rna-seq-pipeline/transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
     "rna.bam_to_signals_ncpus" : 1,
-    "rna.bam_to_signals_ramGB" : 2
+    "rna.bam_to_signals_ramGB" : 2,
+    "rna.align_disk" : "local-disk 20 HDD",
+    "rna.kallisto_disk" : "local-disk 20 HDD",
+    "rna.rna_qc_disk" : "local-disk 20 HDD",
+    "rna.bam_to_signals_disk" : "local-disk 20 HDD",
+    "rna.mad_qc_disk" : "local-disk 20 HDD",
+    "rna.rsem_disk" : "local-disk 20 HDD"
+
 }
 ```
 
@@ -218,12 +229,17 @@ The goal is to run a paired-end, non-strand-specific experiment on DNAnexus plat
     "rna.align_ramGB" : 4,
     "rna.rsem_ncpus" : 2,
     "rna.rsem_ramGB" : 4,
-    "rna.disks" : "local-disk 20 HDD",
     "rna.kallisto_number_of_threads" : 2,
     "rna.kallisto_ramGB" : 4,
     "rna.rna_qc_tr_id_to_gene_type_tsv" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
     "rna.bam_to_signals_ncpus" : 1,
-    "rna.bam_to_signals_ramGB" : 2
+    "rna.bam_to_signals_ramGB" : 2,
+    "rna.align_disk" : "local-disk 20 HDD",
+    "rna.kallisto_disk" : "local-disk 20 HDD",
+    "rna.rna_qc_disk" : "local-disk 20 HDD",
+    "rna.bam_to_signals_disk" : "local-disk 20 HDD",
+    "rna.mad_qc_disk" : "local-disk 20 HDD",
+    "rna.rsem_disk" : "local-disk 20 HDD"
 }
 ```
 

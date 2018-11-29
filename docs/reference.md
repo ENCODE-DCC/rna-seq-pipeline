@@ -60,7 +60,6 @@ A typical input file looks like this:
     "rna.chrom_sizes" : "test_data/GRCh38_EBV.chrom.sizes",
     "rna.align_ncpus" : 2,
     "rna.align_ramGB" : 4,
-    "rna.disks" : "local-disk 20 HDD",
     "rna.kallisto_index" : "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
     "rna.kallisto_number_of_threads" : 2,
     "rna.kallisto_ramGB" : 4,
@@ -68,7 +67,13 @@ A typical input file looks like this:
     "rna.bam_to_signals_ncpus" : 1,
     "rna.bam_to_signals_ramGB" : 2,
     "rna.rsem_ncpus" : 2,
-    "rna.rsem_ramGB" : 4
+    "rna.rsem_ramGB" : 4,
+    "rna.align_disk" : "local-disk 20 HDD",
+    "rna.kallisto_disk" : "local-disk 20 HDD",
+    "rna.rna_qc_disk" : "local-disk 20 HDD",
+    "rna.mad_qc_disk" : "local-disk 20 HDD",
+    "rna.bam_to_signals_disk" : "local-disk 20 HDD",
+    "rna.rsem_disk" : "local-disk 20 HDD"
 }
 ```
 
@@ -102,7 +107,12 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 * `rna.align_ramGB` How many GBs of memory are available for STAR alignment.
 * `rna.align_ncpus` How many cpus are available for RSEM quantification.
 * `rna.align_ramGB` How many GBs of memory are available for RSEM quantification.
-* `rna.disks` How much disk space is available for pipeline. You can also specify the type of disk, `HDD` for a spinning disk and `SSD` for a solid state drive.
+* `rna.align_disk` How much disk space is available for Align task. You can also specify the type of disk, `HDD` for a spinning disk and `SSD` for a solid state drive.
+* `rna.kallisto_disk` As above, but for Kallisto.
+* `rna.rna_qc_disk` As above, but for RNA QC.
+* `rna.bam_to_signals_disk` As above, but for bam_to_signals.
+* `rna.mad_qc_disk` As above, but for MAD QC.
+* `rna.rsem_disk` As above, but for RSEM. 
 * `rna.kallisto_number_of_threads` How many threads are available for Kallisto quantification.
 * `rna.kallisto_ramGB` How many GBs of memory are available for Kallisto quantification.
 
