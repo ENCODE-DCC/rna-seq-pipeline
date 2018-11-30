@@ -6,8 +6,6 @@
         "continueOnReturnCode" : 0,
         "preemptible": "0",
         "bootDiskSizeGb": "10",
-        "noAddress": "false",
-        "align_ncpus" : "1",
-        "align_ramGB" : "4"
+        "noAddress": "false"
     }
 }
