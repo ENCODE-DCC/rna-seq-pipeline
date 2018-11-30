@@ -1,7 +1,0 @@
-{
-	"build_index.reference_genome" : "<path-to-repo>/test_data/GRCh38_no_alt_analysis_set_GCA_000001405.15_onlychr19.fa.gz",
-	"build_index.annotation" : "<path-to-repo>/test_data/gencodeV24pri-tRNAs-ERCC-phiX_onlychr19_and_spikeins.gtf.gz",
-	"build_index.anno_version" : "v24",
-	"build_index.genome" : "GRCh38",
-	"build_index.index_type" : "prep_srna"
-}

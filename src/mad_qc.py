@@ -8,10 +8,26 @@ __version__ = '0.1.0'
 __license__ = 'MIT'
 
 import argparse
-import subprocess
-import shlex
-import os
 import json
+import logging
+import os
+import shlex
+import subprocess
+
+from rna_qc import QCMetric, QCMetricRecord
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+filehandler = logging.FileHandler('mad_qc.log')
+filehandler.setLevel(logging.DEBUG)
+consolehandler = logging.StreamHandler()
+consolehandler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
+filehandler.setFormatter(formatter)
+consolehandler.setFormatter(formatter)
+logger.addHandler(consolehandler)
+logger.addHandler(filehandler)
 
 MADQC_CMD = 'Rscript {path_to_madR} {quants_1} {quants_2}'
 
@@ -36,14 +52,17 @@ def main(args):
     plot_output_filename = '{basename_1}-{basename_2}_mad_plot.png'.format(
         basename_1=quant_basename1, basename_2=quant_basename2)
     # capture the output string from the run
+    logger.info('Running madQC command %s', run_cmd)
     mad_output = subprocess.check_output(shlex.split(run_cmd))
     os.rename('MAplot.png', plot_output_filename)
-    qc_metrics = dict()
-    qc_metrics['MAD.R'] = json.loads(mad_output.decode())
+    qc_record = QCMetricRecord()
+    mad_r_metric = json.loads(mad_output.decode())
+    mad_r_metric_obj = QCMetric('MAD.R', mad_r_metric)
+    qc_record.add(mad_r_metric_obj)
     qc_output_fn = '{basename_1}-{basename_2}_mad_qc_metrics.json'.format(
         basename_1=quant_basename1, basename_2=quant_basename2)
     with open(qc_output_fn, 'w') as f:
-        json.dump(qc_metrics, f)
+        json.dump(qc_record.to_ordered_dict(), f)
 
 
 if __name__ == '__main__':

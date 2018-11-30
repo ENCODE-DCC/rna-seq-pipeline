@@ -1,0 +1,248 @@
+# CircleCI 2.0 configuration file
+# for ENCODE RNA-SEQ-PIPELINE
+# Maintainer: Otto Jolanki
+
+# Defaults and functions
+---
+defaults: &defaults
+  docker:
+    - image: circleci/buildpack-deps:xenial-scm
+  working_directory: ~/rna-seq-pipeline
+
+python_defaults: &python_defaults
+  docker:
+    - image: quay.io/encode-dcc/rna-seq-pipeline:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}
+  working_directory: ~/rna-seq-pipeline
+
+machine_defaults: &machine_defaults
+  machine:
+    image: circleci/classic:latest
+  working_directory: ~/rna-seq-pipeline
+
+make_tag: &make_tag
+  name: make docker image tag
+  command: |
+    echo "export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
+
+get_star_index: &get_star_index
+  name: get star index for test
+  command: |
+    curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+
+get_kallisto_index: &get_kallisto_index
+  name: get kallisto index for test
+  command: |
+    curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+
+install_singularity: &install_singularity
+  name: install singularity
+  command: |
+    sudo apt-get update
+    sudo apt-get install \
+    python \
+    dh-autoreconf \
+    build-essential \
+    libarchive-dev \
+    squashfs-tools
+    wget https://github.com/singularityware/singularity/releases/download/2.6.0/singularity-2.6.0.tar.gz
+    tar xvf singularity-2.6.0.tar.gz
+    cd singularity-2.6.0
+    ./configure --prefix=/usr/local --sysconfdir=/etc
+    make
+    sudo make install
+    singularity --version
+# Jobs
+version: 2
+jobs:
+  unittests:
+    <<: *python_defaults
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd src
+            python3 -m unittest discover
+
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: *make_tag
+      - run:
+          name: build image
+          command: |
+            source ${BASH_ENV}
+            echo "pulling template!"
+            docker pull quay.io/encode-dcc/rna-seq-pipeline:template
+            docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
+            docker build --cache-from quay.io/encode-dcc/rna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG -t quay.io/encode-dcc/rna-seq-pipeline:template .
+            docker push $TAG
+            docker push quay.io/encode-dcc/rna-seq-pipeline:template
+            docker logout
+          no_output_timeout: 30m
+
+  test_PE_unstranded_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
+            cat PE_unstranded_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
+          no_output_timeout: 30m
+
+  test_SE_unstranded_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
+            cat SE_unstranded_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
+          no_output_timeout: 30m
+
+  test_PE_stranded_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
+            cat PE_stranded_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
+          no_output_timeout: 30m
+
+  test_PE_unstranded_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *install_singularity
+      - run: *make_tag
+      - run: *get_star_index
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
+            cat PE_unstranded_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
+          no_output_timeout: 30m
+
+  test_SE_unstranded_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *install_singularity
+      - run: *make_tag
+      - run: *get_star_index
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
+            cat SE_unstranded_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
+          no_output_timeout: 30m
+
+  test_PE_stranded_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *install_singularity
+      - run: *make_tag
+      - run: *get_star_index
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.mad_qc.madQCplot rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all rna.bam_to_signals.unique --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
+            cat PE_stranded_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
+          no_output_timeout: 30m
+
+# Workflow
+workflows:
+  version: 2
+  build_workflow:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown
+      - unittests:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown
+      - test_PE_unstranded_docker:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown
+      - test_SE_unstranded_docker:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown
+      - test_PE_stranded_docker:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown
+      - test_PE_unstranded_singularity:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown
+      - test_SE_unstranded_singularity:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown
+      - test_PE_stranded_singularity:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - PIP-371_markdown

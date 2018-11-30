@@ -8,8 +8,23 @@ __version__ = '0.1.0'
 __license__ = 'MIT'
 
 import argparse
-import subprocess
+import logging
 import shlex
+import subprocess
+import sys
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+filehandler = logging.FileHandler('bam_to_signals.log')
+filehandler.setLevel(logging.DEBUG)
+consolehandler = logging.StreamHandler()
+consolehandler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
+filehandler.setFormatter(formatter)
+consolehandler.setFormatter(formatter)
+logger.addHandler(consolehandler)
+logger.addHandler(filehandler)
 
 STAR_COMMAND = '''STAR --runMode inputAlignmentsFromBAM \
                 --inputBAMfile {input_bam} \
@@ -20,7 +35,14 @@ STAR_COMMAND = '''STAR --runMode inputAlignmentsFromBAM \
 
 def main(args):
     print(args)
-    call_star(args.bamfile, args.strandedness)
+    star_return_code = call_star(args.bamfile, args.strandedness)
+    
+    try:
+        assert star_return_code == 0
+    except AssertionError:
+        logger.exception('Building bedGraph had a problem, most likely out of memory.')
+        sys.exit(1)
+
     if args.strandedness == 'stranded':
         call_bg_to_bw('Signal.UniqueMultiple.str1.out.bg', args.chrom_sizes,
                       args.bamroot + '_minusAll.bw')
@@ -40,19 +62,21 @@ def main(args):
 def call_star(input_bam, strandedness):
     command = STAR_COMMAND.format(
         input_bam=input_bam, strandedness=strandedness.capitalize())
-    print(command)
-    subprocess.call(shlex.split(command))
+    logger.info('Running STAR command %s', command)
+    return_code = subprocess.call(shlex.split(command))
+    return return_code
 
 
 def call_bg_to_bw(input_bg, chrom_sizes, out_fn):
     # sort bedgraph
     bedgraph_cmd = 'bedSort {input_bg} {output_bg}'.format(
         input_bg=input_bg, output_bg=input_bg)
+    logger.info('Sorting bedgraph: %s', bedgraph_cmd)
     subprocess.call(shlex.split(bedgraph_cmd))
     # make bigwig
     command = 'bedGraphToBigWig {input_bg} {chrom_sizes} {out_fn}'.format(
         input_bg=input_bg, chrom_sizes=chrom_sizes, out_fn=out_fn)
-    print(command)
+    logger.info('Building bigWig: %s', command)
     subprocess.call(shlex.split(command))
 
 
