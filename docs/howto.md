@@ -26,7 +26,7 @@ Before following these instructions, make sure you have completed installation a
 ## Google Cloud
 
 The goal is to run a paired-end, strand-specific experiment on Google Cloud Platform.
-Make sure you have completed the steps for installation and Google Cloud setup described in the [installation instructions](installation.md#google-cloud). The following assumes your Google Cloud project is `[YOUR_PROJECT]`, you have created a bucket into `gs://[YOUR_BUCKET_NAME]`, and also directories `inputs`, `output` and `reference` in the bucket.
+Make sure you have completed the steps for installation and Google Cloud setup described in the [installation instructions](installation.md#google-cloud). The following assumes your Google Cloud project is `[YOUR_PROJECT]`, you have created a bucket `gs://[YOUR_BUCKET_NAME]`, and also directories `inputs`, `output` and `reference` in the bucket.
 
 1. Get the code and move to the repo directory:
 
@@ -42,7 +42,7 @@ Make sure you have completed the steps for installation and Google Cloud setup d
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx 
 ``` 
 
-3. Copy indexes, and input data into the cloud:
+3. Copy indexes and input data into the cloud:
 
 ```bash
   $ gsutil cp test_data/ENCSR653DFZ* gs://[YOUR_BUCKET_NAME]/inputs/
@@ -87,7 +87,7 @@ Make sure you have completed the steps for installation and Google Cloud setup d
 }
 ```
 
-Replace `[YOUR_BUCKET_NAME]` with the name of the actual bucket you created.
+Replace `[YOUR_BUCKET_NAME]` with the name of the bucket you created.
 
 5. Run the pipeline:
 
@@ -95,7 +95,7 @@ Replace `[YOUR_BUCKET_NAME]` with the name of the actual bucket you created.
   $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=google -Dbackend.providers.google.config.project=[YOUR_PROJECT] -Dbackend.providers.google.config.root=gs://[YOUR_BUCKET_NAME]/output cromwell-34.jar run rna-seq-pipeline.wdl -i input.json -o workflow_opts/docker.json
 ```
 
-Replace `[YOUR_PROJECT]` with the project id of the project you created, and `[YOUR_BUCKET_NAME]` with the name of the bucket you created.
+Replace `[YOUR_PROJECT]` with the project id of the project you created and `[YOUR_BUCKET_NAME]` with the name of the bucket you created.
 
 6. See outputs in `gs://[YOUR_BUCKET_NAME]/outputs/rna/[RUNHASH]`. See [reference](reference.md) for details about the output directory structure.
 
@@ -171,26 +171,26 @@ Replace `[PATH_TO_REPO]` with the location you cloned the code into.
 
 ## DNAnexus
 
-### Use Pre-Built workflow from ENCODE public project
+### Use Pre-Built workflow from the ENCODE public project
 
 1. Create a new [DNANexus project](https://platform.dnanexus.com/projects) by clicking on "+New Project" on the top left.
 
-2. Navigate to ENCODE public project on the platform of your choice, either [AWS](https://platform.dnanexus.com/projects/BKpvFg00VBPV975PgJ6Q03v6/data/RNA-seq/workflows) or [Azure](https://platform.dnanexus.com/projects/F6K911Q9xyfgJ36JFzv03Z5J/data/RNA-seq/workflows).
+2. Navigate to the ENCODE public project on the platform of your choice, either [AWS](https://platform.dnanexus.com/projects/BKpvFg00VBPV975PgJ6Q03v6/data/RNA-seq/workflows) or [Azure](https://platform.dnanexus.com/projects/F6K911Q9xyfgJ36JFzv03Z5J/data/RNA-seq/workflows).
 
 3. Go to the folder of the pipeline version you want to use. Select all of the folder contents by ticking the square box. Click the copy icon on top right corner of the screen, select your project and copy the workflow into a folder there.
 
 4. Navigate to your project and find the copy of the workflow there. Click on the workflow named `rna`.
 
-5. Enter input fastq files using the UI, and fill in pipeline parameters.
+5. Enter input fastq files using the UI and fill in pipeline parameters.
 
 6. Enter the output folder using the `Workflow actions` menu button. 
 
-7. Run the pipeline by clicking the green `Run as Analysis` button, and you will be automatically redirected in to `Monitor` tab, where you can observe the pipeline progress.
+7. Run the pipeline by clicking the green `Run as Analysis` button.  You will be automatically redirected to the `Monitor` tab, where you can observe the pipeline progress.
 
 
 ### Build your own workflow
 
-The goal is to run a paired-end, non-strand-specific experiment on DNAnexus platform. Before starting, make sure you have created a DNAnexus account, created a new project `[YOUR_PROJECT_NAME]`, installed the [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK), and downloaded dxWDL as detailed in the [installation instructions](installation.md#dna-nexus).
+The goal is to run a paired-end, non-strand-specific experiment on the DNAnexus platform. Before starting, make sure you have created a DNAnexus account, created a new project `[YOUR_PROJECT_NAME]`, installed the [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK), and downloaded dxWDL as detailed in the [installation instructions](installation.md#dna-nexus).
 
 1. Get the code and move to the repo directory:
 
@@ -208,9 +208,9 @@ The goal is to run a paired-end, non-strand-specific experiment on DNAnexus plat
 
 3. Go to [DNAnexus website](https://www.dnanexus.com) and navigate to `[YOUR_PROJECT_NAME]`. Create a `test_run` directory with subdirectories `inputs`, `output`, `reference` and `workflow` (You can organize the directories any way you want, but this is one way to keep organized).
 
-4. Upload files from `test_data` folder into your DNAnexus project. Put `ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz` and `ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz` into `inputs` folder. Put `GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz`, `GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz`, `Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx` and `GRCh38_EBV.chrom.sizes` into `reference` folder.
+4. Upload files from the `test_data` folder into your DNAnexus project. Put `ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz` and `ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz` into the `inputs` folder. Put `GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz`, `GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz`, `Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx` and `GRCh38_EBV.chrom.sizes` into the `reference` folder.
 
-5. Setup the `input.json`: 
+5. Setup `input.json`: 
     Copy the following into `input.json` in your favorite text editor.
 ```
 {
@@ -251,20 +251,20 @@ Replace `[YOUR_PROJECT_NAME]` with the actual name of the project you created.
   $ java -jar dxWDL-0.75.jar compile rna-seq-pipeline.wdl -project [YOUR_PROJECT_NAME] -f -folder /test_run/workflow -defaults input.json -extras workflow_opts/docker.json
 ```
 
-7. Go to DNAnexus [project page](https://platform.dnanexus.com/projects) and click on your project.
+7. Go to the DNAnexus [project page](https://platform.dnanexus.com/projects) and click on your project.
 
 8. Move to the directory `/test_run/workflow`
 
-9. You will find a DNAnexus workflow called `rna` with all inputs and parameters defined. Click the `rna` workflow, and in the window that opens click `Workflow Actions` button in the upper right corner, and from the dropdown menu choose `Set output folder` and set `/test_run/output` as the output folder.
+9. You will find a DNAnexus workflow called `rna` with all inputs and parameters defined. Click the `rna` workflow and in the window that opens click `Workflow Actions` button in the upper right corner.  From the dropdown menu choose `Set output folder` and set `/test_run/output` as the output folder.
 
-10. Click the green `Run as Analysis` button to start the pipeline. You will be automatically redirected into the Monitor tab, where you can observe the pipeline run.
+10. Click the green `Run as Analysis` button to start the pipeline. You will be automatically redirected to the Monitor tab, where you can observe the pipeline run.
 
-11. When the pipeline is completed (15-20min) the outputs will appear in `/test_run/output` folder.
+11. When the pipeline is completed (15-20 min) the outputs will appear in `/test_run/output` folder.
 
 
 ## Local with Singularity
 
-The goal is to run single-end non-strand-specific experiment locally using singularity.
+The goal is to run a single-end non-strand-specific experiment locally using singularity.
 
 1. Make sure you have singularity version greater or equal to `2.5.2` installed in your system. 
 
@@ -345,7 +345,7 @@ The goal is to run a paired-end, strand-specific experiment on Sherlock using si
 }
 ```
 
-The default SLURM partition is `normal`. If you want to use some other partition, as you probably will when running a full sized experiment add `"slurm_partition"` line in the workflow options. After this addition your `workflow_opts/sherlock.json` looks like this:
+The default SLURM partition is `normal`. If you want to use some other partition, as you probably will when running a full sized experiment, add `"slurm_partition"` line in the workflow options. After this addition your `workflow_opts/sherlock.json` looks like this:
 
 ```
 {
@@ -367,7 +367,7 @@ The default SLURM partition is `normal`. If you want to use some other partition
 
 # SLURM
 
-Using a generic SLURM cluster should be quite similar to the Stanford Sherlock (which is a SLURM machine of a specific kind). The main differences are that you must (most likely) [install](installation.md#singularity) singularity, and edit `workflow_opts/slurm.json` to include your information, and the directories that contain your input data.
+Using a generic SLURM cluster should be quite similar to the Stanford Sherlock as documented above (which is a SLURM machine of a specific kind). The main differences are that you may need to [install](installation.md#singularity) singularity and edit `workflow_opts/slurm.json` to include your information and the directories that contain your input data.
 
 * Singularity version has to be `>=2.5.2`
 
@@ -401,17 +401,17 @@ Set your partition/account in workflow_opts/slurm.json. If your SLURM cluster do
 ```
 
 
-On the `"singularity_command_options"` line, add the paths to the directories that contain your input data. This is comma separated, and can include several items.
+On the `"singularity_command_options"` line, add the paths to the directories that contain your input data. This is comma separated and can include several items.
 
 # BUILDING INDEXES
 
-Most likely you will not need to do build STAR or RSEM indexes if you are working with humans or mice and are using standard spikeins. STAR indexes can be downloaded [here](https://www.encodeproject.org/references/ENCSR314WMD/) and RSEM indexes [here](https://www.encodeproject.org/references/ENCSR219BJA/). Genome references used in building the aforementioned indexes can be found [here](https://www.encodeproject.org/references/ENCSR425FOI/).
+Most likely you will not need to build STAR or RSEM indexes if you are working with data from human or mouse samples and are using standard spikeins. STAR indexes can be downloaded [here](https://www.encodeproject.org/references/ENCSR314WMD/) and RSEM indexes [here](https://www.encodeproject.org/references/ENCSR219BJA/). Genome references used in building the aforementioned indexes can be found [here](https://www.encodeproject.org/references/ENCSR425FOI/).
 
 ## Merge Annotation
 
-This step precludes the STAR and RSEM index building steps. This step takes a gene annotation (e.g. gencode.v19.annotation.gtf.gz) gzipped gtf file, the corresponding tRNA gzipped gtf and a spike-in set (e.g. ERCC) gzipped fasta file and combines them into a single merged annotation gzipped gtf file. This file will be used as input to all three 'prep' indexing steps.
+This step precedes the STAR and RSEM index building steps. This step takes a gene annotation (e.g. gencode.v19.annotation.gtf.gz) gzipped gtf file, the corresponding tRNA gzipped gtf and a spike-in set (e.g. ERCC) gzipped fasta file and combines them into a single merged annotation gzipped gtf file. This file will be used as input to all three 'prep' indexing steps.
 
-The goal is to run Merge Annotation step on a local machine using Docker.
+The goal is to run the Merge Annotation step on a local machine using Docker.
 
 1. Get the code and move to the repo directory:
 
@@ -438,13 +438,13 @@ There is no need to edit this file.
   $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=Local cromwell-34.jar run per_task_wdl/merge_anno.wdl -i input_json_templates/per_task_inputs/merge_anno_input.json -o workflow_opts/docker.json
 ```
 
-4. Find output in `cromwell-executions/merge_anno/[RUNHASH]`
+4. Find the output in `cromwell-executions/merge_anno/[RUNHASH]`
 
-## Build STAR Index
+## Build the STAR Index
 
 The goal is to build on the [previous step](howto.md#merge-annotation) and build a STAR index, restricted to chromosome 19, using a local machine with Docker. 
 
-1. Make sure you have run the [previous step](howto.md#merge-annotation) and have located the output (`merged_annotation.gtf.gz`) of that step.  
+1. Make sure you have run the [previous step](howto.md#merge-annotation) and have located the output (`merged_annotation.gtf.gz`) of that step.
 
 2. Find the input file `build_index_STAR.json` in `input_json_templates/per_task_inputs`. The file looks like this:
 
@@ -467,13 +467,13 @@ Open the file in your favorite text editor, and replace `[path-to-output]` with 
   $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=Local cromwell-34.jar run per_task_wdl/build_genome_index.wdl -i input_json_templates/per_task_inputs/build_index_STAR.json -o workflow_opts/docker.json
 ```
 
-4. Find output in `cromwell-executions/build_genome_index/[RUNHASH]`
+4. Find the output in `cromwell-executions/build_genome_index/[RUNHASH]`
 
-## Build RSEM Index
+## Build the RSEM Index
 
-The goal is to build on the [previous step](howto.md#merge-annotation) and build a RSEM index, restricted to chromosome 19, using a local machine with Docker. 
+The goal is to build on the [previous step](howto.md#merge-annotation) and build a RSEM index, restricted to chromosome 19, using a local machine with Docker.
 
-1. Make sure you have run the [previous step](howto.md#merge-annotation) and have located the output (`merged_annotation.gtf.gz`) of that step.  
+1. Make sure you have run the [previous step](howto.md#merge-annotation) and have located the output (`merged_annotation.gtf.gz`) of that step.
 
 2. Find the input file `build_index_RSEM.json` in `input_json_templates/per_task_inputs`. The file looks like this:
 
@@ -488,7 +488,7 @@ The goal is to build on the [previous step](howto.md#merge-annotation) and build
 }
 ```
 
-Open the file in your favorite text editor, and replace `[path-to-output]` with the path to the merged annotation file produced in the [previous step](howto.md#merge-annotation).
+Open the file in your favorite text editor and replace `[path-to-output]` with the path to the merged annotation file produced in the [previous step](howto.md#merge-annotation).
 
 3. Run the pipeline:
 
@@ -496,11 +496,11 @@ Open the file in your favorite text editor, and replace `[path-to-output]` with 
   $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=Local cromwell-34.jar run per_task_wdl/build_genome_index.wdl -i input_json_templates/per_task_inputs/build_index_RSEM.json -o workflow_opts/docker.json
 ```
 
-4. Find output in `cromwell-executions/build_genome_index/[RUNHASH]`
+4. Find the output in `cromwell-executions/build_genome_index/[RUNHASH]`
 
 ## Build Kallisto Index
 
-The goal is to build index for Kallisto using a local machine with Docker.
+The goal is to build index for kallisto using a local machine with Docker.
 
 1. Get the code and move to the repo directory:
 
@@ -518,7 +518,7 @@ The goal is to build index for Kallisto using a local machine with Docker.
 }
 ```
 
-As you can see, this file has less inputs than [STAR](howto.md#build-star-index) and [RSEM](howto.md#build-rsem-index) steps. The reason for this is that when building index kallisto uses only the transcriptome, and does not need annotations. Additionally the spikein sequences are concatenated into the reference file, instead of providing  them in a separate input. The inputs used in this example are [ERCC spikes](https://www.encodeproject.org/files/ENCFF001RTP/) and [Human cDNA](ftp://ftp.ensembl.org/pub/current_fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz), which is restricted to chromosome 19.
+As you can see, this file has fewer inputs than [STAR](howto.md#build-star-index) and [RSEM](howto.md#build-rsem-index) steps. The reason for this is that when building the index kallisto uses only the transcriptome and does not need annotations. Additionally, the spikein sequences are concatenated into the reference file, instead of providing them in a separate input. The inputs used in this example are [ERCC spikes](https://www.encodeproject.org/files/ENCFF001RTP/) and [Human cDNA](ftp://ftp.ensembl.org/pub/current_fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz), which is restricted to chromosome 19.
 
 3. Run the pipeline:
 
@@ -526,4 +526,4 @@ As you can see, this file has less inputs than [STAR](howto.md#build-star-index)
   $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=Local cromwell-34.jar run per_task_wdl/build_genome_index.wdl -i input_json_templates/per_task_inputs/build_index_Kallisto.json -o workflow_opts/docker.json
 ```
 
-4. Find output in `cromwell-executions/build_genome_index/[RUNHASH]`
+4. Find the output in `cromwell-executions/build_genome_index/[RUNHASH]`
