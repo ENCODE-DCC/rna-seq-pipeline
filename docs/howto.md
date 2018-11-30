@@ -270,7 +270,7 @@ The goal is to run a single-end non-strand-specific experiment locally using sin
 
 2. Build the singularity image for the pipeline. The following pulls the pipeline docker image, and uses that to construct the singularity image. The image will be stored in `~/.singularity`.
 ```
-$ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:template
+$ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
 ```
 
 3. Get the code and move to the repo directory:
@@ -330,7 +330,7 @@ The goal is to run a paired-end, strand-specific experiment on Sherlock using si
 
 ```bash
   $ sdev
-  $ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:template
+  $ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
   $ exit #this takes you back to the login node
 ```
 
@@ -339,7 +339,7 @@ The goal is to run a paired-end, strand-specific experiment on Sherlock using si
 ```
 {
     "default_runtime_attributes" : {
-        "singularity_container" : "~/.singularity/rna-seq-pipeline-template.simg",
+        "singularity_container" : "~/.singularity/rna-seq-pipeline-v1.0.simg",
         "singularity_command_options" : "--bind /scratch,/lscratch,/oak/stanford"
     }
 }
@@ -350,7 +350,7 @@ The default SLURM partition is `normal`. If you want to use some other partition
 ```
 {
     "default_runtime_attributes" : {
-        "singularity_container" : "~/.singularity/rna-seq-pipeline-template.simg",
+        "singularity_container" : "~/.singularity/rna-seq-pipeline-v1.0.simg",
         "slurm_partition" : "SLURM_PARTITION"
         "singularity_command_options" : "--bind /scratch,/lscratch,/oak/stanford"
     }
@@ -378,7 +378,7 @@ The `slurm.json` template file looks like this:
     "default_runtime_attributes" : {
       "slurm_partition": "[YOUR_SLURM_PARTITION]",
       "slurm_account": "[YOUR_SLURM_ACCOUNT]",
-      "singularity_container" : "~/.singularity/rna-seq-pipeline-template.simg",
+      "singularity_container" : "~/.singularity/rna-seq-pipeline-v1.0.simg",
       "singularity_command_options" : "--bind /your/,[DATA_DIR1],[DATA_DIR2],..."
     }
 }
@@ -391,7 +391,7 @@ Set your partition/account in workflow_opts/slurm.json. If your SLURM cluster do
 2. Build the singularity image:
 
 ```bash
-  $ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:template
+  $ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
 ```
 
 3. Run the pipeline:

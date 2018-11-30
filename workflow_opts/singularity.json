@@ -1,5 +1,5 @@
 {
     "default_runtime_attributes" : {
-        "singularity_container" : "~/.singularity/rna-seq-pipeline-template.simg"
+        "singularity_container" : "~/.singularity/rna-seq-pipeline-v1.0.simg"
     }
 }
