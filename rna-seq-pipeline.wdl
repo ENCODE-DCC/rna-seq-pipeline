@@ -11,8 +11,6 @@ workflow rna {
     Array[File] fastqs_R2 = [] 
     # aligner: star for now, more added if/when needed
     String aligner
-    # index: aligner index (tar.gz)
-    File index
     # bamroot: root name for output bams. For example foo_bar will
     # create foo_bar_genome.bam and foo_bar_anno.bam
     String bamroot 
@@ -22,37 +20,70 @@ workflow rna {
     String strandedness_direction
     # chrom_sizes: chromosome sizes file
     File chrom_sizes 
-    # rsem_index: location of the RSEM index archive (tar.gz)
-    File rsem_index
-    # rnd_seed: random seed used for rsem
-    Int rnd_seed = 12345
+
+    ## task level variables that are defined globally to make them visible to DNANexus UI
+
+    # ALIGN
+    # index: aligner index (tar.gz)
+    File align_index
+    Int align_ncpus
+    Int align_ramGB
     # indexdir: where to extract the star index, relative to cwd
     String? indexdir
     # libraryid: identifier which will be added to bam headers
     String? libraryid
+    String? align_disk
 
-    String? disks
+    # KALLISTO
 
-    Int align_ncpus
+    Int kallisto_number_of_threads
+    Int kallisto_ramGB
+    File kallisto_index
+    Int? kallisto_fragment_length
+    Float? kallisto_sd_of_fragment_length
+    String? kallisto_disk
+    
+    # BAM_TO_SIGNALS
 
-    Int align_ramGB
+    Int bam_to_signals_ncpus
+    Int bam_to_signals_ramGB
+    String? bam_to_signals_disk
+    
+    # RSEM_QUANT
 
+    # rsem_index: location of the RSEM index archive (tar.gz)
+    File rsem_index
+    # rnd_seed: random seed used for rsem
+    Int rnd_seed = 12345
+    Int rsem_ncpus
+    Int rsem_ramGB
+    String? rsem_disk
+    
+    # RNA_QC
 
+    File rna_qc_tr_id_to_gene_type_tsv
+    String? rna_qc_disk
 
+    # MAD_QC 
+
+    String? mad_qc_disk
+    
+    ## WORKFLOW BEGINS
+    
     Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
     scatter (i in range(length(fastqs_))) {
         call align { input:
             endedness = endedness,
             fastqs = fastqs_[i],
-            index = index,
+            index = align_index,
             aligner = aligner,
             indexdir = indexdir,
             libraryid = libraryid,
             bamroot = "rep"+(i+1)+bamroot,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
-            disks = disks,
+            disks = align_disk,
         }
 
         call bam_to_signals { input:
@@ -60,7 +91,9 @@ workflow rna {
             chrom_sizes = chrom_sizes,
             strandedness = strandedness,
             bamroot = "rep"+(i+1)+bamroot+"_genome",
-            disks = disks,
+            ncpus = bam_to_signals_ncpus,
+            ramGB = bam_to_signals_ramGB,
+            disks = bam_to_signals_disk,
         }
 
         call rsem_quant { input:
@@ -69,9 +102,9 @@ workflow rna {
             anno_bam = align.annobam,
             endedness = endedness,
             read_strand = strandedness_direction,
-            ncpus = align_ncpus,
-            ramGB = align_ramGB,
-            disks = disks,
+            ncpus = rsem_ncpus,
+            ramGB = rsem_ramGB,
+            disks = rsem_disk,
         }
     }
 
@@ -80,7 +113,12 @@ workflow rna {
             fastqs = fastqs_[i],
             endedness = endedness,
             strandedness_direction = strandedness_direction,
-            disks = disks,
+            kallisto_index = kallisto_index,
+            number_of_threads = kallisto_number_of_threads,
+            ramGB = kallisto_ramGB,
+            fragment_length = kallisto_fragment_length,
+            sd_of_fragment_length = kallisto_sd_of_fragment_length,
+            disks = kallisto_disk,
             out_prefix = "rep"+(i+1)+bamroot,
         }
     }
@@ -91,14 +129,16 @@ workflow rna {
         call mad_qc { input:
             quants1 = rsem_quant.genes_results[0],
             quants2 = rsem_quant.genes_results[1],
+            disks = mad_qc_disk,
         }
     }
 
     scatter (i in range(length(align.annobam))) {
         call rna_qc { input:
             input_bam = align.annobam[i],
+            tr_id_to_gene_type_tsv = rna_qc_tr_id_to_gene_type_tsv,
             output_filename = "rep"+(i+1)+bamroot+"_qc.json",
-            disks = disks,
+            disks = rna_qc_disk,
         }
     }
 }
@@ -267,7 +307,7 @@ workflow rna {
         }
 
         runtime {
-            cpu: 1
+            cpu: 2
             memory: "3400 MB"
             disks: select_first([disks,"local-disk 100 SSD"]) 
         }
@@ -292,7 +332,7 @@ workflow rna {
         }
 
         runtime {
-            cpu: 1
+            cpu: 2
             memory: "1024 MB"
             disks: select_first([disks, "local-disk 100 SSD"]) 
         }
