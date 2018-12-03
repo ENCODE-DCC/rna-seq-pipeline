@@ -248,7 +248,7 @@ Replace `[YOUR_PROJECT_NAME]` with the actual name of the project you created.
 6. Compile the workflow:
 
 ```bash
-  $ java -jar dxWDL-0.75.jar compile rna-seq-pipeline.wdl -project [YOUR_PROJECT_NAME] -f -folder /test_run/workflow -defaults input.json -extras workflow_opts/docker.json
+  $ java -jar dxWDL-0.77.jar compile rna-seq-pipeline.wdl -project [YOUR_PROJECT_NAME] -f -folder /test_run/workflow -defaults input.json -extras workflow_opts/docker.json
 ```
 
 7. Go to the DNAnexus [project page](https://platform.dnanexus.com/projects) and click on your project.

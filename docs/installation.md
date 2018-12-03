@@ -66,12 +66,12 @@ If you are intending to build and run the pipeline on DNAnexus, the following se
 
 4. Download dxWDL:
     ```bash 
-      $ wget https://github.com/dnanexus/dxWDL/releases/download/0.75/dxWDL-0.75.jar
+      $ wget https://github.com/dnanexus/dxWDL/releases/download/0.77/dxWDL-0.77.jar
     ```
 
 5. Make dxWDL executable:
     ```bash
-      $ chmod 755 dxWDL-0.75.jar
+      $ chmod 755 dxWDL-0.77.jar
     ```
 
 * For an example on how to run the pipeline on DNAnexus, see [HOWTO](howto.md#dna-nexus)
