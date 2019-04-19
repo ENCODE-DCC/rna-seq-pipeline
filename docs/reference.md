@@ -7,6 +7,11 @@ This document contains more detailed information on the inputs, outputs and the 
 [Software](reference.md#software)  
 [Inputs](reference.md#inputs)  
 [Outputs](reference.md#outputs)
+[Genome Reference Files](reference.md#genome-files)
+
+## Genome Files
+
+Reference and index files can be downloaded from the [ENCODE Portal](https://www.encodeproject.org/search/?type=Reference&reference_type=index). These files are for human, and mouse will follow. Files that are needed are [GRCh38 STAR Index](https://www.encodeproject.org/files/ENCFF742NER/), [GRCh38 RSEM Index](https://www.encodeproject.org/references/ENCSR219BJA/), [GRCh38 Kallisto Index](https://www.encodeproject.org/references/ENCSR622RMG/) and [GRCh38 Chromosome sizes](https://www.encodeproject.org/files/GRCh38_EBV.chrom.sizes/).
 
 ## Software
 

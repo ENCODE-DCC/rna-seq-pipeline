@@ -12,6 +12,10 @@ To check which Java version you already have, run:
 You are looking for 1.8 or higher. If the requirement is not fulfilled follow installation instructions for [mac](https://java.com/en/download/help/mac_install.xml) or
 [linux](http://openjdk.java.net/install/) or use your favorite installation method.
 
+## Cromwell
+
+Download wdl execution engine [Cromwell](https://github.com/broadinstitute/cromwell/releases/download/34/cromwell-34.jar)
+
 ## Docker
 
 Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed. 
