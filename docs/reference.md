@@ -125,7 +125,7 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 
 #### Note about resources:
 
-The hardware resources needed to run the pipeline depend the most on the sequencing depth, so it is hard to give definitive values that would be good for everyone. However for every pipeline run alignment is going to be the most memory intensive task, quantitation with RSEM is going to be computationally hardest, kallisto will require some non trivial amount of resources, and typically rest of the tasks are rather light both in cpu and memory use. Disk usage again depends on the sequencing depth, but `"local-disk 100 HDD"` is a good starting point for all the tasks. The following are recommendations that are a sensible starting point for further optimizations in a typical case (non cpu or memory related inputs omitted):
+The hardware resources needed to run the pipeline depend on the sequencing depth so it is hard to give definitive values that will be good for everyone. However, for every pipeline run, alignment is going to be the most memory-intensive task, quantitation with RSEM is going to be computationally hardest, kallisto will require some non-trivial amount of resources, and typically the rest of the tasks are rather light both in CPU and memory use. Disk usage again depends on the sequencing depth, but `"local-disk 100 HDD"` is a good starting point for all the tasks. The following are recommendations that are a sensible starting point for further optimizations in a typical case (non-CPU or memory related inputs omitted):
 
 ```
 {
