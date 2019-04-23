@@ -5,8 +5,11 @@ This document contains more detailed information on the inputs, outputs and the 
 # CONTENTS
 
 [Software](reference.md#software)  
+[Genome Reference Files](reference.md#genome-files)  
 [Inputs](reference.md#inputs)  
+[Resource Considerations](reference.md#note-about-resources)  
 [Outputs](reference.md#outputs)
+
 
 ## Software
 
@@ -41,7 +44,11 @@ Samtools flagstats are calculated using [Samtools 1.9](https://github.com/samtoo
 ### bedGraphToBigWig and bedSort
 
 [bedGraphToBigWig kent source version 371](http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig) and [bedSort](http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedSort) (no version information available) are used in signal track generation. Source code is downloadable [here](http://hgdownload.soe.ucsc.edu/admin/exe/userApps.v371.src.tgz).
- 
+
+## Genome Files
+
+Reference and index files can be downloaded from the [ENCODE Portal](https://www.encodeproject.org/search/?type=Reference&reference_type=index). These files are for human, and mouse will follow. Files that are needed are [GRCh38 STAR Index](https://www.encodeproject.org/files/ENCFF742NER/), [GRCh38 RSEM Index](https://www.encodeproject.org/references/ENCSR219BJA/), [GRCh38 Kallisto Index](https://www.encodeproject.org/references/ENCSR622RMG/) and [GRCh38 Chromosome sizes](https://www.encodeproject.org/files/GRCh38_EBV.chrom.sizes/).
+
 ## Inputs
 
 A typical input file looks like this:
@@ -115,6 +122,23 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 * `rna.rsem_disk` As above, but for RSEM. 
 * `rna.kallisto_number_of_threads` How many threads are available for Kallisto quantification.
 * `rna.kallisto_ramGB` How many GBs of memory are available for Kallisto quantification.
+
+#### Note about resources:
+
+The hardware resources needed to run the pipeline depend on the sequencing depth so it is hard to give definitive values that will be good for everyone. However, for every pipeline run, alignment is going to be the most memory-intensive task, quantitation with RSEM is going to be computationally hardest, kallisto will require some non-trivial amount of resources, and typically the rest of the tasks are rather light both in CPU and memory use. Disk usage again depends on the sequencing depth, but `"local-disk 100 HDD"` is a good starting point for all the tasks. The following are recommendations that are a sensible starting point for further optimizations in a typical case (non-CPU or memory related inputs omitted):
+
+```
+{
+    "rna.align_ncpus" : 8,
+    "rna.align_ramGB" : 32,
+    "rna.rsem_ncpus" : 8,
+    "rna.rsem_ramGB" : 32,
+    "rna.kallisto_number_of_threads" : 4,
+    "rna.kallisto_ramGB" : 8,
+    "rna.bam_to_signals_ncpus" : 2,
+    "rna.bam_to_signals_ramGB" : 4,
+}
+```
 
 #### Example:
 
