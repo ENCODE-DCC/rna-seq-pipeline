@@ -1,9 +1,10 @@
-# CircleCI 2.0 configuration file
+# CircleCI 2.1 configuration file
 # for ENCODE RNA-SEQ-PIPELINE
 # Maintainer: Otto Jolanki
 
 # Defaults and functions
 ---
+version: 2.1
 defaults: &defaults
   docker:
     - image: circleci/buildpack-deps:xenial-scm
@@ -52,7 +53,8 @@ install_singularity: &install_singularity
     sudo make install
     singularity --version
 # Jobs
-version: 2
+orbs:
+  singularity: singularity/singularity@1.0.3
 jobs:
   unittests:
     <<: *python_defaults
@@ -76,11 +78,26 @@ jobs:
             echo "pulling template!"
             docker pull quay.io/encode-dcc/rna-seq-pipeline:template
             docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
-            docker build --cache-from quay.io/encode-dcc/rna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG -t quay.io/encode-dcc/rna-seq-pipeline:template .
+            docker build --cache-from quay.io/encode-dcc/rna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG .
             docker push $TAG
-            docker push quay.io/encode-dcc/rna-seq-pipeline:template
             docker logout
           no_output_timeout: 30m
+
+  push_template:
+      <<: *defaults
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run: *make_tag
+        - run:
+            command: |
+              source ${BASH_ENV}
+              docker pull $TAG
+              docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
+              docker tag $TAG quay.io/encode-dcc/rna-seq-pipeline:template 
+              docker push quay.io/encode-dcc/rna-seq-pipeline:template
+              docker logout
+            no_output_timeout: 30m
 
   test_PE_unstranded_docker:
     <<: *machine_defaults
@@ -137,8 +154,9 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
       - run: *make_tag
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
@@ -155,8 +173,9 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
       - run: *make_tag
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
@@ -173,8 +192,9 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
       - run: *make_tag
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
@@ -189,60 +209,36 @@ jobs:
 
 # Workflow
 workflows:
-  version: 2
   build_workflow:
     jobs:
       - build:
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - unittests:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_PE_unstranded_docker:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_SE_unstranded_docker:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_PE_stranded_docker:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_PE_unstranded_singularity:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_SE_unstranded_singularity:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_PE_stranded_singularity:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
+      - push_template:
+          requires:
+            - unittests
+            - test_PE_unstranded_docker
+            - test_SE_unstranded_docker
+            - test_PE_stranded_docker
+            - test_PE_unstranded_singularity
+            - test_SE_unstranded_singularity
+            - test_PE_stranded_singularity

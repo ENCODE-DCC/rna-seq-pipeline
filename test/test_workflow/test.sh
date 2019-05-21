@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# from Jin Lee's excellent atac-seq-pipeline in https://www.github.com/encode-dcc/atac-seq-pipeline
-# with minor changes
-
 set -e # exit on error
 
 if [ $# -lt 3 ]; then
   echo "Usage: ./test.sh [WDL] [INPUT_JSON] [DOCKER_IMAGE]"
-  echo "Make sure to have cromwell-34.jar in your \$PATH as an executable (chmod +x)."
+  echo "Make sure to have cromwell-40.jar in your \$PATH as an executable (chmod +x)."
   exit 1
 fi
 
@@ -15,13 +12,13 @@ WDL=$1
 INPUT=$2
 DOCKER_IMAGE=$3
 
-if [ -f "cromwell-34.jar" ]; then
-    echo "cromwell-34.jar already available, skipping download."
+if [ -f "cromwell-40.jar" ]; then
+    echo "cromwell-40.jar already available, skipping download."
 else
-    wget -N -c https://github.com/broadinstitute/cromwell/releases/download/34/cromwell-34.jar
+    wget -N -c https://github.com/broadinstitute/cromwell/releases/download/40/cromwell-40.jar
 fi
 
-CROMWELL_JAR=cromwell-34.jar
+CROMWELL_JAR=cromwell-40.jar
 BACKEND_CONF=backends/backend.conf
 RESULT_PREFIX=$(basename ${INPUT} .json)
 METADATA=${RESULT_PREFIX}.metadata.json # metadata
@@ -46,11 +43,11 @@ if [ $4 = "singularity" ]; then
     # Write workflow option JSON file for singularity
     BACKEND=singularity
     TMP_WF_OPT=$RESULT_PREFIX.test_rna_wf_opt.json
-    SINGULARITY_IMAGE=$(echo ${DOCKER_IMAGE} | sed 's/quay\.io\/encode-dcc\///g' | sed 's/:/-/' | sed 's/$/\.simg/')
+    SINGULARITY_IMAGE=$(echo ${DOCKER_IMAGE} | sed 's/quay\.io\/encode-dcc\///g' | sed 's/:/_/' | sed 's/$/\.sif/')
     cat > $TMP_WF_OPT << EOM
     {
         "default_runtime_attributes" : {
-            "singularity_container" : "~/.singularity/$SINGULARITY_IMAGE"
+            "singularity_container" : "~/rna-seq-pipeline/$SINGULARITY_IMAGE"
         }
     }
 EOM
