@@ -1,6 +1,9 @@
 # ENCODE DCC RNA-seq pipeline
 # Maintainer: Otto Jolanki
 
+#CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.0
+#CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
+
 workflow rna {
     # endedness: paired or single
     String endedness
