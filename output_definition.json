@@ -20,18 +20,55 @@
         }
     },
     "rna.bam_to_signals": {
-
+        "unique": {
+            "path": "bam_to_signals/rep${i+1}/${basename}",
+        },
+        "all": {
+            "path": "bam_to_signals/rep${i+1}/${basename}",
+        },
+        "python_log": {
+            "path": "bam_to_signals/rep${i+1}/${basename}",
+        }
     },
     "rna.rsem_quant": {
-
+        "genes_results": {
+            "path": "rsem_quant/rep${i+1}/${basename}"
+        },
+        "isoforms_results": {
+            "path": "rsem_quant/rep${i+1}/${basename}"
+        },
+        "python_log": {
+            "path": "rsem_quant/rep${i+1}/${basename}"
+        },
+        "number_of_genes": {
+            "path": "rsem_quant/rep${i+1}/${basename}"
+        }
     },
     "rna.kallisto": {
-
+        "quants": {
+            "path": "kallisto/rep${i+1}/${basename}"
+        },
+        "python_log": {
+            "path": "kallisto/rep${i+1}/${basename}"
+        }
     },
     "rna.mad_qc": {
-
+        "madQCplot": {
+            "path": "mad_qc/${basename}"
+        },
+        "madQCmetrics": {
+            "path": "mad_qc/${basename}"
+        },
+        "python_log": {
+            "path": "mad_qc/${basename}"
+        }
     },
     "rna.rna_qc": {
-
+        "rnaQC": {
+            "path": "rna_qc/rep${i+1}/${basename}"
+        },
+        "python_log": {
+            "path": "rna_qc/rep${i+1}/${basename}"
+        }
     }
-
+}
