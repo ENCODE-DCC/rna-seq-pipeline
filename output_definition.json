@@ -1,0 +1,37 @@
+{
+    "rna.align": {
+        "genomebam": {
+            "path": "align/rep${i+1}/${basename}"
+        },
+        "annobam": {
+            "path": "align/rep${i+1}/${basename}"
+        },
+        "genome_flagstat": {
+            "path": "align/rep${i+1}/${basename}"
+        },
+        "anno_flagstat": {
+            "path": "align/rep${i+1}/${basename}"
+        },
+        "log": {
+            "path": "align/rep${i+1}/${basename}"
+        },
+        "python_log": {
+            "path": "align/rep${i+1}/${basename}"
+        }
+    },
+    "rna.bam_to_signals": {
+
+    },
+    "rna.rsem_quant": {
+
+    },
+    "rna.kallisto": {
+
+    },
+    "rna.mad_qc": {
+
+    },
+    "rna.rna_qc": {
+
+    }
+
