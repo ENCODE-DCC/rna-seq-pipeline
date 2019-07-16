@@ -1,6 +1,9 @@
 #ENCODE DCC RNA-Seq pipeline merge-annotation
 #Maintainer: Otto Jolanki
 
+#CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.0
+#CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
+
 workflow merge_anno {
     # input filenames
     File annotation
