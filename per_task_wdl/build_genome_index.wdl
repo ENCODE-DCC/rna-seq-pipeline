@@ -1,6 +1,9 @@
 # ENCODE DCC RNA-Seq pipeline build_genome_index
 # Maintainer: Otto Jolanki
 
+#CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.0
+#CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
+
 workflow build_index {
     # Inputs
     # reference genome or transcriptome (in prep_kallisto mode)in gzipped fasta
@@ -60,7 +63,6 @@ task make_index {
     }
     
     runtime {
-        docker : "quay.io/encode-dcc/rna-seq-pipeline:template"
         cpu : ncpu
         memory : "${select_first([memGB,'8'])} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
