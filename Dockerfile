@@ -57,7 +57,7 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedSort && chmod 
 
 # Install qc-utils 0.2
 
-RIN pip3 install qc-utils==0.2
+RUN pip3 install qc-utils==0.2
 
 RUN mkdir -p rna-seq-pipeline/src
 COPY /src rna-seq-pipeline/src
