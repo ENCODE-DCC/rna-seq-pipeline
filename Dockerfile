@@ -1,5 +1,5 @@
 # Dockerfile for ENCODE-DCC rna-seq-pipeline
-FROM ubuntu:16.04
+FROM ubuntu@sha97b54e5692c27072234ff958a7442dde4266af21e7b688e7fca5dc5acc8ed7d9
 MAINTAINER Otto Jolanki 
 
 RUN apt-get update && apt-get install -y \
