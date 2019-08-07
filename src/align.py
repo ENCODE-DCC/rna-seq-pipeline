@@ -197,7 +197,7 @@ def main(args):
     star_log_path = os.path.join(cwd, args.bamroot + '_Log.final.out')
     os.rename(
         os.path.join(cwd, 'Aligned.sortedByCoord.out.bam'),
-        genome_bam_path
+        genome_bam_path)
     os.rename(
         os.path.join(cwd, 'Log.final.out'),
         star_log_path)
