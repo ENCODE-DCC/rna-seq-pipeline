@@ -8,6 +8,8 @@ __version__ = '0.1.0'
 __license__ = 'MIT'
 
 from abc import ABC, abstractmethod
+from qc_utils import QCMetric, QCMetricRecord
+from qc_utils.parsers import parse_starlog, parse_flagstats
 import argparse
 import logging
 import os
@@ -34,11 +36,11 @@ def make_aligner(args):
         if args.endedness == 'single':
             logger.info('Creating a single-ended aligner.')
             return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB,
-                                          args.indexdir, args.bamroot)
+                                          args.indexdir)
         elif args.endedness == 'paired':
             logger.info('Creating a paired-end aligner.')
             return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB,
-                                        args.indexdir, args.bamroot)
+                                        args.indexdir)
 
 
 def make_modified_TarInfo(archive, target_dir=''):
@@ -79,11 +81,10 @@ class StarAligner(ABC):
     Star aligning jobs.
     """
 
-    def __init__(self, ncpus, ramGB, indexdir, bamroot):
+    def __init__(self, ncpus, ramGB, indexdir):
         self.ncpus = ncpus
         self.ramGB = ramGB
         self.indexdir = indexdir
-        self.bamroot = bamroot
 
     def run(self):
         logger.info('running STAR command %s', ' '.join(self.command))
@@ -97,35 +98,6 @@ class StarAligner(ABC):
     @abstractmethod
     def format_command_string(self):
         pass
-
-    def post_process(self):
-        cwd = os.getcwd()
-        os.rename(
-            os.path.join(cwd, 'Aligned.sortedByCoord.out.bam'),
-            os.path.join(cwd, self.bamroot + '_genome.bam'))
-        os.rename(
-            os.path.join(cwd, 'Log.final.out'),
-            os.path.join(cwd, self.bamroot + '_Log.final.out'))
-        rsem_check_cmd = 'rsem-sam-validator {bam_to_check}'.format(
-            bam_to_check='Aligned.toTranscriptome.out.bam')
-        rsem_output = subprocess.check_output(shlex.split(rsem_check_cmd))
-        # rsem validator exits with 0 whether the check passes or not
-        # for this reason we check if the output ends in 'is valid!'
-        # the other possibility is 'is not valid!'
-        rsem_valid = rsem_output.decode().strip().split('\n')[-1].endswith(
-            'is valid!')
-        if rsem_valid:
-            logger.info('Transcriptome bam is already rsem-sorted.')
-            os.rename(
-                os.path.join(cwd, 'Aligned.toTranscriptome.out.bam'),
-                os.path.join(cwd, self.bamroot + '_anno.bam'))
-        else:
-            logger.info('Transcriptome bam is not rsem-sorted.')
-            rsem_sort_cmd = 'convert-sam-for-rsem {input} {output}'.format(
-                input='Aligned.toTranscriptome.out.bam',
-                output=self.bamroot + '_anno')
-            logger.info('Running %s', rsem_sort_cmd)
-            subprocess.call(shlex.split(rsem_sort_cmd))
 
 
 class SingleEndedStarAligner(StarAligner):
@@ -154,8 +126,8 @@ class SingleEndedStarAligner(StarAligner):
     --sjdbScore 1 \
     --limitBAMsortRAM {ramGB}000000000'''
 
-    def __init__(self, fastqs, ncpus, ramGB, indexdir, bamroot):
-        super().__init__(ncpus, ramGB, indexdir, bamroot)
+    def __init__(self, fastqs, ncpus, ramGB, indexdir):
+        super().__init__(ncpus, ramGB, indexdir)
         self.input_fastq = fastqs[0]
         self.command = shlex.split(
             self.format_command_string(type(self).command_string))
@@ -194,8 +166,8 @@ class PairedEndStarAligner(StarAligner):
     --sjdbScore 1 \
     --limitBAMsortRAM {ramGB}000000000'''
 
-    def __init__(self, fastqs, ncpus, ramGB, indexdir, bamroot):
-        super().__init__(ncpus, ramGB, indexdir, bamroot)
+    def __init__(self, fastqs, ncpus, ramGB, indexdir):
+        super().__init__(ncpus, ramGB, indexdir)
         self.fastq_read1 = fastqs[0]
         self.fastq_read2 = fastqs[1]
         self.command = shlex.split(
@@ -216,13 +188,39 @@ def main(args):
         archive.extractall()
     aligner = make_aligner(args)
     aligner.run()
-    aligner.post_process()
     cwd = os.getcwd()
     genome_bam_path = os.path.join(cwd, args.bamroot + '_genome.bam')
     anno_bam_path = os.path.join(cwd, args.bamroot + '_anno.bam')
     genome_flagstat_path = os.path.join(cwd,
                                         args.bamroot + '_genome_flagstat.txt')
     anno_flagstat_path = os.path.join(cwd, args.bamroot + '_anno_flagstat.txt')
+    star_log_path = os.path.join(cwd, args.bamroot + '_Log.final.out')
+    os.rename(
+        os.path.join(cwd, 'Aligned.sortedByCoord.out.bam'),
+        genome_bam_path
+    os.rename(
+        os.path.join(cwd, 'Log.final.out'),
+        star_log_path)
+    rsem_check_cmd = 'rsem-sam-validator {bam_to_check}'.format(
+        bam_to_check='Aligned.toTranscriptome.out.bam')
+    rsem_output = subprocess.check_output(shlex.split(rsem_check_cmd))
+    # rsem validator exits with 0 whether the check passes or not
+    # for this reason we check if the output ends in 'is valid!'
+    # the other possibility is 'is not valid!'
+    rsem_valid = rsem_output.decode().strip().split('\n')[-1].endswith(
+        'is valid!')
+    if rsem_valid:
+        logger.info('Transcriptome bam is already rsem-sorted.')
+        os.rename(
+            os.path.join(cwd, 'Aligned.toTranscriptome.out.bam'),
+            anno_bam_path)
+    else:
+        logger.info('Transcriptome bam is not rsem-sorted.')
+        rsem_sort_cmd = 'convert-sam-for-rsem {input} {output}'.format(
+            input='Aligned.toTranscriptome.out.bam',
+            output=args.bamroot + '_anno')
+        logger.info('Running %s', rsem_sort_cmd)
+        subprocess.call(shlex.split(rsem_sort_cmd))
     get_flagstats(genome_bam_path, genome_flagstat_path)
     get_flagstats(anno_bam_path, anno_flagstat_path)
 
