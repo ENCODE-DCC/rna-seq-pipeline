@@ -21,8 +21,7 @@ class TestAlignHelpers(unittest.TestCase):
             fastqs=['fq1.fastq.gz', 'fq2.fastq.gz'],
             ncpus=4,
             ramGB=8,
-            indexdir='out',
-            bamroot='foobar')
+            indexdir='out')
         aligner = align.make_aligner(star_paired)
         self.assertTrue(isinstance(aligner, align.PairedEndStarAligner))
 
@@ -33,8 +32,7 @@ class TestAlignHelpers(unittest.TestCase):
             fastqs=['fq.fastq.gz'],
             ncpus=4,
             ramGB=8,
-            indexdir='out',
-            bamroot='foobar')
+            indexdir='out')
         aligner = align.make_aligner(star_single)
         self.assertTrue(isinstance(aligner, align.SingleEndedStarAligner))
 
@@ -88,11 +86,3 @@ class TestAlignHelpers(unittest.TestCase):
             archive, target_dir='/my/new/path/')
         # verify
         self.assertEqual(modified_info[0].name, '/my/new/path/file.txt')
-
-
-class TestAlignerClasses(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
