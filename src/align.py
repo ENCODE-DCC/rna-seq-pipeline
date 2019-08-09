@@ -237,7 +237,8 @@ def main(args):
     star_log_qc = QCMetric('star_log_qc', star_log_path, parser=parse_starlog)
     write_json(anno_flagstat_qc.to_ordered_dict(), re.sub(r"\.txt$", ".json", anno_flagstat_path))
     write_json(genome_flagstat_qc.to_ordered_dict(), re.sub(r"\.txt$", ".json", genome_flagstat_path))
-    write_json(star_log_qc.to_ordered_dict(), re.sub(r"\.out$", ".json", star_log_path)
+    write_json(star_log_qc.to_ordered_dict(), re.sub(r"\.out$", ".json", star_log_path))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
