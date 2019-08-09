@@ -11,8 +11,10 @@ from abc import ABC, abstractmethod
 from qc_utils import QCMetric, QCMetricRecord
 from qc_utils.parsers import parse_starlog, parse_flagstats
 import argparse
+import json
 import logging
 import os
+import re
 import shlex
 import subprocess
 import tarfile
@@ -73,6 +75,13 @@ def get_flagstats(input_path, output_path):
     process = subprocess.run(shlex.split(command), stdout=subprocess.PIPE)
     with open(output_path, 'w') as f:
         f.write(process.stdout.decode())
+    return None
+
+
+def write_json(input_obj, output_path):
+    with open(output_path, "w") as fp:
+        json.dump(input_obj, fp)
+    return None
 
 
 class StarAligner(ABC):
@@ -223,7 +232,12 @@ def main(args):
         subprocess.call(shlex.split(rsem_sort_cmd))
     get_flagstats(genome_bam_path, genome_flagstat_path)
     get_flagstats(anno_bam_path, anno_flagstat_path)
-
+    anno_flagstat_qc = QCMetric('samtools_anno_flagstat', anno_flagstat_path, parser=parse_flagstats)
+    genome_flagstat_qc = QCMetric('samtools_genome_flagstat', genome_flagstat_path, parser=parse_flagstats)
+    star_log_qc = QCMetric('star_log_qc', star_log_path, parser=parse_starlog)
+    write_json(anno_flagstat_qc.to_ordered_dict(), re.sub(r"\.txt$", ".json", anno_flagstat_path))
+    write_json(genome_flagstat_qc.to_ordered_dict(), re.sub(r"\.txt$", ".json", genome_flagstat_path))
+    write_json(star_log_qc.to_ordered_dict(), re.sub(r"\.out$", ".json", star_log_path)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
