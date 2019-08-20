@@ -17,7 +17,7 @@ python_defaults: &python_defaults
 
 machine_defaults: &machine_defaults
   machine:
-    image: circleci/classic:latest
+    image: ubuntu-1604:201903-01
   working_directory: ~/rna-seq-pipeline
 
 make_tag: &make_tag
@@ -155,6 +155,7 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
+      - run: sudo apt-get update
       - singularity/install-go
       - singularity/debian-install-3
       - run: *get_star_index
@@ -174,6 +175,7 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
+      - run: sudo apt-get update
       - singularity/install-go
       - singularity/debian-install-3
       - run: *get_star_index
@@ -193,6 +195,7 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
+      - run: sudo apt-get update
       - singularity/install-go
       - singularity/debian-install-3
       - run: *get_star_index
