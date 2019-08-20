@@ -36,7 +36,7 @@ STAR_COMMAND = '''STAR --runMode inputAlignmentsFromBAM \
 def main(args):
     print(args)
     star_return_code = call_star(args.bamfile, args.strandedness)
-    
+
     try:
         assert star_return_code == 0
     except AssertionError:
