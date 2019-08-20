@@ -55,9 +55,9 @@ ENV PATH="/software/RSEM-1.2.31:${PATH}"
 RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig && chmod +x bedGraphToBigWig
 RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedSort && chmod +x bedSort
 
-# Install qc-utils 0.2.1
+# Install qc-utils 19.8.1
 
-RUN pip3 install qc-utils==0.2.1
+RUN pip3 install qc-utils==19.8.1
 
 RUN mkdir -p rna-seq-pipeline/src
 COPY /src rna-seq-pipeline/src
