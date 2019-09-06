@@ -210,6 +210,23 @@ jobs:
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
           no_output_timeout: 30m
 
+  test_PE_align_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_PE_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_PE_input.metadata.json --reference_json test/test_task/test_align_PE_reference_md5.json --outfile test_align_PE_input.result.json
+            cat test_align_PE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_align_PE_input.result.json
+          no_output_timeout: 30m
+
 # Workflow
 workflows:
   build_workflow:
@@ -236,6 +253,9 @@ workflows:
       - test_PE_stranded_singularity:
           requires:
             - build
+      - test_PE_align_docker:
+          requires:
+            - build
       - push_template:
           requires:
             - unittests
@@ -245,3 +265,4 @@ workflows:
             - test_PE_unstranded_singularity
             - test_SE_unstranded_singularity
             - test_PE_stranded_singularity
+            - test_PE_align_docker
