@@ -5,7 +5,6 @@ Unit test module for align.py
 
 import unittest
 import align
-import argparse
 import io
 import tarfile
 
@@ -15,25 +14,11 @@ class TestAlignHelpers(unittest.TestCase):
         pass
 
     def test_make_aligner_star_paired(self):
-        star_paired = argparse.Namespace(
-            aligner='star',
-            endedness='paired',
-            fastqs=['fq1.fastq.gz', 'fq2.fastq.gz'],
-            ncpus=4,
-            ramGB=8,
-            indexdir='out')
-        aligner = align.make_aligner(star_paired)
+        aligner = align.make_aligner('paired', ['fq1.fastq.gz', 'fq2.fastq.gz'], 4, 8, 'out')
         self.assertTrue(isinstance(aligner, align.PairedEndStarAligner))
 
     def test_make_aligner_star_single(self):
-        star_single = argparse.Namespace(
-            aligner='star',
-            endedness='single',
-            fastqs=['fq.fastq.gz'],
-            ncpus=4,
-            ramGB=8,
-            indexdir='out')
-        aligner = align.make_aligner(star_single)
+        aligner = align.make_aligner('single', ['fq.fastq.gz'], 4, 8, 'out')
         self.assertTrue(isinstance(aligner, align.SingleEndedStarAligner))
 
     def create_tar_archive(self, name_type_list):

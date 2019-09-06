@@ -1,6 +1,6 @@
 {
     "rna.endedness" : "single",
-    "rna.fastqs_R1" : ["test_data/rep1_ENCSR510QZW_chr19only_10000_reads.fastq.gz","test_data/rep2_ENCSR510QZW_chr19only_10000_reads.fastq.gz"],
+    "rna.fastqs_R1" : [["test_data/rep1_ENCSR510QZW_chr19only_10000_reads.fastq.gz"],["test_data/rep2_ENCSR510QZW_chr19only_10000_reads.fastq.gz"]],
     "rna.aligner" : "star",
     "rna.bamroot" : "SE_unstranded",
     "rna.align_index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",

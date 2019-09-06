@@ -11,6 +11,9 @@ from abc import ABC, abstractmethod
 import argparse
 import logging
 import os
+import pathlib
+import random
+import shutil
 import shlex
 import subprocess
 import sys
@@ -27,6 +30,45 @@ filehandler.setFormatter(formatter)
 consolehandler.setFormatter(formatter)
 logger.addHandler(consolehandler)
 logger.addHandler(filehandler)
+
+
+def choices(population, k):
+    result = []
+    for i in range(k):
+        result.append(random.choice(population))
+    return result
+
+
+def get_tmp_file_name(extension=".fastq.gz"):
+    """
+    Returns a string that contains 20 random lowercase letters followed
+    by extension. Used to guarantee that the name of the merged filename
+    will not collide with anything.
+    """
+    while True:
+        tmp_name = ''.join(choices('abcdefghijklmnopqrstuvwxyz', k=20)) + extension
+        if pathlib.Path(tmp_name).exists():
+            continue
+        else:
+            return tmp_name
+
+
+def concatenate_files(input_files):
+    """Merge list of files into one.
+    Args: list of paths.
+    Returns: pathlib.Path to the concatenated file.
+    Side effect: creates the concatenated file in the path that is returned.
+    """
+    result_filename = get_tmp_file_name()
+    with open(result_filename, "wb") as out_fp:
+        logger.info("merging files into %r" % result_filename)
+        for fastq in input_files:
+            with open(fastq, "rb") as add_on:
+                logger.info("merging %r next" % fastq)
+                shutil.copyfileobj(add_on, out_fp)
+                logger.info("merging %r success" % fastq)
+    logger.info("merge complete, result is in %r" % result_filename)
+    return result_filename
 
 
 class KallistoQuant(ABC):
@@ -178,28 +220,34 @@ class KallistoQuantPairedEnd(KallistoQuant):
                 fastq2=self.fastq2))
 
 
-def get_kallisto_quant_instance(args):
-    if args.endedness == 'paired':
-        return KallistoQuantPairedEnd(
-            args.path_to_index, args.output_dir, args.number_of_threads,
-            args.strandedness, args.fastqs, args.out_prefix)
-    elif args.endedness == 'single':
-        return KallistoQuantSingleEnd(
-            args.path_to_index, args.output_dir, args.number_of_threads,
-            args.strandedness, args.fragment_length,
-            args.sd_of_fragment_length, args.fastqs, args.out_prefix)
-
-
 def main(args):
-    kallisto_quantifier = get_kallisto_quant_instance(args)
+    merged_R2 = None
+    if len(args.fastqs_R1) > 1:
+        merged_R1 = concatenate_files(args.fastqs_R1)
+    else:
+        merged_R1 = args.fastqs_R1[0]
+    if args.endedness == "paired" and len(args.fastqs_R2) > 1:
+        merged_R2 = concatenate_files(args.fastqs_R2)
+    elif args.endedness == "paired" and len(args.fastqs_R2) == 1:
+        merged_R2 = args.fastqs_R2[0]
+    fastqs = [merged_R1]
+    if merged_R2 and args.endedness == "paired":
+        fastqs.append(merged_R2)
+    if args.endedness == "paired":
+        kallisto_quantifier = KallistoQuantPairedEnd(args.path_to_index, args.output_dir, args.number_of_threads,
+                                                     args.strandedness, fastqs, args.out_prefix)
+    if args.endedness == "single":
+        kallisto_quantifier = KallistoQuantSingleEnd(args.path_to_index, args.output_dir, args.number_of_threads,
+                                                     args.strandedness, args.fragment_length, args.sd_of_fragment_length,
+                                                     fastqs, args.out_prefix)
     kallisto_quantifier.run()
     kallisto_quantifier.rename_output()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--fastqs', nargs='+', help='Input fastqs, gzipped or uncompressed')
+    parser.add_argument('--fastqs_R1', nargs='+', help='Input gzipped fastq(s) beloning to read1')
+    parser.add_argument('--fastqs_R2', nargs='*', help='Input gzipped fastq(s) beloning to read2')
     parser.add_argument(
         '--number_of_threads',
         type=int,

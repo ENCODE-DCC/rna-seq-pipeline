@@ -1,7 +1,7 @@
 {
     "rna.endedness" : "paired",
-    "rna.fastqs_R1" : ["test_data/ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz"],
-    "rna.fastqs_R2" : ["test_data/ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz"],
+    "rna.fastqs_R1" : [["test_data/ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz"]],
+    "rna.fastqs_R2" : [["test_data/ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz"]],
     "rna.aligner" : "star",
     "rna.align_index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
     "rna.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
