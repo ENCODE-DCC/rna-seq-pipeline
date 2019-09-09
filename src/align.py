@@ -244,6 +244,7 @@ def main(args):
     elif args.endedness == "paired" and len(args.fastqs_R2) == 1:
         merged_R2 = args.fastqs_R2[0]
     fastqs = [merged_R1]
+
     if merged_R2 and args.endedness == "paired":
         fastqs.append(merged_R2)
     with tarfile.open(args.index, 'r:gz') as archive:

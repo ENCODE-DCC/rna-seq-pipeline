@@ -11,7 +11,6 @@ import argparse
 import json
 import logging
 import pysam
-from bisect import insort
 from qc_utils import QCMetric, QCMetricRecord
 
 logger = logging.getLogger(__name__)

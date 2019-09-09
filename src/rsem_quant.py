@@ -17,7 +17,7 @@ import shlex
 import subprocess
 import tarfile
 from align import make_modified_TarInfo
-from rna_qc import QCMetric, QCMetricRecord
+from qc_utils import QCMetric, QCMetricRecord
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

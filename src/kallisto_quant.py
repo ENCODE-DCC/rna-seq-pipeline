@@ -11,12 +11,12 @@ from abc import ABC, abstractmethod
 import argparse
 import logging
 import os
-import pathlib
 import random
-import shutil
 import shlex
 import subprocess
 import sys
+
+from align import concatenate_files
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -37,38 +37,6 @@ def choices(population, k):
     for i in range(k):
         result.append(random.choice(population))
     return result
-
-
-def get_tmp_file_name(extension=".fastq.gz"):
-    """
-    Returns a string that contains 20 random lowercase letters followed
-    by extension. Used to guarantee that the name of the merged filename
-    will not collide with anything.
-    """
-    while True:
-        tmp_name = ''.join(choices('abcdefghijklmnopqrstuvwxyz', k=20)) + extension
-        if pathlib.Path(tmp_name).exists():
-            continue
-        else:
-            return tmp_name
-
-
-def concatenate_files(input_files):
-    """Merge list of files into one.
-    Args: list of paths.
-    Returns: pathlib.Path to the concatenated file.
-    Side effect: creates the concatenated file in the path that is returned.
-    """
-    result_filename = get_tmp_file_name()
-    with open(result_filename, "wb") as out_fp:
-        logger.info("merging files into %r" % result_filename)
-        for fastq in input_files:
-            with open(fastq, "rb") as add_on:
-                logger.info("merging %r next" % fastq)
-                shutil.copyfileobj(add_on, out_fp)
-                logger.info("merging %r success" % fastq)
-    logger.info("merge complete, result is in %r" % result_filename)
-    return result_filename
 
 
 class KallistoQuant(ABC):
@@ -231,6 +199,7 @@ def main(args):
     elif args.endedness == "paired" and len(args.fastqs_R2) == 1:
         merged_R2 = args.fastqs_R2[0]
     fastqs = [merged_R1]
+
     if merged_R2 and args.endedness == "paired":
         fastqs.append(merged_R2)
     if args.endedness == "paired":
