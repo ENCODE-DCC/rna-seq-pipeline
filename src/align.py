@@ -14,8 +14,11 @@ import argparse
 import json
 import logging
 import os
+import pathlib
+import random
 import re
 import shlex
+import shutil
 import subprocess
 import tarfile
 
@@ -33,16 +36,15 @@ logger.addHandler(consolehandler)
 logger.addHandler(filehandler)
 
 
-def make_aligner(args):
-    if args.aligner == 'star':
-        if args.endedness == 'single':
-            logger.info('Creating a single-ended aligner.')
-            return SingleEndedStarAligner(args.fastqs, args.ncpus, args.ramGB,
-                                          args.indexdir)
-        elif args.endedness == 'paired':
-            logger.info('Creating a paired-end aligner.')
-            return PairedEndStarAligner(args.fastqs, args.ncpus, args.ramGB,
-                                        args.indexdir)
+def make_aligner(endedness, fastqs, ncpus, ramGB, indexdir):
+    if endedness == 'single':
+        logger.info('Creating a single-ended aligner.')
+        return SingleEndedStarAligner(fastqs, ncpus, ramGB,
+                                      indexdir)
+    elif endedness == 'paired':
+        logger.info('Creating a paired-end aligner.')
+        return PairedEndStarAligner(fastqs, ncpus, ramGB,
+                                    indexdir)
 
 
 def make_modified_TarInfo(archive, target_dir=''):
@@ -67,6 +69,45 @@ def make_modified_TarInfo(archive, target_dir=''):
                                        os.path.basename(member.name))
             members.append(member)
     return members
+
+
+def choices(population, k):
+    result = []
+    for i in range(k):
+        result.append(random.choice(population))
+    return result
+
+
+def get_tmp_file_name(extension=".fastq.gz"):
+    """
+    Returns a string that contains 20 random lowercase letters followed
+    by extension. Used to guarantee that the name of the merged filename
+    will not collide with anything.
+    """
+    while True:
+        tmp_name = ''.join(choices('abcdefghijklmnopqrstuvwxyz', k=20)) + extension
+        if pathlib.Path(tmp_name).exists():
+            continue
+        else:
+            return tmp_name
+
+
+def concatenate_files(input_files):
+    """Merge list of files into one.
+    Args: list of paths.
+    Returns: pathlib.Path to the concatenated file.
+    Side effect: creates the concatenated file in the path that is returned.
+    """
+    result_filename = get_tmp_file_name()
+    with open(result_filename, "wb") as out_fp:
+        logger.info("merging files into %r" % result_filename)
+        for fastq in input_files:
+            with open(fastq, "rb") as add_on:
+                logger.info("merging %r next" % fastq)
+                shutil.copyfileobj(add_on, out_fp)
+                logger.info("merging %r success" % fastq)
+    logger.info("merge complete, result is in %r" % result_filename)
+    return result_filename
 
 
 def get_flagstats(input_path, output_path):
@@ -193,9 +234,22 @@ class PairedEndStarAligner(StarAligner):
 
 
 def main(args):
+    merged_R2 = None
+    if len(args.fastqs_R1) > 1:
+        merged_R1 = concatenate_files(args.fastqs_R1)
+    else:
+        merged_R1 = args.fastqs_R1[0]
+    if args.endedness == "paired" and len(args.fastqs_R2) > 1:
+        merged_R2 = concatenate_files(args.fastqs_R2)
+    elif args.endedness == "paired" and len(args.fastqs_R2) == 1:
+        merged_R2 = args.fastqs_R2[0]
+    fastqs = [merged_R1]
+
+    if merged_R2 and args.endedness == "paired":
+        fastqs.append(merged_R2)
     with tarfile.open(args.index, 'r:gz') as archive:
         archive.extractall()
-    aligner = make_aligner(args)
+    aligner = make_aligner(args.endedness, fastqs, args.ncpus, args.ramGB, args.indexdir)
     aligner.run()
     cwd = os.getcwd()
     genome_bam_path = os.path.join(cwd, args.bamroot + '_genome.bam')
@@ -245,14 +299,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fastqs', nargs='+', help='Input gzipped fastq(s)')
-    parser.add_argument(
-        '--aligner',
-        type=str,
-        choices=['star'],
-        help='this is exists for the purpose of extension',
-        required=True,
-        default='star')
+    parser.add_argument('--fastqs_R1', nargs='+', help='Input gzipped fastq(s) belonging to read1')
+    parser.add_argument('--fastqs_R2', nargs='*', help='Input gzipped fastq(s) belonging to read2')
     parser.add_argument(
         '--index',
         type=str,
@@ -269,11 +317,6 @@ if __name__ == '__main__':
         choices=['paired', 'single'],
         help='paired or single',
         required=True)
-    parser.add_argument(
-        '--libraryid',
-        type=str,
-        help='Library identifier which will be added to bam header.',
-        default='libraryID')
     parser.add_argument(
         '--bamroot',
         type=str,

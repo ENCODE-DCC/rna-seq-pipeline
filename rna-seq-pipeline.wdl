@@ -8,12 +8,10 @@ workflow rna {
     # endedness: paired or single
     String endedness
     # fastqs_R1: fastq.gz files for Read1 (only these if single-ended)
-    Array[File] fastqs_R1
+    Array[Array[File]] fastqs_R1
     # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
     # corresponding to fastqs_R1
-    Array[File] fastqs_R2 = [] 
-    # aligner: star for now, more added if/when needed
-    String aligner
+    Array[Array[File]] fastqs_R2 = [] 
     # bamroot: root name for output bams. For example foo_bar will
     # create foo_bar_genome.bam and foo_bar_anno.bam
     String bamroot 
@@ -33,8 +31,6 @@ workflow rna {
     Int align_ramGB
     # indexdir: where to extract the star index, relative to cwd
     String? indexdir
-    # libraryid: identifier which will be added to bam headers
-    String? libraryid
     String? align_disk
 
     # KALLISTO
@@ -72,17 +68,17 @@ workflow rna {
     String? mad_qc_disk
     
     ## WORKFLOW BEGINS
-    
-    Array[Array[File]] fastqs_ = if length(fastqs_R2)>0 then transpose([fastqs_R1, fastqs_R2]) else transpose([fastqs_R1])
 
-    scatter (i in range(length(fastqs_))) {
+    # dummy variable value for the single-ended case
+    Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
+    
+    scatter (i in range(length(fastqs_R1))) {
         call align { input:
             endedness = endedness,
-            fastqs = fastqs_[i],
+            fastqs_R1 = fastqs_R1[i],
+            fastqs_R2 = fastqs_R2_[i],
             index = align_index,
-            aligner = aligner,
             indexdir = indexdir,
-            libraryid = libraryid,
             bamroot = "rep"+(i+1)+bamroot,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
@@ -111,9 +107,10 @@ workflow rna {
         }
     }
 
-    scatter (i in range(length(fastqs_))) {
+    scatter (i in range(length(fastqs_R1))) {
         call kallisto { input:
-            fastqs = fastqs_[i],
+            fastqs_R1 = fastqs_R1[i],
+            fastqs_R2 = fastqs_R2_[i],
             endedness = endedness,
             strandedness_direction = strandedness_direction,
             kallisto_index = kallisto_index,
@@ -126,8 +123,9 @@ workflow rna {
         }
     }
 
-    # if there are exactly two replicates, calculate the madQC metrics and draw a plot
 
+
+# if there are exactly two replicates, calculate the madQC metrics and draw a plot
     if (length(fastqs_R1) == 2) {
         call mad_qc { input:
             quants1 = rsem_quant.genes_results[0],
@@ -146,15 +144,13 @@ workflow rna {
     }
 }
 
-
     ## tasks
     task align {
-        Array[File] fastqs
+        Array[File] fastqs_R1
+        Array[File] fastqs_R2
         String endedness
-        String aligner
         File index
         String? indexdir
-        String? libraryid
         String bamroot
         Int ncpus
         Int ramGB
@@ -162,12 +158,11 @@ workflow rna {
 
         command {
             python3 $(which align.py) \
-                ${if length(fastqs)<2 then "--fastqs " + fastqs[0] else "--fastqs " + fastqs[0] + " " + fastqs[1]} \
+                --fastqs_R1 ${sep=' ' fastqs_R1} \
+                --fastqs_R2 ${sep=' ' fastqs_R2} \
                 --endedness ${endedness} \
-                --aligner ${aligner} \
                 --index ${index} \
                 ${"--indexdir " + indexdir} \
-                ${"--libraryid " + libraryid} \
                 ${"--bamroot " + bamroot} \
                 ${"--ncpus " + ncpus} \
                 ${"--ramGB " + ramGB}
@@ -259,7 +254,8 @@ workflow rna {
     }
 
     task kallisto {
-        Array[File] fastqs
+        Array[File] fastqs_R1
+        Array[File] fastqs_R2
         File kallisto_index
         String endedness
         String strandedness_direction
@@ -272,7 +268,8 @@ workflow rna {
 
         command {
             python3 $(which kallisto_quant.py) \
-                --fastqs ${sep=' ' fastqs} \
+                --fastqs_R1 ${sep=' ' fastqs_R1} \
+                --fastqs_R2 ${sep=' ' fastqs_R2} \
                 --number_of_threads ${number_of_threads} \
                 --strandedness ${strandedness_direction} \
                 --path_to_index ${kallisto_index} \

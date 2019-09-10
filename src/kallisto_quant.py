@@ -15,6 +15,8 @@ import shlex
 import subprocess
 import sys
 
+from align import concatenate_files
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 filehandler = logging.FileHandler('kallisto_quant.log')
@@ -178,28 +180,35 @@ class KallistoQuantPairedEnd(KallistoQuant):
                 fastq2=self.fastq2))
 
 
-def get_kallisto_quant_instance(args):
-    if args.endedness == 'paired':
-        return KallistoQuantPairedEnd(
-            args.path_to_index, args.output_dir, args.number_of_threads,
-            args.strandedness, args.fastqs, args.out_prefix)
-    elif args.endedness == 'single':
-        return KallistoQuantSingleEnd(
-            args.path_to_index, args.output_dir, args.number_of_threads,
-            args.strandedness, args.fragment_length,
-            args.sd_of_fragment_length, args.fastqs, args.out_prefix)
-
-
 def main(args):
-    kallisto_quantifier = get_kallisto_quant_instance(args)
+    merged_R2 = None
+    if len(args.fastqs_R1) > 1:
+        merged_R1 = concatenate_files(args.fastqs_R1)
+    else:
+        merged_R1 = args.fastqs_R1[0]
+    if args.endedness == "paired" and len(args.fastqs_R2) > 1:
+        merged_R2 = concatenate_files(args.fastqs_R2)
+    elif args.endedness == "paired" and len(args.fastqs_R2) == 1:
+        merged_R2 = args.fastqs_R2[0]
+    fastqs = [merged_R1]
+
+    if merged_R2 and args.endedness == "paired":
+        fastqs.append(merged_R2)
+    if args.endedness == "paired":
+        kallisto_quantifier = KallistoQuantPairedEnd(args.path_to_index, args.output_dir, args.number_of_threads,
+                                                     args.strandedness, fastqs, args.out_prefix)
+    if args.endedness == "single":
+        kallisto_quantifier = KallistoQuantSingleEnd(args.path_to_index, args.output_dir, args.number_of_threads,
+                                                     args.strandedness, args.fragment_length, args.sd_of_fragment_length,
+                                                     fastqs, args.out_prefix)
     kallisto_quantifier.run()
     kallisto_quantifier.rename_output()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--fastqs', nargs='+', help='Input fastqs, gzipped or uncompressed')
+    parser.add_argument('--fastqs_R1', nargs='+', help='Input gzipped fastq(s) belonging to read1')
+    parser.add_argument('--fastqs_R2', nargs='*', help='Input gzipped fastq(s) belonging to read2')
     parser.add_argument(
         '--number_of_threads',
         type=int,
