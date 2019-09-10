@@ -11,7 +11,6 @@ from abc import ABC, abstractmethod
 import argparse
 import logging
 import os
-import random
 import shlex
 import subprocess
 import sys
@@ -30,13 +29,6 @@ filehandler.setFormatter(formatter)
 consolehandler.setFormatter(formatter)
 logger.addHandler(consolehandler)
 logger.addHandler(filehandler)
-
-
-def choices(population, k):
-    result = []
-    for i in range(k):
-        result.append(random.choice(population))
-    return result
 
 
 class KallistoQuant(ABC):
@@ -215,8 +207,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fastqs_R1', nargs='+', help='Input gzipped fastq(s) beloning to read1')
-    parser.add_argument('--fastqs_R2', nargs='*', help='Input gzipped fastq(s) beloning to read2')
+    parser.add_argument('--fastqs_R1', nargs='+', help='Input gzipped fastq(s) belonging to read1')
+    parser.add_argument('--fastqs_R2', nargs='*', help='Input gzipped fastq(s) belonging to read2')
     parser.add_argument(
         '--number_of_threads',
         type=int,

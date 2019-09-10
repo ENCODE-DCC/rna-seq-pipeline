@@ -299,8 +299,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fastqs_R1', nargs='+', help='Input gzipped fastq(s) beloning to read1')
-    parser.add_argument('--fastqs_R2', nargs='*', help='Input gzipped fastq(s) beloning to read2')
+    parser.add_argument('--fastqs_R1', nargs='+', help='Input gzipped fastq(s) belonging to read1')
+    parser.add_argument('--fastqs_R2', nargs='*', help='Input gzipped fastq(s) belonging to read2')
     parser.add_argument(
         '--index',
         type=str,

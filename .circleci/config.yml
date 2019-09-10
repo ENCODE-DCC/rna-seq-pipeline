@@ -344,6 +344,9 @@ workflows:
       - test_PE_align_docker:
           requires:
             - build
+      - test_PE_align_singularity:
+          requires:
+            - build
       - test_SE_align_docker:
           requires:
             - build
@@ -366,6 +369,7 @@ workflows:
             - test_SE_unstranded_singularity
             - test_PE_stranded_singularity
             - test_PE_align_docker
+            - test_PE_align_singularity
             - test_SE_align_docker
             - test_SE_align_singularity
             - test_PE_kallisto_docker
