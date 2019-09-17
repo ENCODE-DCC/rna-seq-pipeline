@@ -25,12 +25,10 @@ workflow rna {
     ## task level variables that are defined globally to make them visible to DNANexus UI
 
     # ALIGN
-    # index: aligner index (tar.gz)
+    # index: aligner index archive (tar.gz)
     File align_index
     Int align_ncpus
     Int align_ramGB
-    # indexdir: where to extract the star index, relative to cwd
-    String? indexdir
     String? align_disk
 
     # KALLISTO
@@ -50,7 +48,7 @@ workflow rna {
     
     # RSEM_QUANT
 
-    # rsem_index: location of the RSEM index archive (tar.gz)
+    # rsem_index: RSEM index archive (tar.gz)
     File rsem_index
     # rnd_seed: random seed used for rsem
     Int rnd_seed = 12345
@@ -78,7 +76,6 @@ workflow rna {
             fastqs_R1 = fastqs_R1[i],
             fastqs_R2 = fastqs_R2_[i],
             index = align_index,
-            indexdir = indexdir,
             bamroot = "rep"+(i+1)+bamroot,
             ncpus = align_ncpus,
             ramGB = align_ramGB,
@@ -150,7 +147,6 @@ task align {
     Array[File] fastqs_R2
     String endedness
     File index
-    String? indexdir
     String bamroot
     Int ncpus
     Int ramGB
@@ -162,7 +158,6 @@ task align {
             --fastqs_R2 ${sep=' ' fastqs_R2} \
             --endedness ${endedness} \
             --index ${index} \
-            ${"--indexdir " + indexdir} \
             ${"--bamroot " + bamroot} \
             ${"--ncpus " + ncpus} \
             ${"--ramGB " + ramGB}
