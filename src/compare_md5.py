@@ -3,9 +3,9 @@
 Script for comparing md5 sums of results to a reference json.
 """
 
-__author__ = 'Otto Jolanki'
-__version__ = '0.1.0'
-__license__ = 'MIT'
+__author__ = "Otto Jolanki"
+__version__ = "0.1.0"
+__license__ = "MIT"
 
 import argparse
 import hashlib
@@ -16,12 +16,11 @@ import sys
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-filehandler = logging.FileHandler('compare_md5.log')
+filehandler = logging.FileHandler("compare_md5.log")
 filehandler.setLevel(logging.DEBUG)
 consolehandler = logging.StreamHandler()
 consolehandler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s | %(levelname)s | %(name)s: %(message)s')
+formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(name)s: %(message)s")
 filehandler.setFormatter(formatter)
 consolehandler.setFormatter(formatter)
 logger.addHandler(consolehandler)
@@ -53,10 +52,10 @@ class FileWithMd5(object):
 
     def calculate_md5(self, chunksize=4096):
         hash_md5 = hashlib.md5()
-        with open(self.filepath, 'rb') as f:
+        with open(self.filepath, "rb") as f:
             # Iter is calling f.read(chunksize) until it returns
             # the sentinel b''(empty bytes)
-            for chunk in iter(lambda: f.read(chunksize), b''):
+            for chunk in iter(lambda: f.read(chunksize), b""):
                 hash_md5.update(chunk)
         return hash_md5.hexdigest()
 
@@ -88,7 +87,7 @@ def main(args):
         reference = json.load(f)
     with open(args.metadata_json) as f:
         metadata = json.load(f)
-    output = metadata['outputs']
+    output = metadata["outputs"]
     # make the output structure flat
     for key in output:
         if isinstance(output[key], list):
@@ -103,14 +102,11 @@ def main(args):
             for item in output[key]:
                 input_files.append(item)
         except KeyError:
-            logger.exception('Key %s was not found in the output!', key)
+            logger.exception("Key %s was not found in the output!", key)
             sys.exit(-1)
 
     files_to_inspect = [get_file_with_md5(file) for file in input_files]
-    files_to_inspect_md5 = {
-        file.basename: file.md5
-        for file in files_to_inspect
-    }
+    files_to_inspect_md5 = {file.basename: file.md5 for file in files_to_inspect}
     md5_match_by_file = dict()
     match_overall = True
     try:
@@ -119,20 +115,20 @@ def main(args):
             md5_match_by_file[key] = match
             match_overall &= match
     except KeyError:
-        logger.exception('Key %s not found', key)
+        logger.exception("Key %s not found", key)
         match_overall = False
-        md5_match_by_file['match_overall'] = False
+        md5_match_by_file["match_overall"] = False
     else:
-        md5_match_by_file['match_overall'] = match_overall
-    with open(args.outfile, 'w') as f:
+        md5_match_by_file["match_overall"] = match_overall
+    with open(args.outfile, "w") as f:
         json.dump(md5_match_by_file, fp=f)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--keys_to_inspect', nargs='+')
-    parser.add_argument('--metadata_json')
-    parser.add_argument('--reference_json')
-    parser.add_argument('--outfile')
+    parser.add_argument("--keys_to_inspect", nargs="+")
+    parser.add_argument("--metadata_json")
+    parser.add_argument("--reference_json")
+    parser.add_argument("--outfile")
     args = parser.parse_args()
     main(args)
