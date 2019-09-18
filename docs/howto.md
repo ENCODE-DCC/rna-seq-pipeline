@@ -7,11 +7,10 @@ Before following these instructions, make sure you have completed installation a
 
 ## Running Analyses
 
-[Google Cloud](howto.md#google-cloud)
-[Local with Docker](howto.md#local-with-docker)
-[DNAnexus](howto.md#dnanexus)
-[Local with Singularity](howto.md#local-with-singularity)
-[Sherlock with Singularity](howto.md#sherlock-with-singularity)
+[Google Cloud](howto.md#google-cloud)  
+[Local with Docker](howto.md#local-with-docker)  
+[Local with Singularity](howto.md#local-with-singularity)  
+[Sherlock with Singularity](howto.md#sherlock-with-singularity)  
 [SLURM](howto.md#slurm)
 
 ## Building indexes
@@ -167,100 +166,6 @@ Replace `[PATH_TO_REPO]` with the location you cloned the code into.
 ```
 
 5. See the outputs in `cromwell-executions/rna/[RUNHASH]`. See [reference](reference.md) for details about the output directory structure.
-
-
-## DNAnexus
-
-### Use Pre-Built workflow from the ENCODE public project
-
-1. Create a new [DNANexus project](https://platform.dnanexus.com/projects) by clicking on "+New Project" on the top left.
-
-2. Navigate to the ENCODE public project on the platform of your choice, either [AWS](https://platform.dnanexus.com/projects/BKpvFg00VBPV975PgJ6Q03v6/data/RNA-seq/workflows) or [Azure](https://platform.dnanexus.com/projects/F6K911Q9xyfgJ36JFzv03Z5J/data/RNA-seq/workflows).
-
-3. Go to the folder of the pipeline version you want to use. Select all of the folder contents by ticking the square box. Click the copy icon on top right corner of the screen, select your project and copy the workflow into a folder there.
-
-4. Navigate to your project and find the copy of the workflow there. Click on the workflow named `rna`.
-
-5. Enter input fastq files using the UI and fill in pipeline parameters.
-
-6. Enter the output folder using the `Workflow actions` menu button.
-
-7. Run the pipeline by clicking the green `Run as Analysis` button.  You will be automatically redirected to the `Monitor` tab, where you can observe the pipeline progress.
-
-
-### Build your own workflow
-
-The goal is to run a paired-end, non-strand-specific experiment on the DNAnexus platform. Before starting, make sure you have created a DNAnexus account, created a new project `[YOUR_PROJECT_NAME]`, installed the [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK), and downloaded dxWDL as detailed in the [installation instructions](installation.md#dna-nexus).
-
-1. Get the code and move to the repo directory:
-
-```bash
-  $ git clone https://github.com/ENCODE-DCC/rna-seq-pipeline
-  $ cd rna-seq-pipeline
-```
-
-2. Get STAR and kallisto index files:
-
-```bash
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
-```
-
-3. Go to [DNAnexus website](https://www.dnanexus.com) and navigate to `[YOUR_PROJECT_NAME]`. Create a `test_run` directory with subdirectories `inputs`, `output`, `reference` and `workflow` (You can organize the directories any way you want, but this is one way to keep organized).
-
-4. Upload files from the `test_data` folder into your DNAnexus project. Put `ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz` and `ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz` into the `inputs` folder. Put `GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz`, `GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz`, `Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx` and `GRCh38_EBV.chrom.sizes` into the `reference` folder.
-
-5. Setup `input.json`:
-    Copy the following into `input.json` in your favorite text editor.
-```
-{
-    "rna.endedness" : "paired",
-    "rna.fastqs_R1" : ["dx://[YOUR_PROJECT_NAME]:test_run/inputs/ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz"],
-    "rna.fastqs_R2" : ["dx://[YOUR_PROJECT_NAME]:test_run/inputs/ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz"],
-    "rna.aligner" : "star",
-    "rna.align_index" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
-    "rna.rsem_index" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
-    "rna.kallisto_index" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
-    "rna.bamroot" : "PE_unstranded",
-    "rna.strandedness" : "unstranded",
-    "rna.strandedness_direction" : "unstranded",
-    "rna.chrom_sizes" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/GRCh38_EBV.chrom.sizes",
-    "rna.align_ncpus" : 2,
-    "rna.align_ramGB" : 4,
-    "rna.rsem_ncpus" : 2,
-    "rna.rsem_ramGB" : 4,
-    "rna.kallisto_number_of_threads" : 2,
-    "rna.kallisto_ramGB" : 4,
-    "rna.rna_qc_tr_id_to_gene_type_tsv" : "dx://[YOUR_PROJECT_NAME]:test_run/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
-    "rna.bam_to_signals_ncpus" : 1,
-    "rna.bam_to_signals_ramGB" : 2,
-    "rna.align_disk" : "local-disk 20 HDD",
-    "rna.kallisto_disk" : "local-disk 20 HDD",
-    "rna.rna_qc_disk" : "local-disk 20 HDD",
-    "rna.bam_to_signals_disk" : "local-disk 20 HDD",
-    "rna.mad_qc_disk" : "local-disk 20 HDD",
-    "rna.rsem_disk" : "local-disk 20 HDD"
-}
-```
-
-Replace `[YOUR_PROJECT_NAME]` with the actual name of the project you created.
-
-6. Compile the workflow:
-
-```bash
-  $ java -jar dxWDL-0.77.jar compile rna-seq-pipeline.wdl -project [YOUR_PROJECT_NAME] -f -folder /test_run/workflow -defaults input.json -extras workflow_opts/docker.json
-```
-
-7. Go to the DNAnexus [project page](https://platform.dnanexus.com/projects) and click on your project.
-
-8. Move to the directory `/test_run/workflow`
-
-9. You will find a DNAnexus workflow called `rna` with all inputs and parameters defined. Click the `rna` workflow and in the window that opens click `Workflow Actions` button in the upper right corner.  From the dropdown menu choose `Set output folder` and set `/test_run/output` as the output folder.
-
-10. Click the green `Run as Analysis` button to start the pipeline. You will be automatically redirected to the Monitor tab, where you can observe the pipeline run.
-
-11. When the pipeline is completed (15-20 min) the outputs will appear in `/test_run/output` folder.
-
 
 ## Local with Singularity
 
