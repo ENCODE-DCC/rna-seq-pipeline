@@ -12,13 +12,25 @@
             "path": "align/rep${i+1}/${basename}",
             "table": "Align/Replicate ${i+1}/genome flagstats"
         },
+        "genome_flagstat_json": {
+            "path": "align/rep${i+1}/${basename}",
+            "table": "Align/Replicate ${i+1}/genome flagstats json"
+        },
         "anno_flagstat": {
             "path": "align/rep${i+1}/${basename}",
             "table": "Align/Replicate ${i+1}/transcriptome flagstats"
         },
+        "anno_flagstat_json": {
+            "path": "align/rep${i+1}/${basename}",
+            "table": "Align/Replicate ${i+1}/transcriptome flagstats json"
+        },
         "log": {
             "path": "align/rep${i+1}/${basename}",
             "table": "Align/Replicate ${i+1}/STAR log"
+        },
+        "log_json": {
+            "path": "align/rep${i+1}/${basename}",
+            "table": "Align/Replicate ${i+1}/STAR log json"
         },
         "python_log": {
             "path": "align/rep${i+1}/${basename}",
@@ -54,7 +66,7 @@
         },
         "number_of_genes": {
             "path": "rsem_quant/rep${i+1}/${basename}",
-            "table": "Rsem_quant/Replicate ${i+1}/number of genes detected"
+            "table": "Rsem_quant/Replicate ${i+1}/number of genes detected json"
         }
     },
     "rna.kallisto": {
@@ -74,7 +86,7 @@
         },
         "madQCmetrics": {
             "path": "mad_qc/${basename}",
-            "table": "Mad_QC/Mad QC metrics"
+            "table": "Mad_QC/Mad QC metrics json"
         },
         "python_log": {
             "path": "mad_qc/${basename}",
@@ -84,7 +96,7 @@
     "rna.rna_qc": {
         "rnaQC": {
             "path": "rna_qc/rep${i+1}/${basename}",
-            "table": "RNA_QC/Replicate ${i+1}/rna qc metrics"
+            "table": "RNA_QC/Replicate ${i+1}/rna qc metrics json"
         },
         "python_log": {
             "path": "rna_qc/rep${i+1}/${basename}",
