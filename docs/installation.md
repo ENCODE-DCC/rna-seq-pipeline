@@ -2,6 +2,22 @@
 
 To run the pipeline you need to do some setup. The exact steps you need to take depends on the platform you are running the pipeline on, and will be detailed below and in [HOWTO](howto.md). Independent of platform, running the pipeline is done using [caper](https://github.com/ENCODE-DCC/caper) and (optional but recommended) output organization is done using [croo](https://github.com/ENCODE-DCC/croo). Both `caper` and `croo` require `python` version 3.4.1 or newer. 
 
+## Caper
+
+Direct usage of the execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) features complicated backend configuration, workflow options and command line parameters. Caper hides the complexity and consolidates configuration in one file. Caper is available in [the Cheeseshop](https://pypi.org/project/caper/) and it is installed by running:
+
+```bash
+  $ pip install caper
+```
+
+## Croo
+
+The way [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) organizes pipeline outputs is not always the most clear and findable. Croo is a tool to reorganize the files in more readable manner. Croo is available in [the Cheeseshop](https://pypi.org/project/croo/) and it is installed by running:
+
+```bash
+  $ pip install croo
+```
+
 ## Java 8
 
 Java is required to run execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) that `caper` uses under the hood.
