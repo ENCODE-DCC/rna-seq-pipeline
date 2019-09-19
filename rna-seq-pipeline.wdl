@@ -3,6 +3,7 @@
 
 #CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.0
 #CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
+#CROO out_def https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json
 
 workflow rna {
     # endedness: paired or single
