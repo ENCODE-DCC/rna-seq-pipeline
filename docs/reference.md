@@ -47,7 +47,7 @@ Samtools flagstats are calculated using [Samtools 1.9](https://github.com/samtoo
 
 ## Genome Reference Files
 
-Reference and index files can be downloaded from the [ENCODE Portal](https://www.encodeproject.org/search/?type=Reference&reference_type=index). These files are for human, and mouse will follow. Files that are needed are [GRCh38 STAR Index](https://www.encodeproject.org/files/ENCFF742NER/), [GRCh38 RSEM Index](https://www.encodeproject.org/references/ENCSR219BJA/), [GRCh38 Kallisto Index](https://www.encodeproject.org/references/ENCSR622RMG/) and [GRCh38 Chromosome sizes](https://www.encodeproject.org/files/GRCh38_EBV.chrom.sizes/).
+Reference and index files can be downloaded from the [ENCODE Portal](https://www.encodeproject.org/search/?type=Reference&reference_type=index). These files are for human, and mouse will follow. Files that are needed are STAR Index, RSEM Index, Kallisto Index, Chromosome sizes file. Links to required files are summarized in the table below.
 
 |Genome|Annotation Version|STAR|RSEM|Kallisto|Chr Sizes|
 |--------|:--------------:|----|----|--------|---------|
@@ -57,13 +57,13 @@ Reference and index files can be downloaded from the [ENCODE Portal](https://www
 
 ## Inputs
 
-A typical input file looks like this:
+Input is given in a json file like this (note that the resources in this input file are suitable for small subsampled test files, for recommendations that work for typical full sized files, see [Resource Considerations](reference.md#note-about-resources)):
 
 ```
 {
     "rna.endedness" : "paired",
-    "rna.fastqs_R1" : ["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R1.fastq.gz", "test_data/ENCSR653DFZ_rep2_chr19_10000reads_R1.fastq.gz"],
-    "rna.fastqs_R2" : ["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R2.fastq.gz", "test_data/ENCSR653DFZ_rep2_chr19_10000reads_R2.fastq.gz"],
+    "rna.fastqs_R1" : [["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R1.fastq.gz"], ["test_data/ENCSR653DFZ_rep2_chr19_10000reads_R1.fastq.gz"]],
+    "rna.fastqs_R2" : [["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R2.fastq.gz"], ["test_data/ENCSR653DFZ_rep2_chr19_10000reads_R2.fastq.gz"]],
     "rna.aligner" : "star",
     "rna.align_index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
     "rna.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
@@ -92,9 +92,9 @@ A typical input file looks like this:
 
 Following elaborates the meaning of each line in the input file.
 
-* `rna.endedness` Indicates whether the endedness of the experiment is `paired` or `single`.
-* `rna.fastqs_R1` Is list of gzipped fastq files containing the first pairs of reads.
-* `rna.fastqs_R2` Is list of gzipped fastq files containing the second pairs of reads.
+* `rna.endedness` Indicates whether the endedness of the experiment is `paired` or `single`. 
+* `rna.fastqs_R1` Is list of lists of gzipped fastq files containing the first pairs of reads.
+* `rna.fastqs_R2` Is list of lists of gzipped fastq files containing the second pairs of reads. 
 
 #### Example:
 
