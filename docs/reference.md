@@ -45,9 +45,15 @@ Samtools flagstats are calculated using [Samtools 1.9](https://github.com/samtoo
 
 [bedGraphToBigWig kent source version 371](http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig) and [bedSort](http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedSort) (no version information available) are used in signal track generation. Source code is downloadable [here](http://hgdownload.soe.ucsc.edu/admin/exe/userApps.v371.src.tgz).
 
-## Genome Files
+## Genome Reference Files
 
 Reference and index files can be downloaded from the [ENCODE Portal](https://www.encodeproject.org/search/?type=Reference&reference_type=index). These files are for human, and mouse will follow. Files that are needed are [GRCh38 STAR Index](https://www.encodeproject.org/files/ENCFF742NER/), [GRCh38 RSEM Index](https://www.encodeproject.org/references/ENCSR219BJA/), [GRCh38 Kallisto Index](https://www.encodeproject.org/references/ENCSR622RMG/) and [GRCh38 Chromosome sizes](https://www.encodeproject.org/files/GRCh38_EBV.chrom.sizes/).
+
+|Genome|Annotation Version|STAR|RSEM|Kallisto|Chr Sizes|
+|--------|:--------------:|----|----|--------|---------|
+|[GRCh38](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/)|Gencode V29|[GRCh38 V29 STAR index](https://www.encodeproject.org/files/ENCFF598IDH/)|[GRCh38 V29 RSEM index](https://www.encodeproject.org/files/ENCFF285DRD/)|[V29 Kallisto index](https://www.encodeproject.org/files/ENCFF471EAM/)|[GRCh38 Chr sizes](https://www.encodeproject.org/files/GRCh38_EBV.chrom.sizes/)|
+|[GRCh38](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/)|Gencode V24|[GRCh38 V24 STAR index](https://www.encodeproject.org/files/ENCFF742NER/)|[GRCh38 V24 RSEM index](https://www.encodeproject.org/references/ENCSR219BJA/)|[V24 Kallisto index](https://www.encodeproject.org/references/ENCSR622RMG/)|[GRCh38 Chr sizes](https://www.encodeproject.org/files/GRCh38_EBV.chrom.sizes/)|
+|[mm10](https://www.encodeproject.org/files/mm10_no_alt_analysis_set_ENCODE/)|Gencode M21|[mm10 M21 STAR index](https://www.encodeproject.org/files/ENCFF795ZFF/)|[mm10 M21 RSEM index](https://www.encodeproject.org/files/ENCFF363TFV/)|[M21 Kallisto index](https://www.encodeproject.org/files/ENCFF383TUX/)|[mm10 Chr sizes](https://www.encodeproject.org/files/mm10_no_alt.chrom.sizes/)|
 
 ## Inputs
 
