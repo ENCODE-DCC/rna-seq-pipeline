@@ -106,7 +106,7 @@ Note that it is very important that the replicates are in same order in both lis
 #### Example:
 
 Assume you are running a single end experiment with 3 replicates. Further assume that in your first round of sequencing you do not get depth you would like (but you still think that the data you obtained is good), and that the data for the replicates are in files `replicate1_part1.fastq.gz` and `replicate2_part1.fastq.gz`. To obtain a deeper data, you submit the libraries from the replicates to re-sequencing, which yields data files  `replicate1_part2.fastq.gz` and `replicate2_part2.fastq.gz`. In this case the input on the fastq part should be:  
-`"rna.fastqs_R1" : [["replicate1_part1.fastq.gz", "replicate1_part2.fastq.gz"], ["replicate2_part1.fastq.gz", "replicate2_part2.fastq.gz"]`  
+`"rna.fastqs_R1" : [["replicate1_part1.fastq.gz", "replicate1_part2.fastq.gz"], ["replicate2_part1.fastq.gz", "replicate2_part2.fastq.gz"]]`  
 `"rna.fastqs_R2" : []` (in single ended experiment the second read input is empty)  
 In the case when the input for a replicate consists of several fastq files, they will be automatically merged during the pipeline run.
 
@@ -153,6 +153,8 @@ The hardware resources needed to run the pipeline depend on the sequencing depth
 }
 ```
 
+In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 64GB. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. 
+
 #### Example:
 
 Assume you want to allocate 100 gigabytes of spinning hard drive. In this case you would enter `"local-disk 100 HDD"`. If you want to allocate 111 gigabytes of solid state drive space, enter `"local-disk 111 SSD"`.
@@ -176,44 +178,47 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 
 #### Task Align
 
-* `Genome bam`, file name matches `*_genome.bam`. Bam aligned to genome.
-* `Anno bam`, file name matches `*_anno.bam`. Bam aligned to annotation.
-* `Genome flagstat` file name matches `*_genome_flagstat.txt`. Samtools flagstats on the genome bam.
-* `Anno flagstat` file name matches `*_anno_flagstat.txt`. Samtools flagstats on anno bam.
-* `STAR run log` file name matches `*_Log.final.out`. STAR run log.
-* `Python log` file name is `align.log`. This file contains possible additional information on the pipeline step.
+* `genomebam`, file name matches `*_genome.bam`. Bam aligned to genome.
+* `annobam`, file name matches `*_anno.bam`. Bam aligned to annotation.
+* `genome_flagstat` file name matches `*_genome_flagstat.txt`. Samtools flagstats on the genome bam.
+* `genome_flagstat_json` file name matches `*_genome_flagstat.json`. Samtools flagstats on the genome bam in json format.
+* `anno_flagstat` file name matches `*_anno_flagstat.txt`. Samtools flagstats on anno bam.
+* `anno_flagstat_json` file name matches `*_anno_flagstat.json`. Samtools flagstats on anno bam in json format.
+* `log` file name matches `*_Log.final.out`. STAR run log.
+* `log_json` file name matches `*_Log.final.out`. STAR run log in json format.
+* `python_log` file name is `align.log`. This file contains possible additional information on the pipeline step.
 
 #### Task Kallisto
 
-* `Kallisto quants`, file name matches `*_abundance.tsv`. Kallisto quantifications.
-* `Python log` file name is `kallisto_quant.log`. This file contains possible additional information on the pipeline step.
+* `quants`, file name matches `*_abundance.tsv`. Kallisto quantifications.
+* `python_log` file name is `kallisto_quant.log`. This file contains possible additional information on the pipeline step.
 
 #### Task Bam to Signals
 
 In case of an stranded run, the plus and minus strand signal tracks are separated (there will be four tracks per replicate).
 
-* `Unique BigWig`, file name matches `*niq.bw`. Contains the signal track of the uniquely mapped reads.
-* `All BigWig`, the file name matches `*ll.bw`. Contains the signal track of all reads.
-* `Python log` file name is `bam_to_signals.log`. This file contains possible additional information on the pipeline step.
+* `unique`, file name matches `*niq.bw`. Contains the signal track of the uniquely mapped reads.
+* `all`, the file name matches `*ll.bw`. Contains the signal track of all reads.
+* `python_log` file name is `bam_to_signals.log`. This file contains possible additional information on the pipeline step.
 
 #### Task RSEM Quant
 
-* `Genes results`, file name matches `*.genes.results`. Contains gene quantifications.
-* `Isoforms results`, file name matches `*.isoforms.results`. Contains isoform quantifications.
-* `Number of genes`, file name matches `*_number_of_genes_detected.json`. Contains the number of genes detected, which is determined as `TPM` value being greater than `1`.
-* `Python log` file name is `rsem_quant.log`. This file contains possible additional information on the pipeline step.
+* `genes_results`, file name matches `*.genes.results`. Contains gene quantifications.
+* `isoforms_results`, file name matches `*.isoforms.results`. Contains isoform quantifications.
+* `number_of_genes`, file name matches `*_number_of_genes_detected.json`. Contains the number of genes detected, which is determined as `TPM` value being greater than `1`.
+* `python_log` file name is `rsem_quant.log`. This file contains possible additional information on the pipeline step.
 
 #### Task Mad QC
 
 This step is run if and only if the number of replicates is 2.
 
-* `Mad QC plot`, file name matches `*_mad_plot.png`. Contains the MAD QC plot.
-* `Mad QC metrics` file name matches `*_mad_qc_metrics.json`. Contains MAD QC metrics.
-* `Python log` file name is `mad_qc.log`. This file contains possible additional information on the pipeline step.
+* `madQCplot`, file name matches `*_mad_plot.png`. Contains the MAD QC plot.
+* `madQCmetrics` file name matches `*_mad_qc_metrics.json`. Contains MAD QC metrics.
+* `python_log` file name is `mad_qc.log`. This file contains possible additional information on the pipeline step.
 
 #### Task RNA QC
 
-This step calculates additional metrics. At this time the only metric is to calculate reads by gene type. It is very **IMPORTANT** to look at the `Python log` of this step to see that the transcriptome bam did not contain any transcripts that are not present in the transcript ID to gene type mapping tsv. In case that happens, make sure you are using the STAR aligner and RSEM quantifier indexes you think you are using, and that all the other references are correct!
+This step calculates additional metrics. At this time the only metric is to calculate reads by gene type. It is very **IMPORTANT** to look at the `python_log` of this step to see that the transcriptome bam did not contain any transcripts that are not present in the transcript ID to gene type mapping tsv. In case that happens, make sure you are using the STAR aligner and RSEM quantifier indexes you think you are using, and that all the other references are correct!
 
-* `RNA QC`, file name matches `*_qc.json`. Contains additional QC metrics. For now the reads by gene type.
-* `Python log` file name is `rna_qc.log`. This file contains **IMPORTANT** information on the pipeline step.
+* `rnaQC`, file name matches `*_qc.json`. Contains additional QC metrics. For now the reads by gene type.
+* `python_log` file name is `rna_qc.log`. This file contains **IMPORTANT** information on the pipeline step.
