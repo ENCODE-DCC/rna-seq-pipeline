@@ -88,15 +88,19 @@ Make sure you have completed the steps for installation and Google Cloud setup d
 
 Replace `[YOUR_BUCKET_NAME]` with the name of the bucket you created.
 
-5. Run the pipeline:
+5. Run the pipeline using caper:
 
+```bash
+  $ caper run rna-seq-pipeline.wdl -i input.json -b gcp -m testrun_metadata.json
 ```
-  $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=google -Dbackend.providers.google.config.project=[YOUR_PROJECT] -Dbackend.providers.google.config.root=gs://[YOUR_BUCKET_NAME]/output cromwell-34.jar run rna-seq-pipeline.wdl -i input.json -o workflow_opts/docker.json
+
+6. Run croo, to easier view the pipeline output:
+
+```bash
+  $ croo testrun_metadata.json --out-dir gs://[YOUR_BUCKET_NAME]/croo_out
 ```
 
-Replace `[YOUR_PROJECT]` with the project id of the project you created and `[YOUR_BUCKET_NAME]` with the name of the bucket you created.
-
-6. See outputs in `gs://[YOUR_BUCKET_NAME]/outputs/rna/[RUNHASH]`. See [reference](reference.md) for details about the output directory structure.
+This command will output into the bucket an HTML table, that shows the locations of the outputs nicely organized. Note that if your output bucket is not public, you need to be logged into your google account to be able to follow the links.
 
 
 ## Local with Docker
@@ -159,13 +163,19 @@ The other data that is required to complete this recipe is included in the repos
 Replace `[PATH_TO_REPO]` with the location you cloned the code into.
 
 
-4. Run the pipeline:
+4. Run the pipeline using caper:
 
 ```
-  $ java -jar -Dconfig.file=backends/backend.conf cromwell-34.jar run rna-seq-pipeline.wdl -i input.json -o workflow_opts/docker.json
+  $ caper run rna-seq-pipeline.wdl -i input.json -m testrun_metadata.json --docker
 ```
 
-5. See the outputs in `cromwell-executions/rna/[RUNHASH]`. See [reference](reference.md) for details about the output directory structure.
+5. Organize outputs with croo:
+
+```bash
+  $ croo testrun_metadata.json --out-dir organized_outputs
+```
+
+This will create directory tree grouped by task and replicate. Disk space does not get wasted, by default croo creates symbolic links in local mode.
 
 ## Local with Singularity
 

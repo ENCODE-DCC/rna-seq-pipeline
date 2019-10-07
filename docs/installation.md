@@ -10,6 +10,8 @@ Direct usage of the execution engine [Cromwell](https://software.broadinstitute.
   $ pip install caper
 ```
 
+Note that conda run mode that is described in caper documentation is not supported by this pipeline.
+
 ## Croo
 
 The way [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) organizes pipeline outputs is not always the most clear and findable. Croo is a tool to reorganize the files in more readable manner. Croo is available in [the Cheeseshop](https://pypi.org/project/croo/) and it is installed by running:
