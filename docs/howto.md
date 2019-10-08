@@ -183,31 +183,26 @@ The goal is to run a single-end non-strand-specific experiment locally using sin
 
 1. Make sure you have singularity version greater or equal to `2.5.2` installed in your system.
 
-2. Build the singularity image for the pipeline. The following pulls the pipeline docker image, and uses that to construct the singularity image. The image will be stored in `~/.singularity`.
-```
-$ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
-```
-
-3. Get the code and move to the repo directory:
+2. Get the code and move to the repo directory:
 
 ```bash
   $ git clone https://github.com/ENCODE-DCC/rna-seq-pipeline
   $ cd rna-seq-pipeline
 ```
 
-4. Get STAR and kallisto index files:
+3. Get STAR and kallisto index files:
 
 ```bash
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 ```
 
-5. Run the pipeline:
+4. Run the pipeline using caper:
 ```
-$ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=singularity cromwell-34.jar run rna-seq-pipeline.wdl -i test/test_workflow/SE_unstranded_input.json -o workflow_opts/singularity.json
+$ caper run rna-seq-pipeline.wdl -i test/test_workflow/SE_unstranded_input.json --singularity
 ```
 
-6. See outputs in `cromwell-executions/rna/[RUNHASH]`.
+5. See outputs in `cromwell-executions/rna/[RUNHASH]`.
 
 
 ## Sherlock with Singularity
