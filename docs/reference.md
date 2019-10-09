@@ -172,7 +172,7 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 
 ## Outputs
 
-`Cromwell`: `Cromwell` will store outputs for each task under directory `cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]`. For all tasks `[IDX]` means a zero-based index for each replicate.
+`Cromwell`: `Cromwell` will store outputs for each task under directory `cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]`. For all tasks `[IDX]` means a zero-based index for each replicate. In addition to the actual pipeline outputs, these directories contain a plethora of operational Cromwell-specific files. Use [croo](https://github.com/ENCODE-DCC/croo) to find and organize the pipeline outputs.
 
 ### Output files
 
