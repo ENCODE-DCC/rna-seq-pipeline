@@ -15,12 +15,6 @@
       - id: isort
         language_version: python3.7
 
-  - repo: git://github.com/detailyang/pre-commit-shell
-    sha: v1.0.6
-    hooks:
-      - id: shell-lint
-        args: [--format=json]
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.2.3
     hooks:
