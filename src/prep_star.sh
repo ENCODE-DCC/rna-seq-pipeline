@@ -21,7 +21,7 @@ anno_root=${anno_gtf%.gtf}
 gunzip -c $anno_gtf_gz > $anno_gtf
 
 # spike_root needs to be basenamed to handle path in cromwell run
-archive_file="${genome}_${anno}_$(basename ${spike_root})_starIndex.tgz" 
+archive_file="${genome}_${anno}_$(basename ${spike_root})_starIndex.tgz"
 echo "-- Results will be: '${archive_file}'."
 
 echo "-- Build index..."
@@ -51,4 +51,3 @@ set +x
 
 echo "-- The results..."
 ls -l $archive_file
-

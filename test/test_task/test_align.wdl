@@ -4,7 +4,7 @@ workflow test_align {
     String endedness
     Array[Array[File]] fastqs_R1
     Array[Array[File]] fastqs_R2 = []
-    String bamroot 
+    String bamroot
     File align_index
     Int align_ncpus
     Int align_ramGB
@@ -22,7 +22,7 @@ workflow test_align {
             ncpus = align_ncpus,
             ramGB = align_ramGB,
             disks = align_disk,
-    
+
         }
     }
 }

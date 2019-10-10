@@ -12,16 +12,16 @@ workflow rna {
     Array[Array[File]] fastqs_R1
     # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
     # corresponding to fastqs_R1
-    Array[Array[File]] fastqs_R2 = [] 
+    Array[Array[File]] fastqs_R2 = []
     # bamroot: root name for output bams. For example foo_bar will
     # create foo_bar_genome.bam and foo_bar_anno.bam
-    String bamroot 
+    String bamroot
     # strandedness: is the library strand specific (stranded or unstranded)
-    String strandedness 
+    String strandedness
     # strandedness_direction (forward, reverse, unstranded)
     String strandedness_direction
     # chrom_sizes: chromosome sizes file
-    File chrom_sizes 
+    File chrom_sizes
 
     ## task level variables that are defined globally to make them visible to DNANexus UI
 
@@ -40,13 +40,13 @@ workflow rna {
     Int? kallisto_fragment_length
     Float? kallisto_sd_of_fragment_length
     String? kallisto_disk
-    
+
     # BAM_TO_SIGNALS
 
     Int bam_to_signals_ncpus
     Int bam_to_signals_ramGB
     String? bam_to_signals_disk
-    
+
     # RSEM_QUANT
 
     # rsem_index: RSEM index archive (tar.gz)
@@ -56,21 +56,21 @@ workflow rna {
     Int rsem_ncpus
     Int rsem_ramGB
     String? rsem_disk
-    
+
     # RNA_QC
 
     File rna_qc_tr_id_to_gene_type_tsv
     String? rna_qc_disk
 
-    # MAD_QC 
+    # MAD_QC
 
     String? mad_qc_disk
-    
+
     ## WORKFLOW BEGINS
 
     # dummy variable value for the single-ended case
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
-    
+
     scatter (i in range(length(fastqs_R1))) {
         call align { input:
             endedness = endedness,
@@ -282,7 +282,7 @@ task kallisto {
 
     runtime {
         cpu: number_of_threads
-        memory: "${ramGB} GB" 
+        memory: "${ramGB} GB"
         disks: select_first([disks, "local-disk 100 SSD"])
     }
 }

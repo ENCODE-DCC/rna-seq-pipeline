@@ -7,13 +7,13 @@ __author__ = "Otto Jolanki"
 __version__ = "0.1.0"
 __license__ = "MIT"
 
-from abc import ABC, abstractmethod
 import argparse
 import logging
 import os
 import shlex
 import subprocess
 import sys
+from abc import ABC, abstractmethod
 
 from align import concatenate_files
 

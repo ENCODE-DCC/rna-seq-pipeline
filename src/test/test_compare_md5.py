@@ -3,9 +3,10 @@ unittests for compare_md5.py
 """
 
 import unittest
-from unittest.mock import patch
-import compare_md5
 from io import BytesIO
+from unittest.mock import patch
+
+import compare_md5
 
 
 class TestFileWithMd5(unittest.TestCase):

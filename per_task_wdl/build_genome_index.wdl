@@ -8,7 +8,7 @@ workflow build_index {
     # Inputs
     # reference genome or transcriptome (in prep_kallisto mode)in gzipped fasta
     File reference_sequence
-    # spikeins in gzipped fasta 
+    # spikeins in gzipped fasta
     File? spikeins
     # annotation in gzipped gtf
     File? annotation
@@ -47,7 +47,7 @@ task make_index {
     Int ncpu
     Int? memGB
     String? disks
-    
+
     command {
         $(which ${index_type + ".sh"}) \
             ${reference_sequence} \
@@ -61,7 +61,7 @@ task make_index {
     output {
         File index = if (index_type == "prep_kallisto") then glob("*.idx")[0] else glob("*.tgz")[0]
     }
-    
+
     runtime {
         cpu : ncpu
         memory : "${select_first([memGB,'8'])} GB"

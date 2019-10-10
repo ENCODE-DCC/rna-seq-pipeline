@@ -7,9 +7,6 @@ __author__ = "Otto Jolanki"
 __version__ = "0.1.0"
 __license__ = "MIT"
 
-from abc import ABC, abstractmethod
-from qc_utils import QCMetric
-from qc_utils.parsers import parse_starlog, parse_flagstats
 import argparse
 import json
 import logging
@@ -21,6 +18,10 @@ import shlex
 import shutil
 import subprocess
 import tarfile
+from abc import ABC, abstractmethod
+
+from qc_utils import QCMetric
+from qc_utils.parsers import parse_flagstats, parse_starlog
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

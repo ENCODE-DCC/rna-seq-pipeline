@@ -23,7 +23,7 @@ mkdir out
 STAR --runMode genomeGenerate --genomeFastaFiles $ref_fasta --sjdbGTFfile $anno_gtf \
         --sjdbOverhang 1 --runThreadN $ncpu --genomeDir out/ --outFileNamePrefix out
 set +x
-    
+
 # Attempt to make bamCommentLines.txt, which should be reviewed. NOTE tabs handled by assignment.
 echo "-- Create bam header..."
 set -x
@@ -39,4 +39,3 @@ set +x
 
 echo "-- The results..."
 ls -l $archive_file
-

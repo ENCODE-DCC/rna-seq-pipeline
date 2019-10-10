@@ -18,7 +18,7 @@ Download WDL runner Cromwell from [here](https://github.com/broadinstitute/cromw
 
 ## Docker
 
-Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed. 
+Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed.
 Follow instructions for [mac](https://docs.docker.com/docker-for-mac/install/) or [linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/#upgrade-docker-after-using-the-convenience-script).
 
 ## Singularity
@@ -69,7 +69,7 @@ If you are intending to build and run the pipeline on DNAnexus, the following se
 3. Install [DNAnexus SDK](https://wiki.dnanexus.com/Downloads#DNAnexus-Platform-SDK). Run `dx login` to log in to the platform using your credentials.
 
 4. Download dxWDL:
-    ```bash 
+    ```bash
       $ wget https://github.com/dnanexus/dxWDL/releases/download/0.77/dxWDL-0.77.jar
     ```
 

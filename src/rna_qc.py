@@ -10,6 +10,7 @@ __license__ = "MIT"
 import argparse
 import json
 import logging
+
 import pysam
 from qc_utils import QCMetric, QCMetricRecord
 

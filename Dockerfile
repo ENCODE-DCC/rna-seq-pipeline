@@ -1,6 +1,6 @@
 # Dockerfile for ENCODE-DCC rna-seq-pipeline
 FROM ubuntu@sha256:97b54e5692c27072234ff958a7442dde4266af21e7b688e7fca5dc5acc8ed7d9
-MAINTAINER Otto Jolanki 
+MAINTAINER Otto Jolanki
 
 RUN apt-get update && apt-get install -y \
     python3-dev \
@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     bzip2 \
 # libcurses is a samtools dependency
-    libncurses5-dev \ 
+    libncurses5-dev \
     r-base-core \
     ghostscript && rm -rf /var/lib/apt/lists/*
 

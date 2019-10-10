@@ -2,11 +2,12 @@
 unittests for rna_qc.py
 """
 
-import rna_qc
 import unittest
 from collections import OrderedDict
 from io import StringIO
 from unittest.mock import patch
+
+import rna_qc
 
 
 class TestQCMetric(unittest.TestCase):

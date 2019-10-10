@@ -1,25 +1,25 @@
 # HOWTO
 
 Here are recipes for running analyses on different platforms.
-Before following these instructions, make sure you have completed installation and possible account setup detailed in [installation instructions](installation.md). 
+Before following these instructions, make sure you have completed installation and possible account setup detailed in [installation instructions](installation.md).
 
 # CONTENTS
 
 ## Running Analyses
 
-[Google Cloud](howto.md#google-cloud)  
-[Local with Docker](howto.md#local-with-docker)  
-[DNAnexus](howto.md#dnanexus)  
-[Local with Singularity](howto.md#local-with-singularity)  
-[Sherlock with Singularity](howto.md#sherlock-with-singularity)  
+[Google Cloud](howto.md#google-cloud)
+[Local with Docker](howto.md#local-with-docker)
+[DNAnexus](howto.md#dnanexus)
+[Local with Singularity](howto.md#local-with-singularity)
+[Sherlock with Singularity](howto.md#sherlock-with-singularity)
 [SLURM](howto.md#slurm)
 
 ## Building indexes
 
-[Merge Annotation](howto.md#merge-annotation)  
-[Build STAR Index](howto.md#build-star-index)  
-[Build RSEM Index](howto.md#build-rsem-index)  
-[Build Kallisto Index](howto.md#build-kallisto-index)  
+[Merge Annotation](howto.md#merge-annotation)
+[Build STAR Index](howto.md#build-star-index)
+[Build RSEM Index](howto.md#build-rsem-index)
+[Build Kallisto Index](howto.md#build-kallisto-index)
 
 # RUNNING THE PIPELINE
 
@@ -39,8 +39,8 @@ Make sure you have completed the steps for installation and Google Cloud setup d
 
 ```bash
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx 
-``` 
+  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+```
 
 3. Copy indexes and input data into the cloud:
 
@@ -49,7 +49,7 @@ Make sure you have completed the steps for installation and Google Cloud setup d
   $ gsutil cp test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz gs://[YOUR_BUCKET_NAME]/reference/
   $ gsutil cp test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx gs://[YOUR_BUCKET_NAME]/reference/
   $ gsutil cp test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz gs://[YOUR_BUCKET_NAME]/reference/
-  $ gsutil cp test_data/GRCh38_EBV.chrom.sizes gs://[YOUR_BUCKET_NAME]/reference/ 
+  $ gsutil cp test_data/GRCh38_EBV.chrom.sizes gs://[YOUR_BUCKET_NAME]/reference/
 ```
 
 4. Set up the `input.json`:
@@ -83,7 +83,7 @@ Make sure you have completed the steps for installation and Google Cloud setup d
     "rna.rna_qc_disk" : "local-disk 20 HDD",
     "rna.bam_to_signals_disk" : "local-disk 20 HDD",
     "rna.mad_qc_disk" : "local-disk 20 HDD",
-    "rna.rsem_disk" : "local-disk 20 HDD"    
+    "rna.rsem_disk" : "local-disk 20 HDD"
 }
 ```
 
@@ -102,7 +102,7 @@ Replace `[YOUR_PROJECT]` with the project id of the project you created and `[YO
 
 ## Local with Docker
 
-The goal is to run a single-end, non-strand-specific experiment on a local computer. 
+The goal is to run a single-end, non-strand-specific experiment on a local computer.
 
 1. Get the code:
 
@@ -115,8 +115,8 @@ The goal is to run a single-end, non-strand-specific experiment on a local compu
 
 ```bash
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx 
-``` 
+  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+```
 
 The other data that is required to complete this recipe is included in the repository within test_data directory.
 
@@ -183,7 +183,7 @@ Replace `[PATH_TO_REPO]` with the location you cloned the code into.
 
 5. Enter input fastq files using the UI and fill in pipeline parameters.
 
-6. Enter the output folder using the `Workflow actions` menu button. 
+6. Enter the output folder using the `Workflow actions` menu button.
 
 7. Run the pipeline by clicking the green `Run as Analysis` button.  You will be automatically redirected to the `Monitor` tab, where you can observe the pipeline progress.
 
@@ -203,14 +203,14 @@ The goal is to run a paired-end, non-strand-specific experiment on the DNAnexus 
 
 ```bash
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx 
-``` 
+  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+```
 
 3. Go to [DNAnexus website](https://www.dnanexus.com) and navigate to `[YOUR_PROJECT_NAME]`. Create a `test_run` directory with subdirectories `inputs`, `output`, `reference` and `workflow` (You can organize the directories any way you want, but this is one way to keep organized).
 
 4. Upload files from the `test_data` folder into your DNAnexus project. Put `ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz` and `ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz` into the `inputs` folder. Put `GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz`, `GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz`, `Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx` and `GRCh38_EBV.chrom.sizes` into the `reference` folder.
 
-5. Setup `input.json`: 
+5. Setup `input.json`:
     Copy the following into `input.json` in your favorite text editor.
 ```
 {
@@ -266,7 +266,7 @@ Replace `[YOUR_PROJECT_NAME]` with the actual name of the project you created.
 
 The goal is to run a single-end non-strand-specific experiment locally using singularity.
 
-1. Make sure you have singularity version greater or equal to `2.5.2` installed in your system. 
+1. Make sure you have singularity version greater or equal to `2.5.2` installed in your system.
 
 2. Build the singularity image for the pipeline. The following pulls the pipeline docker image, and uses that to construct the singularity image. The image will be stored in `~/.singularity`.
 ```
@@ -284,8 +284,8 @@ $ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode
 
 ```bash
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx 
-``` 
+  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+```
 
 5. Run the pipeline:
 ```
@@ -316,8 +316,8 @@ The goal is to run a paired-end, strand-specific experiment on Sherlock using si
 
 ```bash
   $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx 
-``` 
+  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+```
 
 4. Load singularity and java modules into your environment. You can add the lines to your `~/.bashrc` or `~/.bash_profile` if you want them available always when you log in to Sherlock:
 
@@ -428,7 +428,7 @@ The goal is to run the Merge Annotation step on a local machine using Docker.
     "merge_anno.tRNA" : "test_data/gencode.v24.tRNAs.gtf.gz",
     "merge_anno.spikeins" : "test_data/ERCC_phiX.fa.gz",
     "merge_anno.output_filename" : "merged_annotation.gtf.gz"
-} 
+}
 ```
 There is no need to edit this file.
 
@@ -442,7 +442,7 @@ There is no need to edit this file.
 
 ## Build the STAR Index
 
-The goal is to build on the [previous step](howto.md#merge-annotation) and build a STAR index, restricted to chromosome 19, using a local machine with Docker. 
+The goal is to build on the [previous step](howto.md#merge-annotation) and build a STAR index, restricted to chromosome 19, using a local machine with Docker.
 
 1. Make sure you have run the [previous step](howto.md#merge-annotation) and have located the output (`merged_annotation.gtf.gz`) of that step.
 
