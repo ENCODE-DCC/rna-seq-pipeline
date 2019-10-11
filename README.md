@@ -24,10 +24,6 @@ OUTPUTS
 --------
 Description of the pipeline [outputs](docs/reference.md#outputs)
 
-FAQ
------------
-FAQ [here](docs/FAQ.md)
-
 REFERENCE
 ----------
 Reference [here](docs/reference.md)
