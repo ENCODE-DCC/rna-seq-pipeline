@@ -5,7 +5,7 @@ This document contains more detailed information on the inputs, outputs and the 
 # CONTENTS
 
 [Software](reference.md#software)
-[Genome Reference Files](reference.md#genome-files)
+[Genome Reference Files](reference.md#genome-reference-files)
 [Inputs](reference.md#inputs)
 [Resource Considerations](reference.md#note-about-resources)
 [Outputs](reference.md#outputs)
