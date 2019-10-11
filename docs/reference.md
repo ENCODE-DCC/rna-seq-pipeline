@@ -92,22 +92,22 @@ Input is given in a json file like this (note that the resources in this input f
 
 Following elaborates the meaning of each line in the input file.
 
-* `rna.endedness` Indicates whether the endedness of the experiment is `paired` or `single`. 
+* `rna.endedness` Indicates whether the endedness of the experiment is `paired` or `single`.
 * `rna.fastqs_R1` Is list of lists of gzipped fastq files containing the first pairs of reads.
-* `rna.fastqs_R2` Is list of lists of gzipped fastq files containing the second pairs of reads. 
+* `rna.fastqs_R2` Is list of lists of gzipped fastq files containing the second pairs of reads.
 
 #### Example:
 
-Assume you are running a paired end experiment with 3 replicates. The fastq files from the first replicate are `replicate1_read1.fastq.gz` and `replicate1_read2.fastq.gz`. The fastq files from the second replicate are `replicate2_read1.fastq.gz` and `replicate2_read2.fastq.gz`. Finally assume that the fastq files from the third replicate are `replicate3_read1.fastq.gz` and `replicate3_read2.fastq.gz`. In this case the input on the relevant part should be as follows:  
-`"rna.fastqs_R1" : [["replicate1_read1.fastq.gz"], ["replicate2_read1.fastq.gz"], ["replicate3_read1.fastq.gz"]]`  
-`"rna.fastqs_R2" : [["replicate1_read2.fastq.gz"], ["replicate2_read2.fastq.gz"], ["replicate3_read2.fastq.gz"]]`  
+Assume you are running a paired end experiment with 3 replicates. The fastq files from the first replicate are `replicate1_read1.fastq.gz` and `replicate1_read2.fastq.gz`. The fastq files from the second replicate are `replicate2_read1.fastq.gz` and `replicate2_read2.fastq.gz`. Finally assume that the fastq files from the third replicate are `replicate3_read1.fastq.gz` and `replicate3_read2.fastq.gz`. In this case the input on the relevant part should be as follows:
+`"rna.fastqs_R1" : [["replicate1_read1.fastq.gz"], ["replicate2_read1.fastq.gz"], ["replicate3_read1.fastq.gz"]]`
+`"rna.fastqs_R2" : [["replicate1_read2.fastq.gz"], ["replicate2_read2.fastq.gz"], ["replicate3_read2.fastq.gz"]]`
 Note that it is very important that the replicates are in same order in both lists, this correspondence is used for pairing correct files with each other.
 
 #### Example:
 
-Assume you are running a single end experiment with 3 replicates. Further assume that in your first round of sequencing you do not get depth you would like (but you still think that the data you obtained is good), and that the data for the replicates are in files `replicate1_part1.fastq.gz` and `replicate2_part1.fastq.gz`. To obtain a deeper data, you submit the libraries from the replicates to re-sequencing, which yields data files  `replicate1_part2.fastq.gz` and `replicate2_part2.fastq.gz`. In this case the input on the fastq part should be:  
-`"rna.fastqs_R1" : [["replicate1_part1.fastq.gz", "replicate1_part2.fastq.gz"], ["replicate2_part1.fastq.gz", "replicate2_part2.fastq.gz"]]`  
-`"rna.fastqs_R2" : []` (in single ended experiment the second read input is empty)  
+Assume you are running a single end experiment with 3 replicates. Further assume that in your first round of sequencing you do not get depth you would like (but you still think that the data you obtained is good), and that the data for the replicates are in files `replicate1_part1.fastq.gz` and `replicate2_part1.fastq.gz`. To obtain a deeper data, you submit the libraries from the replicates to re-sequencing, which yields data files  `replicate1_part2.fastq.gz` and `replicate2_part2.fastq.gz`. In this case the input on the fastq part should be:
+`"rna.fastqs_R1" : [["replicate1_part1.fastq.gz", "replicate1_part2.fastq.gz"], ["replicate2_part1.fastq.gz", "replicate2_part2.fastq.gz"]]`
+`"rna.fastqs_R2" : []` (in single ended experiment the second read input is empty)
 In the case when the input for a replicate consists of several fastq files, they will be automatically merged during the pipeline run.
 
 * `rna.aligner` Use `star` aligner, possibly extended to use others in future.
@@ -153,7 +153,7 @@ The hardware resources needed to run the pipeline depend on the sequencing depth
 }
 ```
 
-In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 64GB. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. 
+In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 64GB. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts.
 
 #### Example:
 

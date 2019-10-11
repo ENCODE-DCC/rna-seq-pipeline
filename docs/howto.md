@@ -7,10 +7,10 @@ Before following these instructions, make sure you have completed installation a
 
 ## Running Analyses
 
-[Google Cloud](howto.md#google-cloud)  
-[Local with Docker](howto.md#local-with-docker)  
-[Local with Singularity](howto.md#local-with-singularity)  
-[Sherlock with Singularity](howto.md#sherlock-with-singularity)  
+[Google Cloud](howto.md#google-cloud)
+[Local with Docker](howto.md#local-with-docker)
+[Local with Singularity](howto.md#local-with-singularity)
+[Sherlock with Singularity](howto.md#sherlock-with-singularity)
 [SLURM](howto.md#slurm)
 
 ## Building indexes
