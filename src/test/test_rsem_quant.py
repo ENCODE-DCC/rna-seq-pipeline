@@ -2,9 +2,10 @@
 unittests for rsem_quant.py
 """
 
-import rsem_quant
 import unittest
 from unittest.mock import patch
+
+import rsem_quant
 from pandas import DataFrame
 
 

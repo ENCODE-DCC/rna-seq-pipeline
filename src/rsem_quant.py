@@ -11,11 +11,12 @@ import argparse
 import json
 import logging
 import os
-import pandas as pd
 import re
 import shlex
 import subprocess
 import tarfile
+
+import pandas as pd
 from align import make_modified_TarInfo
 from qc_utils import QCMetric, QCMetricRecord
 

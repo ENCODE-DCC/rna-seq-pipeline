@@ -4,10 +4,10 @@ This document contains more detailed information on the inputs, outputs and the 
 
 # CONTENTS
 
-[Software](reference.md#software)  
-[Genome Reference Files](reference.md#genome-files)  
-[Inputs](reference.md#inputs)  
-[Resource Considerations](reference.md#note-about-resources)  
+[Software](reference.md#software)
+[Genome Reference Files](reference.md#genome-files)
+[Inputs](reference.md#inputs)
+[Resource Considerations](reference.md#note-about-resources)
 [Outputs](reference.md#outputs)
 
 
@@ -35,7 +35,7 @@ Quantification is done using [RSEM v1.2.31](https://github.com/deweylab/RSEM/rel
 
 ### Kallisto 0.44.0
 
-Additional quantification is calculated using [Kallisto v0.44.0](https://github.com/pachterlab/kallisto/releases/tag/v0.44.0). For detailed description of the software see [Article by Bray et al.](https://www.nature.com/articles/nbt.3519). 
+Additional quantification is calculated using [Kallisto v0.44.0](https://github.com/pachterlab/kallisto/releases/tag/v0.44.0). For detailed description of the software see [Article by Bray et al.](https://www.nature.com/articles/nbt.3519).
 
 ### Samtools 1.9
 
@@ -86,19 +86,19 @@ A typical input file looks like this:
 
 Following elaborates the meaning of each line in the input file.
 
-* `rna.endedness` Indicates whether the endedness of the experiment is `paired` or `single`. 
+* `rna.endedness` Indicates whether the endedness of the experiment is `paired` or `single`.
 * `rna.fastqs_R1` Is list of gzipped fastq files containing the first pairs of reads.
-* `rna.fastqs_R2` Is list of gzipped fastq files containing the second pairs of reads. 
+* `rna.fastqs_R2` Is list of gzipped fastq files containing the second pairs of reads.
 
 #### Example:
 
-Assume you are running a paired end experiment with 3 replicates. The fastq files from the first replicate are `replicate1_read1.fastq.gz` and `replicate1_read2.fastq.gz`. The fastq files from the second replicate are `replicate2_read1.fastq.gz` and `replicate2_read2.fastq.gz`. Finally assume that the fastq files from the third replicate are `replicate3_read1.fastq.gz` and `replicate3_read2.fastq.gz`. In this case the input on the relevant part should be as follows:  
-`"rna.fastqs_R1" : ["replicate1_read1.fastq.gz", "replicate2_read1.fastq.gz", "replicate3_read1.fastq.gz"]`  
-`"rna.fastqs_R2" : ["replicate1_read2.fastq.gz", "replicate2_read2.fastq.gz", "replicate3_read2.fastq.gz"]`  
+Assume you are running a paired end experiment with 3 replicates. The fastq files from the first replicate are `replicate1_read1.fastq.gz` and `replicate1_read2.fastq.gz`. The fastq files from the second replicate are `replicate2_read1.fastq.gz` and `replicate2_read2.fastq.gz`. Finally assume that the fastq files from the third replicate are `replicate3_read1.fastq.gz` and `replicate3_read2.fastq.gz`. In this case the input on the relevant part should be as follows:
+`"rna.fastqs_R1" : ["replicate1_read1.fastq.gz", "replicate2_read1.fastq.gz", "replicate3_read1.fastq.gz"]`
+`"rna.fastqs_R2" : ["replicate1_read2.fastq.gz", "replicate2_read2.fastq.gz", "replicate3_read2.fastq.gz"]`
 Note that it is very important that the replicates are in same order in both lists, this correspondence is used for pairing correct files with each other.
 
 * `rna.aligner` Use `star` aligner, possibly extended to use others in future.
-* `rna.align_index` Is the index for STAR aligner. 
+* `rna.align_index` Is the index for STAR aligner.
 * `rna.rsem_index` Is the index for RSEM quantifier.
 * `rna.kallisto_index` Is the index for Kallisto quantifier.
 * `rna.bamroot` This is a prefix that gets added into the output filenames. Additionally the files are prefixed with information of the replicate they originate from.
@@ -119,7 +119,7 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 * `rna.rna_qc_disk` As above, but for RNA QC.
 * `rna.bam_to_signals_disk` As above, but for bam_to_signals.
 * `rna.mad_qc_disk` As above, but for MAD QC.
-* `rna.rsem_disk` As above, but for RSEM. 
+* `rna.rsem_disk` As above, but for RSEM.
 * `rna.kallisto_number_of_threads` How many threads are available for Kallisto quantification.
 * `rna.kallisto_ramGB` How many GBs of memory are available for Kallisto quantification.
 

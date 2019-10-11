@@ -102,7 +102,7 @@ ENV/
 
 # dx wdl and cromwell output
 *.jar
-cromwell-executions/ 
+cromwell-executions/
 cromwell-workflow-logs/
 
 Untitled.ipynb

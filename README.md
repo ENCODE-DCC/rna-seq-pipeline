@@ -32,4 +32,4 @@ FAQ [here](docs/FAQ.md)
 
 REFERENCE
 ----------
-Reference [here](docs/reference.md) 
+Reference [here](docs/reference.md)
