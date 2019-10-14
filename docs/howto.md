@@ -3,6 +3,9 @@
 Here are recipes for running analyses on different platforms.
 Before following these instructions, make sure you have completed installation and possible account setup detailed in [installation instructions](installation.md). Note that although running the pipeline directly with Cromwell is still possible, using [caper](https://github.com/ENCODE-DCC/caper) is the canonical, supported and official way to use ENCODE Uniform Processing Pipelines. The examples below use command `caper run`, which is the simplest way to run a single pipeline instance. For running multiple pipelines in production setting we recommend using caper server. To find details on setting up the server, refer to [caper documentation](https://github.com/ENCODE-DCC/caper/blob/master/DETAILS.md#usage).
 
+Note that the files used in these exampled are first restricted to reads from chromosome 19, and then further subsampled to 10000 reads. The cpu and memory resources reflect the size of inputs. For resource guidelines with full sized data, see discussion [here](reference.md#note-about-resources).
+
+
 # CONTENTS
 
 ## Running Analyses
@@ -11,7 +14,7 @@ Before following these instructions, make sure you have completed installation a
 [Local with Docker](howto.md#local-with-docker)  
 [Local with Singularity](howto.md#local-with-singularity)  
 [Sherlock with Singularity](howto.md#sherlock-with-singularity)  
-[SLURM](howto.md#slurm)
+[SLURM](howto.md#slurm)  
 
 ## Building indexes
 
