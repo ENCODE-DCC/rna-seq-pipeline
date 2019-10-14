@@ -136,24 +136,6 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 * `rna.kallisto_number_of_threads` How many threads are available for Kallisto quantification.
 * `rna.kallisto_ramGB` How many GBs of memory are available for Kallisto quantification.
 
-#### Note about resources:
-
-The hardware resources needed to run the pipeline depend on the sequencing depth so it is hard to give definitive values that will be good for everyone. However, for every pipeline run, alignment is going to be the most memory-intensive task, quantitation with RSEM is going to be computationally hardest, kallisto will require some non-trivial amount of resources, and typically the rest of the tasks are rather light both in CPU and memory use. Disk usage again depends on the sequencing depth, but `"local-disk 100 HDD"` is a good starting point for all the tasks. The following are recommendations that are a sensible starting point for further optimizations in a typical case (non-CPU or memory related inputs omitted):
-
-```
-{
-    "rna.align_ncpus" : 8,
-    "rna.align_ramGB" : 32,
-    "rna.rsem_ncpus" : 8,
-    "rna.rsem_ramGB" : 32,
-    "rna.kallisto_number_of_threads" : 4,
-    "rna.kallisto_ramGB" : 8,
-    "rna.bam_to_signals_ncpus" : 2,
-    "rna.bam_to_signals_ramGB" : 4,
-}
-```
-
-In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 64GB. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts.
 
 #### Example:
 
@@ -222,3 +204,73 @@ This step calculates additional metrics. At this time the only metric is to calc
 
 * `rnaQC`, file name matches `*_qc.json`. Contains additional QC metrics. For now the reads by gene type.
 * `python_log` file name is `rna_qc.log`. This file contains **IMPORTANT** information on the pipeline step.
+
+#### Note about resources:
+
+The hardware resources needed to run the pipeline depend on the sequencing depth so it is hard to give definitive values that will be good for everyone. However, for every pipeline run, alignment is going to be the most memory-intensive task, quantitation with RSEM is going to be computationally hardest, kallisto will require some non-trivial amount of resources, and typically the rest of the tasks are rather light both in CPU and memory use. Disk usage again depends on the sequencing depth, but `"local-disk 100 HDD"` is a good starting point for all the tasks. The following are recommendations that are a sensible starting point for further optimizations in a typical case (non-CPU or memory related inputs omitted):
+
+```
+{
+    "rna.align_ncpus" : 16,
+    "rna.align_ramGB" : 60,
+    "rna.rsem_ncpus" : 16,
+    "rna.rsem_ramGB" : 60,
+    "rna.kallisto_number_of_threads" : 8,
+    "rna.kallisto_ramGB" : 30,
+    "rna.bam_to_signals_ncpus" : 8,
+    "rna.bam_to_signals_ramGB" : 30
+}
+```
+
+In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 60GB. The merge annotation workflow with gencode V29 annotation and tRNAs works with the default resources defined in the `merge_anno.wdl`. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. Following inputs have been tested on Google Cloud, and are a good landmark for defining the resources on other platforms as well:
+
+Merge Annotation:
+
+```
+{
+    "merge_anno.annotation" : "https://www.encodeproject.org/files/gencode.v29.primary_assembly.annotation_UCSC_names/@@download/gencode.v29.primary_assembly.annotation_UCSC_names.gtf.gz",
+    "merge_anno.tRNA" : "https://www.encodeproject.org/files/gencode.v29.tRNAs/@@download/gencode.v29.tRNAs.gtf.gz",
+    "merge_anno.spikeins" : "https://github.com/ENCODE-DCC/rna-seq-pipeline/raw/master/test_data/ERCC_phiX.fa.gz",
+    "merge_anno.output_filename" : "merged_annotation_V29.gtf.gz"
+}
+```
+
+STAR index:
+
+```
+{
+  "build_index.reference_sequence" : "GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta.gz",
+  "build_index.spikeins" : "ERCC_phiX.fa.gz",
+  "build_index.annotation" : "merged_annotation_V29.gtf.gz",
+  "build_index.anno_version" : "v29",
+  "build_index.genome" : "GRCh38",
+  "build_index.index_type" : "prep_star",
+  "build_index.ncpu" : 16,
+  "build_index.memGB" : 60
+}
+```
+
+RSEM index:
+
+```
+{
+  "build_index.reference_sequence" : "GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta.gz",
+  "build_index.spikeins" : "ERCC_phiX.fa.gz",
+  "build_index.annotation" : "merged_annotation_V29.gtf.gz",
+  "build_index.anno_version" : "v29",
+  "build_index.genome" : "GRCh38",
+  "build_index.index_type" : "prep_rsem",
+  "build_index.ncpu" : 16,
+  "build_index.memGB" : 60
+}
+```
+
+Kallisto index:
+```
+{
+    "build_index.reference_sequence" : "gencode.v29.transcripts_ERCC_phiX.fa.gz",
+    "build_index.index_type" : "prep_kallisto",
+    "build_index.ncpu" : 16,
+    "build_index.memGB" : 60
+}
+```
