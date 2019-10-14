@@ -7,18 +7,18 @@ Before following these instructions, make sure you have completed installation a
 
 ## Running Analyses
 
-[Google Cloud](howto.md#google-cloud)
-[Local with Docker](howto.md#local-with-docker)
-[Local with Singularity](howto.md#local-with-singularity)
-[Sherlock with Singularity](howto.md#sherlock-with-singularity)
+[Google Cloud](howto.md#google-cloud)  
+[Local with Docker](howto.md#local-with-docker)  
+[Local with Singularity](howto.md#local-with-singularity)  
+[Sherlock with Singularity](howto.md#sherlock-with-singularity)  
 [SLURM](howto.md#slurm)
 
 ## Building indexes
 
-[Merge Annotation](howto.md#merge-annotation)
-[Build STAR Index](howto.md#build-star-index)
-[Build RSEM Index](howto.md#build-rsem-index)
-[Build Kallisto Index](howto.md#build-kallisto-index)
+[Merge Annotation](howto.md#merge-annotation)  
+[Build STAR Index](howto.md#build-star-index)  
+[Build RSEM Index](howto.md#build-rsem-index)  
+[Build Kallisto Index](howto.md#build-kallisto-index)  
 
 # RUNNING THE PIPELINE
 

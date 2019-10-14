@@ -20,7 +20,7 @@
     hooks:
       - id: flake8
       - id: trailing-whitespace
-        exclude: docs/reference\.md
+        exclude: docs/\w+\.md
       - id: end-of-file-fixer
       - id: debug-statements
       - id: check-json
