@@ -205,7 +205,13 @@ The goal is to run a single-end non-strand-specific experiment locally using sin
 $ caper run rna-seq-pipeline.wdl -i test/test_workflow/SE_unstranded_input.json --singularity
 ```
 
-5. See outputs in `cromwell-executions/rna/[RUNHASH]`.
+5. Organize outputs with croo:
+
+```bash
+  $ croo testrun_metadata.json --out-dir organized_outputs
+```
+
+This will create directory tree grouped by task and replicate. Disk space does not get wasted, by default croo creates symbolic links in local mode.
 
 
 ## Sherlock with Singularity
@@ -431,7 +437,7 @@ The goal is to build index for kallisto using a local machine with Docker.
 }
 ```
 
-As you can see, this file has fewer inputs than [STAR](howto.md#build-star-index) and [RSEM](howto.md#build-rsem-index) steps. The reason for this is that when building the index kallisto uses only the transcriptome and does not need annotations. Additionally, the spikein sequences are concatenated into the reference file, instead of providing them in a separate input. The inputs used in this example are [ERCC spikes](https://www.encodeproject.org/files/ENCFF001RTP/) and [Human cDNA](ftp://ftp.ensembl.org/pub/current_fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz), which is restricted to chromosome 19.
+As you can see, this file has fewer inputs than [STAR](howto.md#build-star-index) and [RSEM](howto.md#build-rsem-index) steps. The reason for this is that when building the index kallisto uses only the transcriptome and does not need annotations. Additionally, the spikein sequences are concatenated into the reference file, instead of providing them in a separate input. The inputs used in this example are [ERCC spikes](https://www.encodeproject.org/files/ENCFF001RTP/), [Illumina phiX sequencing control spikein](https://www.encodeproject.org/files/ENCFF335FFV/) and [Human cDNA](ftp://ftp.ensembl.org/pub/current_fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz), which is restricted to chromosome 19.
 
 3. Run the pipeline:
 
