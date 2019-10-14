@@ -222,7 +222,7 @@ The hardware resources needed to run the pipeline depend on the sequencing depth
 }
 ```
 
-In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 60GB. The merge annotation workflow with gencode V29 annotation and tRNAs works with the default resources defined in the `merge_anno.wdl`. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. Following inputs have been tested on Google Cloud, and are a good landmark for defining the resources on other platforms as well:
+In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 60GB. The merge annotation workflow with gencode V29 annotation and tRNAs works with the default resources defined in the `merge_anno.wdl`. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. Following inputs with non-subsampled, full sized inputs have been tested on Google Cloud, and are a good landmark for defining the resources on other platforms as well:
 
 Merge Annotation:
 
@@ -272,5 +272,46 @@ Kallisto index:
     "build_index.index_type" : "prep_kallisto",
     "build_index.ncpu" : 16,
     "build_index.memGB" : 60
+}
+```
+
+```
+{
+  "rna.endedness": "single",
+  "rna.fastqs_R1": [
+    [
+      "https://www.encodeproject.org/files/ENCFF824LLV/@@download/ENCFF824LLV.fastq.gz",
+      "https://www.encodeproject.org/files/ENCFF729YAX/@@download/ENCFF729YAX.fastq.gz"
+    ],
+    [
+      "https://www.encodeproject.org/files/ENCFF481BWJ/@@download/ENCFF481BWJ.fastq.gz",
+      "https://www.encodeproject.org/files/ENCFF974EKR/@@download/ENCFF974EKR.fastq.gz"
+    ]
+  ],
+  "rna.aligner": "star",
+  "rna.bamroot": "ENCSR843RJV_testing",
+  "rna.align_index": "gs://long_read_rna_production/caper_out/build_index/9320f158-6b7f-400a-899e-5b3f7e2ca46e/call-make_index/glob-08af9cb4bb3f985849894cfeafd3be7b/GRCh38_v29_ERCC_phiX_starIndex.tgz",
+  "rna.rsem_index": "gs://long_read_rna_production/caper_out/build_index/b15d94e9-b4ef-49dc-b164-45000a0b3cb0/call-make_index/glob-08af9cb4bb3f985849894cfeafd3be7b/GRCh38_v29_ERCC_phiX_rsemIndex.tgz",
+  "rna.strandedness": "unstranded",
+  "rna.strandedness_direction": "unstranded",
+  "rna.chrom_sizes": "gs://release-tests/Inputs/reference/GRCh38_EBV.chrom.sizes",
+  "rna.align_ncpus": 16,
+  "rna.align_ramGB": 60,
+  "rna.kallisto_index": "gs://long_read_rna_production/caper_out/build_index/35ee9e2c-370d-416b-b08d-05307a63b7d1/call-make_index/glob-0a1c08388fcf0d2e32fc9d921d5a8910/gencode.v29.transcripts_ERCC_phiX.idx",
+  "rna.kallisto_number_of_threads": 8,
+  "rna.kallisto_ramGB": 30,
+  "rna.kallisto_fragment_length": 250,
+  "rna.kallisto_sd_of_fragment_length": 10,
+  "rna.rna_qc_tr_id_to_gene_type_tsv": "gs://release-tests/Inputs/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+  "rna.bam_to_signals_ncpus": 8,
+  "rna.bam_to_signals_ramGB": 30,
+  "rna.rsem_ncpus": 16,
+  "rna.rsem_ramGB": 60,
+  "rna.align_disk": "local-disk 200 SSD",
+  "rna.kallisto_disk": "local-disk 200 SSD",
+  "rna.rna_qc_disk": "local-disk 200 SSD",
+  "rna.bam_to_signals_disk": "local-disk 200 SSD",
+  "rna.mad_qc_disk": "local-disk 200 SSD",
+  "rna.rsem_disk": "local-disk 200 SSD"
 }
 ```
