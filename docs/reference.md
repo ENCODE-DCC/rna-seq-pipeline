@@ -4,12 +4,11 @@ This document contains more detailed information on the inputs, outputs and the 
 
 # CONTENTS
 
-[Software](reference.md#software)
-[Genome Reference Files](reference.md#genome-reference-files)
-[Inputs](reference.md#inputs)
-[Resource Considerations](reference.md#note-about-resources)
-[Outputs](reference.md#outputs)
-
+[Software](reference.md#software)  
+[Genome Reference Files](reference.md#genome-reference-files)  
+[Inputs](reference.md#inputs)  
+[Resource Considerations](reference.md#note-about-resources)  
+[Outputs](reference.md#outputs)  
 
 ## Software
 
@@ -222,7 +221,7 @@ The hardware resources needed to run the pipeline depend on the sequencing depth
 }
 ```
 
-In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 60GB. The merge annotation workflow with gencode V29 annotation and tRNAs works with the default resources defined in the `merge_anno.wdl`. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. Following inputs with non-subsampled, full sized inputs have been tested on Google Cloud, and are a good landmark for defining the resources on other platforms as well:
+In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 60GB. The merge annotation workflow with gencode V29 annotation and tRNAs works with the default resources defined in the `merge_anno.wdl`. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. Following inputs with non-subsampled, full sized inputs have been tested on Google Cloud are a good landmark for defining the resources on other platforms as well:
 
 Merge Annotation:
 
