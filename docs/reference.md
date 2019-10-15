@@ -121,7 +121,7 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 
 * `rna.strandedness` Indicates whether the experiment is `stranded` or `unstranded`. If this is `stranded`, then the `rna.strandedness_direction` should be set to `forward` or `reverse`.
 * `rna.strandedness_direction` Indicates the direction of strandedness. Options are `forward`, `reverse` and `unstranded`.
-* `rna.chrom_sizes` Is the file containing the chromosome sizes. You can find and download the files from [ENCODE portal](https://www.encodeproject.org/references/ENCSR425FOI/).
+* `rna.chrom_sizes` Is the file containing the chromosome sizes. You can find and download the files from ENCODE Portal, see [table above](reference.md#genome-reference-files).
 * `rna.align_ncpus` How many cpus are available for STAR alignment.
 * `rna.align_ramGB` How many GBs of memory are available for STAR alignment.
 * `rna.align_ncpus` How many cpus are available for RSEM quantification.
