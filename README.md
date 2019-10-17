@@ -1,9 +1,7 @@
 ENCODE RNA-seq pipeline
 =================================================
 [![CircleCI](https://circleci.com/gh/ENCODE-DCC/rna-seq-pipeline/tree/dev1.1.svg?style=svg)](https://circleci.com/gh/ENCODE-DCC/rna-seq-pipeline/tree/dev1.1)
-
 [![Docker Repository on Quay](https://quay.io/repository/encode-dcc/rna-seq-pipeline/status "Docker Repository on Quay")](https://quay.io/repository/encode-dcc/rna-seq-pipeline)
-
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 OVERVIEW
@@ -25,10 +23,6 @@ Description of the pipeline [inputs](docs/reference.md#inputs)
 OUTPUTS
 --------
 Description of the pipeline [outputs](docs/reference.md#outputs)
-
-FAQ
------------
-FAQ [here](docs/FAQ.md)
 
 REFERENCE
 ----------
