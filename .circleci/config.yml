@@ -315,6 +315,41 @@ jobs:
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_kallisto_PE_input.result.json
           no_output_timeout: 30m
 
+  test_SE_kallisto_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_kallisto.wdl test/test_task/test_kallisto_SE_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_kallisto.kallisto.quants --metadata_json test_kallisto_SE_input.metadata.json --reference_json test/test_task/test_kallisto_SE_reference_md5.json --outfile test_kallisto_SE_input.result.json
+            cat test_kallisto_SE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_kallisto_SE_input.result.json
+          no_output_timeout: 30m
+
+  test_SE_kallisto_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_kallisto.wdl test/test_task/test_kallisto_SE_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect test_kallisto.kallisto.quants --metadata_json test_kallisto_SE_input.metadata.json --reference_json test/test_task/test_kallisto_SE_reference_md5.json --outfile test_kallisto_SE_input.result.json
+            cat test_kallisto_SE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_kallisto_SE_input.result.json
+          no_output_timeout: 30m
+
 # Workflow
 workflows:
   build_workflow:
@@ -359,6 +394,12 @@ workflows:
       - test_PE_kallisto_singularity:
           requires:
             - build
+      - test_SE_kallisto_docker:
+          requires:
+            - build
+      - test_SE_kallisto_singularity:
+          requires:
+            - build
       - push_template:
           requires:
             - unittests
@@ -374,3 +415,5 @@ workflows:
             - test_SE_align_singularity
             - test_PE_kallisto_docker
             - test_PE_kallisto_singularity
+            - test_SE_kallisto_docker
+            - test_SE_kallisto_singularity
