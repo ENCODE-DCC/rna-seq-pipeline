@@ -4,7 +4,7 @@ To run the pipeline you need to do some setup. The exact steps you need to take 
 
 ## Caper
 
-Direct usage of the execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) features complicated backend configuration, workflow options and command line parameters. Caper hides the complexity and consolidates configuration in one file. Caper is available in [the Cheeseshop](https://pypi.org/project/caper/) and it is installed by running:
+Direct usage of the execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) features complicated backend configuration, workflow options and command line parameters. Caper hides the complexity and consolidates configuration in one file. Caper is available in [PyPI](https://pypi.org/project/caper/) and it is installed by running:
 
 ```bash
   $ pip install caper
@@ -14,7 +14,7 @@ Note that conda run mode that is described in caper documentation is not support
 
 ## Croo
 
-The way [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) organizes pipeline outputs is not always the most clear and findable. Croo is a tool to reorganize the files in more readable manner. Croo is available in [the Cheeseshop](https://pypi.org/project/croo/) and it is installed by running:
+The way [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution) organizes pipeline outputs is not always the most clear and findable. Croo is a tool to reorganize the files in more readable manner. Croo is available in [PyPI](https://pypi.org/project/croo/) and it is installed by running:
 
 ```bash
   $ pip install croo

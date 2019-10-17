@@ -88,7 +88,7 @@ Replace `[YOUR_BUCKET_NAME]` with the name of the bucket you created.
   $ caper run rna-seq-pipeline.wdl -i input.json -b gcp -m testrun_metadata.json
 ```
 
-6. Run croo, to easier view the pipeline output:
+6. Run croo, to to make finding outputs easier:
 
 ```bash
   $ croo testrun_metadata.json --out-dir gs://[YOUR_BUCKET_NAME]/croo_out

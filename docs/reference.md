@@ -221,7 +221,7 @@ The hardware resources needed to run the pipeline depend on the sequencing depth
 }
 ```
 
-In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 60GB. The merge annotation workflow with gencode V29 annotation and tRNAs works with the default resources defined in the `merge_anno.wdl`. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. Following inputs with non-subsampled, full sized inputs have been tested on Google Cloud are a good landmark for defining the resources on other platforms as well:
+In case of building index files for STAR and RSEM the sufficient amount of memory for GRCh38 is 60GB. The merge annotation workflow with gencode V29 annotation and tRNAs works with the default resources defined in the `merge_anno.wdl`. Smaller references may be able to run with less, but because index building typically needs to be done only once, it is most prudent to overshoot rather than waste time on several attempts. Following inputs with non-subsampled, full sized inputs have been tested on Google Cloud are good landmarks for defining the resources on other platforms as well:
 
 Merge Annotation:
 
@@ -301,7 +301,7 @@ Kallisto index:
   "rna.kallisto_ramGB": 30,
   "rna.kallisto_fragment_length": 250,
   "rna.kallisto_sd_of_fragment_length": 10,
-  "rna.rna_qc_tr_id_to_gene_type_tsv": "gs://release-tests/Inputs/reference/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+  "rna.rna_qc_tr_id_to_gene_type_tsv": "gs://release-tests/Inputs/reference/gencodeV29pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
   "rna.bam_to_signals_ncpus": 8,
   "rna.bam_to_signals_ramGB": 30,
   "rna.rsem_ncpus": 16,
