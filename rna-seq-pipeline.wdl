@@ -1,8 +1,8 @@
 # ENCODE DCC RNA-seq pipeline
 # Maintainer: Otto Jolanki
 
-#CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.0
-#CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
+#CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.1
+#CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.1
 #CROO out_def https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json
 
 workflow rna {
