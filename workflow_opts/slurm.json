@@ -1,8 +1,0 @@
-{
-  "default_runtime_attributes": {
-    "singularity_command_options": "--bind /your/,[DATA_DIR1],[DATA_DIR2],...",
-    "singularity_container": "~/.singularity/rna-seq-pipeline-v1.0.simg",
-    "slurm_account": "YOUR_SLURM_ACCOUNT",
-    "slurm_partition": "YOUR_SLURM_PARTITON"
-  }
-}

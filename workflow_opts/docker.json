@@ -2,7 +2,7 @@
   "default_runtime_attributes": {
     "bootDiskSizeGb": "10",
     "continueOnReturnCode": 0,
-    "docker": "quay.io/encode-dcc/rna-seq-pipeline:v1.0",
+    "docker": "quay.io/encode-dcc/rna-seq-pipeline:v1.1",
     "failOnStderr": false,
     "noAddress": "false",
     "preemptible": "0",
