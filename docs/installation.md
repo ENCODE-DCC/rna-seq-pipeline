@@ -1,6 +1,6 @@
 # INSTALLATION
 
-To run the pipeline you need to do some setup. The exact steps you need to take depends on the platform you are running the pipeline on, and will be detailed below and in [HOWTO](howto.md). Independent of platform, running the pipeline is done using [caper](https://github.com/ENCODE-DCC/caper) and (optional but recommended) output organization is done using [croo](https://github.com/ENCODE-DCC/croo). Both `caper` and `croo` require `python` version 3.4.1 or newer.
+To run the pipeline you need to do some setup. The exact steps you need to take depend on the platform you are running the pipeline on, and will be detailed below and in [HOWTO](howto.md). Independent of platform, running the pipeline is done using [caper](https://github.com/ENCODE-DCC/caper) and (optional but recommended) output organization is done using [croo](https://github.com/ENCODE-DCC/croo). Both `caper` and `croo` require `python` version 3.4.1 or newer.
 
 ## Caper
 

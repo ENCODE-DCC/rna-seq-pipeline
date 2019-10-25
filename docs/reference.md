@@ -46,7 +46,7 @@ Samtools flagstats are calculated using [Samtools 1.9](https://github.com/samtoo
 
 ## Genome Reference Files
 
-Reference and index files can be downloaded from the [ENCODE Portal](https://www.encodeproject.org/search/?type=Reference&reference_type=index). These files are for human, and mouse will follow. Files that are needed are STAR Index, RSEM Index, Kallisto Index, Chromosome sizes file. Links to required files are summarized in the table below.
+Reference and index files can be downloaded from the [ENCODE Portal](https://www.encodeproject.org/search/?type=Reference&reference_type=index). These files are for human, and mouse will follow. Files that are needed are STAR Index, RSEM Index, Kallisto Index, chromosome sizes file. Links to required files are summarized in the table below.
 
 |Genome|Annotation Version|STAR|RSEM|Kallisto|Chr Sizes|
 |--------|:--------------:|----|----|--------|---------|
