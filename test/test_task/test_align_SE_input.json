@@ -1,0 +1,19 @@
+{
+  "test_align.align_disk": "local-disk 20 HDD",
+  "test_align.align_index": "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+  "test_align.align_ncpus": 2,
+  "test_align.align_ramGB": 4,
+  "test_align.bamroot": "align_SE",
+  "test_align.endedness": "single",
+  "test_align.fastqs_R1": [
+    [
+      "test_data/rep1_ENCSR510QZW_chr19only_10000_reads_part1.fastq.gz",
+      "test_data/rep1_ENCSR510QZW_chr19only_10000_reads_part2.fastq.gz"
+    ],
+    [
+      "test_data/rep2_ENCSR510QZW_chr19only_10000_reads_part1.fastq.gz",
+      "test_data/rep2_ENCSR510QZW_chr19only_10000_reads_part2.fastq.gz"
+    ]
+  ],
+  "test_align.fastqs_R2": []
+}

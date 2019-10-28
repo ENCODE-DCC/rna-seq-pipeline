@@ -2,25 +2,26 @@
 unittests for rna_qc.py
 """
 
-import rna_qc
 import unittest
 from collections import OrderedDict
 from io import StringIO
 from unittest.mock import patch
 
+import rna_qc
+
 
 class TestQCMetric(unittest.TestCase):
     def test_type_check(self):
         with self.assertRaises(TypeError):
-            rna_qc.QCMetric('name', 1)
+            rna_qc.QCMetric("name", 1)
 
     def test_get_name(self):
-        qc_obj = rna_qc.QCMetric('a', {})
-        self.assertEqual(qc_obj.name, 'a')
+        qc_obj = rna_qc.QCMetric("a", {})
+        self.assertEqual(qc_obj.name, "a")
 
     def test_get_content(self):
-        qc_obj = rna_qc.QCMetric('_', {2: 'a', 1: 'b'})
-        self.assertEqual(qc_obj.content, OrderedDict([(1, 'b'), (2, 'a')]))
+        qc_obj = rna_qc.QCMetric("_", {2: "a", 1: "b"})
+        self.assertEqual(qc_obj.content, OrderedDict([(1, "b"), (2, "a")]))
 
     def test_less_than(self):
         smaller_obj = rna_qc.QCMetric(1, {})
@@ -28,21 +29,20 @@ class TestQCMetric(unittest.TestCase):
         self.assertTrue(smaller_obj < bigger_obj)
 
     def test_equals(self):
-        first_obj = rna_qc.QCMetric('a', {})
-        second_obj = rna_qc.QCMetric('a', {'x': 'y'})
+        first_obj = rna_qc.QCMetric("a", {})
+        second_obj = rna_qc.QCMetric("a", {"x": "y"})
         self.assertTrue(first_obj == second_obj)
 
     def test_repr(self):
-        obj = rna_qc.QCMetric('a', {1: 'x'})
-        self.assertEqual(obj.__repr__(),
-                         "QCMetric('a', OrderedDict([(1, 'x')]))")
+        obj = rna_qc.QCMetric("a", {1: "x"})
+        self.assertEqual(obj.__repr__(), "QCMetric('a', OrderedDict([(1, 'x')]))")
 
 
 class TestQCMetricRecord(unittest.TestCase):
     def setUp(self):
-        self.obj_a1 = rna_qc.QCMetric('a', {1: 2})
-        self.obj_a2 = rna_qc.QCMetric('a', {2: 3})
-        self.obj_b = rna_qc.QCMetric('b', {3: 4})
+        self.obj_a1 = rna_qc.QCMetric("a", {1: 2})
+        self.obj_a2 = rna_qc.QCMetric("a", {2: 3})
+        self.obj_b = rna_qc.QCMetric("b", {3: 4})
         self.qc_record = rna_qc.QCMetricRecord()
 
     def test_init_from_list_not_unique(self):
@@ -75,19 +75,17 @@ class TestQCMetricRecord(unittest.TestCase):
         self.qc_record.add(self.obj_a1)
         self.qc_record.add(self.obj_b)
         qc_dict = self.qc_record.to_ordered_dict()
-        self.assertEqual(qc_dict, OrderedDict([('a', {1: 2}), ('b', {3: 4})]))
+        self.assertEqual(qc_dict, OrderedDict([("a", {1: 2}), ("b", {3: 4})]))
 
 
 class TestRegularFunctions(unittest.TestCase):
-    @patch(
-        'builtins.open', return_value=StringIO('file\tcontains\tbad\ttsv\n'))
+    @patch("builtins.open", return_value=StringIO("file\tcontains\tbad\ttsv\n"))
     def test_read_dict_from_tsv_malformed(self, mock_open):
         with self.assertRaises(AssertionError):
-            rna_qc.read_dict_from_tsv('bad.tsv')
+            rna_qc.read_dict_from_tsv("bad.tsv")
 
-    @patch(
-        'builtins.open', return_value=StringIO('file\tcontains\ngood\ttsv\n'))
+    @patch("builtins.open", return_value=StringIO("file\tcontains\ngood\ttsv\n"))
     def test_read_dict_from_tsv_good_input(self, mock_open):
-        result_dict = rna_qc.read_dict_from_tsv('good.tsv')
-        self.assertEqual(result_dict['file'], 'contains')
-        self.assertEqual(result_dict['good'], 'tsv')
+        result_dict = rna_qc.read_dict_from_tsv("good.tsv")
+        self.assertEqual(result_dict["file"], "contains")
+        self.assertEqual(result_dict["good"], "tsv")

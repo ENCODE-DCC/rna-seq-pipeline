@@ -1,28 +1,36 @@
 {
-    "rna.endedness" : "paired",
-    "rna.fastqs_R1" : ["test_data/ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz"],
-    "rna.fastqs_R2" : ["test_data/ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz"],
-    "rna.aligner" : "star",
-    "rna.align_index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
-    "rna.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
-    "rna.bamroot" : "PE_unstranded",
-    "rna.strandedness" : "unstranded",
-    "rna.strandedness_direction" : "unstranded",
-    "rna.chrom_sizes" : "test_data/GRCh38_EBV.chrom.sizes",
-    "rna.align_ncpus" : 2,
-    "rna.align_ramGB" : 4,
-    "rna.kallisto_index" : "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
-    "rna.kallisto_number_of_threads" : 2,
-    "rna.kallisto_ramGB" : 4,
-    "rna.rna_qc_tr_id_to_gene_type_tsv" : "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
-    "rna.bam_to_signals_ncpus" : 1,
-    "rna.bam_to_signals_ramGB" : 2,
-    "rna.rsem_ncpus" : 2,
-    "rna.rsem_ramGB" : 4,
-    "rna.align_disk" : "local-disk 20 HDD",
-    "rna.kallisto_disk" : "local-disk 20 HDD",
-    "rna.rna_qc_disk" : "local-disk 20 HDD",
-    "rna.mad_qc_disk" : "local-disk 20 HDD",
-    "rna.bam_to_signals_disk" : "local-disk 20 HDD",
-    "rna.rsem_disk" : "local-disk 20 HDD"
+  "rna.align_disk": "local-disk 20 HDD",
+  "rna.align_index": "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
+  "rna.align_ncpus": 2,
+  "rna.align_ramGB": 4,
+  "rna.aligner": "star",
+  "rna.bam_to_signals_disk": "local-disk 20 HDD",
+  "rna.bam_to_signals_ncpus": 1,
+  "rna.bam_to_signals_ramGB": 2,
+  "rna.bamroot": "PE_unstranded",
+  "rna.chrom_sizes": "test_data/GRCh38_EBV.chrom.sizes",
+  "rna.endedness": "paired",
+  "rna.fastqs_R1": [
+    [
+      "test_data/ENCSR142YZV_chr19only_10000_reads_R1.fastq.gz"
+    ]
+  ],
+  "rna.fastqs_R2": [
+    [
+      "test_data/ENCSR142YZV_chr19only_10000_reads_R2.fastq.gz"
+    ]
+  ],
+  "rna.kallisto_disk": "local-disk 20 HDD",
+  "rna.kallisto_index": "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+  "rna.kallisto_number_of_threads": 2,
+  "rna.kallisto_ramGB": 4,
+  "rna.mad_qc_disk": "local-disk 20 HDD",
+  "rna.rna_qc_disk": "local-disk 20 HDD",
+  "rna.rna_qc_tr_id_to_gene_type_tsv": "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",
+  "rna.rsem_disk": "local-disk 20 HDD",
+  "rna.rsem_index": "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
+  "rna.rsem_ncpus": 2,
+  "rna.rsem_ramGB": 4,
+  "rna.strandedness": "unstranded",
+  "rna.strandedness_direction": "unstranded"
 }

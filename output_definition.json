@@ -1,94 +1,106 @@
 {
-    "rna.align": {
-        "genomebam": {
-            "path": "align/rep${i+1}/${basename}",
-            "table": "Align/Replicate ${i+1}/genome alignments"
-        },
-        "annobam": {
-            "path": "align/rep${i+1}/${basename}",
-            "table": "Align/Replicate ${i+1}/transcriptome alignments"
-        },
-        "genome_flagstat": {
-            "path": "align/rep${i+1}/${basename}",
-            "table": "Align/Replicate ${i+1}/genome flagstats"
-        },
-        "anno_flagstat": {
-            "path": "align/rep${i+1}/${basename}",
-            "table": "Align/Replicate ${i+1}/transcriptome flagstats"
-        },
-        "log": {
-            "path": "align/rep${i+1}/${basename}",
-            "table": "Align/Replicate ${i+1}/STAR log"
-        },
-        "python_log": {
-            "path": "align/rep${i+1}/${basename}",
-            "table": "Align/Replicate ${i+1}/python log"
-        }
+  "rna.align": {
+    "anno_flagstat": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/transcriptome flagstats"
     },
-    "rna.bam_to_signals": {
-        "unique": {
-            "path": "bam_to_signals/rep${i+1}/${basename}",
-            "table": "Bam_to_signals/Replicate ${i+1}/signal track of unique reads"
-        },
-        "all": {
-            "path": "bam_to_signals/rep${i+1}/${basename}",
-            "table": "Bam_to_signals/Replicate ${i+1}/signal track of all reads"
-        },
-        "python_log": {
-            "path": "bam_to_signals/rep${i+1}/${basename}",
-            "table": "Bam_to_signals/Replicate ${i+1}/python log"
-        }
+    "anno_flagstat_json": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/transcriptome flagstats json"
     },
-    "rna.rsem_quant": {
-        "genes_results": {
-            "path": "rsem_quant/rep${i+1}/${basename}",
-            "table": "Rsem_quant/Replicate ${i+1}/gene quants"
-        },
-        "isoforms_results": {
-            "path": "rsem_quant/rep${i+1}/${basename}",
-            "table": "Rsem_quant/Replicate ${i+1}/isoform quants"
-        },
-        "python_log": {
-            "path": "rsem_quant/rep${i+1}/${basename}",
-            "table": "Rsem_quant/Replicate ${i+1}/python log"
-        },
-        "number_of_genes": {
-            "path": "rsem_quant/rep${i+1}/${basename}",
-            "table": "Rsem_quant/Replicate ${i+1}/number of genes detected"
-        }
+    "annobam": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/transcriptome alignments"
     },
-    "rna.kallisto": {
-        "quants": {
-            "path": "kallisto/rep${i+1}/${basename}",
-            "table": "Kallisto/Replicate ${i+1}/kallisto quants"
-        },
-        "python_log": {
-            "path": "kallisto/rep${i+1}/${basename}",
-            "table": "Kallisto/Replicate ${i+1}/python log"
-        }
+    "genome_flagstat": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/genome flagstats"
     },
-    "rna.mad_qc": {
-        "madQCplot": {
-            "path": "mad_qc/${basename}",
-            "table": "Mad_QC/Mad QC plot"
-        },
-        "madQCmetrics": {
-            "path": "mad_qc/${basename}",
-            "table": "Mad_QC/Mad QC metrics"
-        },
-        "python_log": {
-            "path": "mad_qc/${basename}",
-            "table": "Mad_QC/python log"
-        }
+    "genome_flagstat_json": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/genome flagstats json"
     },
-    "rna.rna_qc": {
-        "rnaQC": {
-            "path": "rna_qc/rep${i+1}/${basename}",
-            "table": "RNA_QC/Replicate ${i+1}/rna qc metrics"
-        },
-        "python_log": {
-            "path": "rna_qc/rep${i+1}/${basename}",
-            "table": "RNA_QC/Replicate ${i+1}/python log"
-        }
+    "genomebam": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/genome alignments"
+    },
+    "log": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/STAR log"
+    },
+    "log_json": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/STAR log json"
+    },
+    "python_log": {
+      "path": "align/rep${i+1}/${basename}",
+      "table": "Align/Replicate ${i+1}/python log"
     }
+  },
+  "rna.bam_to_signals": {
+    "all": {
+      "path": "bam_to_signals/rep${i+1}/${basename}",
+      "table": "Bam_to_signals/Replicate ${i+1}/signal track of all reads"
+    },
+    "python_log": {
+      "path": "bam_to_signals/rep${i+1}/${basename}",
+      "table": "Bam_to_signals/Replicate ${i+1}/python log"
+    },
+    "unique": {
+      "path": "bam_to_signals/rep${i+1}/${basename}",
+      "table": "Bam_to_signals/Replicate ${i+1}/signal track of unique reads"
+    }
+  },
+  "rna.kallisto": {
+    "python_log": {
+      "path": "kallisto/rep${i+1}/${basename}",
+      "table": "Kallisto/Replicate ${i+1}/python log"
+    },
+    "quants": {
+      "path": "kallisto/rep${i+1}/${basename}",
+      "table": "Kallisto/Replicate ${i+1}/kallisto quants"
+    }
+  },
+  "rna.mad_qc": {
+    "madQCmetrics": {
+      "path": "mad_qc/${basename}",
+      "table": "Mad_QC/Mad QC metrics json"
+    },
+    "madQCplot": {
+      "path": "mad_qc/${basename}",
+      "table": "Mad_QC/Mad QC plot"
+    },
+    "python_log": {
+      "path": "mad_qc/${basename}",
+      "table": "Mad_QC/python log"
+    }
+  },
+  "rna.rna_qc": {
+    "python_log": {
+      "path": "rna_qc/rep${i+1}/${basename}",
+      "table": "RNA_QC/Replicate ${i+1}/python log"
+    },
+    "rnaQC": {
+      "path": "rna_qc/rep${i+1}/${basename}",
+      "table": "RNA_QC/Replicate ${i+1}/rna qc metrics json"
+    }
+  },
+  "rna.rsem_quant": {
+    "genes_results": {
+      "path": "rsem_quant/rep${i+1}/${basename}",
+      "table": "Rsem_quant/Replicate ${i+1}/gene quants"
+    },
+    "isoforms_results": {
+      "path": "rsem_quant/rep${i+1}/${basename}",
+      "table": "Rsem_quant/Replicate ${i+1}/isoform quants"
+    },
+    "number_of_genes": {
+      "path": "rsem_quant/rep${i+1}/${basename}",
+      "table": "Rsem_quant/Replicate ${i+1}/number of genes detected json"
+    },
+    "python_log": {
+      "path": "rsem_quant/rep${i+1}/${basename}",
+      "table": "Rsem_quant/Replicate ${i+1}/python log"
+    }
+  }
 }

@@ -1,9 +1,10 @@
-# CircleCI 2.0 configuration file
+# CircleCI 2.1 configuration file
 # for ENCODE RNA-SEQ-PIPELINE
 # Maintainer: Otto Jolanki
 
 # Defaults and functions
 ---
+version: 2.1
 defaults: &defaults
   docker:
     - image: circleci/buildpack-deps:xenial-scm
@@ -16,7 +17,7 @@ python_defaults: &python_defaults
 
 machine_defaults: &machine_defaults
   machine:
-    image: circleci/classic:latest
+    image: ubuntu-1604:201903-01
   working_directory: ~/rna-seq-pipeline
 
 make_tag: &make_tag
@@ -52,7 +53,8 @@ install_singularity: &install_singularity
     sudo make install
     singularity --version
 # Jobs
-version: 2
+orbs:
+  singularity: singularity/singularity@1.0.3
 jobs:
   unittests:
     <<: *python_defaults
@@ -76,11 +78,26 @@ jobs:
             echo "pulling template!"
             docker pull quay.io/encode-dcc/rna-seq-pipeline:template
             docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
-            docker build --cache-from quay.io/encode-dcc/rna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG -t quay.io/encode-dcc/rna-seq-pipeline:template .
+            docker build --cache-from quay.io/encode-dcc/rna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG .
             docker push $TAG
-            docker push quay.io/encode-dcc/rna-seq-pipeline:template
             docker logout
           no_output_timeout: 30m
+
+  push_template:
+      <<: *defaults
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run: *make_tag
+        - run:
+            command: |
+              source ${BASH_ENV}
+              docker pull $TAG
+              docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
+              docker tag $TAG quay.io/encode-dcc/rna-seq-pipeline:template
+              docker push quay.io/encode-dcc/rna-seq-pipeline:template
+              docker logout
+            no_output_timeout: 30m
 
   test_PE_unstranded_docker:
     <<: *machine_defaults
@@ -137,8 +154,10 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
       - run: *make_tag
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
@@ -155,8 +174,10 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
       - run: *make_tag
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
@@ -173,8 +194,10 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
       - run: *make_tag
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
@@ -187,62 +210,210 @@ jobs:
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
           no_output_timeout: 30m
 
+  test_PE_align_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_PE_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_PE_input.metadata.json --reference_json test/test_task/test_align_PE_reference_md5.json --outfile test_align_PE_input.result.json
+            cat test_align_PE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_align_PE_input.result.json
+          no_output_timeout: 30m
+
+  test_PE_align_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_PE_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_PE_input.metadata.json --reference_json test/test_task/test_align_PE_reference_md5.json --outfile test_align_PE_input.result.json
+            cat test_align_PE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_align_PE_input.result.json
+          no_output_timeout: 30m
+
+  test_SE_align_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_SE_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_SE_input.metadata.json --reference_json test/test_task/test_align_SE_reference_md5.json --outfile test_align_SE_input.result.json
+            cat test_align_SE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_align_SE_input.result.json
+          no_output_timeout: 30m
+
+  test_SE_align_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_SE_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_SE_input.metadata.json --reference_json test/test_task/test_align_SE_reference_md5.json --outfile test_align_SE_input.result.json
+            cat test_align_SE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_align_SE_input.result.json
+          no_output_timeout: 30m
+
+  test_PE_kallisto_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_kallisto.wdl test/test_task/test_kallisto_PE_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_kallisto.kallisto.quants --metadata_json test_kallisto_PE_input.metadata.json --reference_json test/test_task/test_kallisto_PE_reference_md5.json --outfile test_kallisto_PE_input.result.json
+            cat test_kallisto_PE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_kallisto_PE_input.result.json
+          no_output_timeout: 30m
+
+  test_PE_kallisto_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_kallisto.wdl test/test_task/test_kallisto_PE_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect test_kallisto.kallisto.quants --metadata_json test_kallisto_PE_input.metadata.json --reference_json test/test_task/test_kallisto_PE_reference_md5.json --outfile test_kallisto_PE_input.result.json
+            cat test_kallisto_PE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_kallisto_PE_input.result.json
+          no_output_timeout: 30m
+
+  test_SE_kallisto_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_kallisto.wdl test/test_task/test_kallisto_SE_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_kallisto.kallisto.quants --metadata_json test_kallisto_SE_input.metadata.json --reference_json test/test_task/test_kallisto_SE_reference_md5.json --outfile test_kallisto_SE_input.result.json
+            cat test_kallisto_SE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_kallisto_SE_input.result.json
+          no_output_timeout: 30m
+
+  test_SE_kallisto_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
+      - run: *get_kallisto_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test_workflow/test.sh test/test_task/test_kallisto.wdl test/test_task/test_kallisto_SE_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect test_kallisto.kallisto.quants --metadata_json test_kallisto_SE_input.metadata.json --reference_json test/test_task/test_kallisto_SE_reference_md5.json --outfile test_kallisto_SE_input.result.json
+            cat test_kallisto_SE_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_kallisto_SE_input.result.json
+          no_output_timeout: 30m
+
 # Workflow
 workflows:
-  version: 2
   build_workflow:
     jobs:
-      - build:
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
+      - build
       - unittests:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_PE_unstranded_docker:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_SE_unstranded_docker:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_PE_stranded_docker:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_PE_unstranded_singularity:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_SE_unstranded_singularity:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
       - test_PE_stranded_singularity:
           requires:
             - build
-          filters:
-            branches:
-              ignore:
-                - PIP-371_markdown
+      - test_PE_align_docker:
+          requires:
+            - build
+      - test_PE_align_singularity:
+          requires:
+            - build
+      - test_SE_align_docker:
+          requires:
+            - build
+      - test_SE_align_singularity:
+          requires:
+            - build
+      - test_PE_kallisto_docker:
+          requires:
+            - build
+      - test_PE_kallisto_singularity:
+          requires:
+            - build
+      - test_SE_kallisto_docker:
+          requires:
+            - build
+      - test_SE_kallisto_singularity:
+          requires:
+            - build
+      - push_template:
+          requires:
+            - unittests
+            - test_PE_unstranded_docker
+            - test_SE_unstranded_docker
+            - test_PE_stranded_docker
+            - test_PE_unstranded_singularity
+            - test_SE_unstranded_singularity
+            - test_PE_stranded_singularity
+            - test_PE_align_docker
+            - test_PE_align_singularity
+            - test_SE_align_docker
+            - test_SE_align_singularity
+            - test_PE_kallisto_docker
+            - test_PE_kallisto_singularity
+            - test_SE_kallisto_docker
+            - test_SE_kallisto_singularity

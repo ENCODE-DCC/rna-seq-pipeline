@@ -1,6 +1,0 @@
-{
-	"merge_anno.annotation" : "test_data/gencode.v24.primary_assembly.annotation.gtf.gz",
-	"merge_anno.tRNA" : "test_data/gencode.v24.tRNAs.gtf.gz",
-	"merge_anno.spikeins" : "test_data/ERCC_phiX.fa.gz",
-	"merge_anno.output_filename" : "gencodeV24pri-tRNAs-ERCC-phiX_onlychr19_and_spikeins.gtf.gz"
-} 

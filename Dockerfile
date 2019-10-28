@@ -1,6 +1,6 @@
 # Dockerfile for ENCODE-DCC rna-seq-pipeline
-FROM ubuntu:16.04
-MAINTAINER Otto Jolanki 
+FROM ubuntu@sha256:97b54e5692c27072234ff958a7442dde4266af21e7b688e7fca5dc5acc8ed7d9
+MAINTAINER Otto Jolanki
 
 RUN apt-get update && apt-get install -y \
     python3-dev \
@@ -10,12 +10,12 @@ RUN apt-get update && apt-get install -y \
     unzip \
     bzip2 \
 # libcurses is a samtools dependency
-    libncurses5-dev \ 
+    libncurses5-dev \
     r-base-core \
     ghostscript && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install pandas
-RUN pip3 install pysam
+RUN pip3 install pandas==0.24.2
+RUN pip3 install pysam==0.15.3
 
 # Add mountpoint directory
 RUN mkdir /data
@@ -54,6 +54,10 @@ ENV PATH="/software/RSEM-1.2.31:${PATH}"
 # Install BedGraphToBigWig and bedSort
 RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig && chmod +x bedGraphToBigWig
 RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedSort && chmod +x bedSort
+
+# Install qc-utils 19.8.1
+
+RUN pip3 install qc-utils==19.8.1
 
 RUN mkdir -p rna-seq-pipeline/src
 COPY /src rna-seq-pipeline/src

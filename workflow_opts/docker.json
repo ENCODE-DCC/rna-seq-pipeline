@@ -1,11 +1,11 @@
 {
-    "default_runtime_attributes" : {
-        "docker" : "quay.io/encode-dcc/rna-seq-pipeline:v1.0",
-        "zones": "us-west1-a us-west1-b us-west1-c us-central1-c us-central1-b",
-        "failOnStderr" : false,
-        "continueOnReturnCode" : 0,
-        "preemptible": "0",
-        "bootDiskSizeGb": "10",
-        "noAddress": "false"
-    }
+  "default_runtime_attributes": {
+    "bootDiskSizeGb": "10",
+    "continueOnReturnCode": 0,
+    "docker": "quay.io/encode-dcc/rna-seq-pipeline:v1.1",
+    "failOnStderr": false,
+    "noAddress": "false",
+    "preemptible": "0",
+    "zones": "us-west1-a us-west1-b us-west1-c us-central1-c us-central1-b"
+  }
 }

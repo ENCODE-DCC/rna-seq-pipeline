@@ -1,4 +1,0 @@
-{
-    "build_index.reference_sequence" : "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix.fa.gz",
-    "build_index.index_type" : "prep_kallisto"
-}

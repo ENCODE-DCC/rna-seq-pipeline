@@ -1,0 +1,22 @@
+{
+  "test_kallisto.endedness": "single",
+  "test_kallisto.fastqs_R1": [
+    [
+      "test_data/rep1_ENCSR510QZW_chr19only_10000_reads_part1.fastq.gz",
+      "test_data/rep1_ENCSR510QZW_chr19only_10000_reads_part2.fastq.gz"
+    ],
+    [
+      "test_data/rep2_ENCSR510QZW_chr19only_10000_reads_part1.fastq.gz",
+      "test_data/rep2_ENCSR510QZW_chr19only_10000_reads_part2.fastq.gz"
+    ]
+  ],
+  "test_kallisto.fastqs_R2": [],
+  "test_kallisto.kallisto_disk": "local-disk 20 HDD",
+  "test_kallisto.kallisto_fragment_length": 250,
+  "test_kallisto.kallisto_index": "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+  "test_kallisto.kallisto_number_of_threads": 2,
+  "test_kallisto.kallisto_ramGB": 4,
+  "test_kallisto.kallisto_sd_of_fragment_length": 10,
+  "test_kallisto.out_prefix": "kallisto_SE",
+  "test_kallisto.strandedness_direction": "unstranded"
+}

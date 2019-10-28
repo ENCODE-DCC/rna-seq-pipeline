@@ -1,0 +1,21 @@
+{
+  "test_kallisto.endedness": "paired",
+  "test_kallisto.fastqs_R1": [
+    [
+      "test_data/ENCSR142YZV_chr19only_10000_reads_R1_part1.fastq.gz",
+      "test_data/ENCSR142YZV_chr19only_10000_reads_R1_part2.fastq.gz"
+    ]
+  ],
+  "test_kallisto.fastqs_R2": [
+    [
+      "test_data/ENCSR142YZV_chr19only_10000_reads_R2_part1.fastq.gz",
+      "test_data/ENCSR142YZV_chr19only_10000_reads_R2_part2.fastq.gz"
+    ]
+  ],
+  "test_kallisto.kallisto_disk": "local-disk 20 HDD",
+  "test_kallisto.kallisto_index": "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
+  "test_kallisto.kallisto_number_of_threads": 2,
+  "test_kallisto.kallisto_ramGB": 4,
+  "test_kallisto.out_prefix": "PE_unstranded",
+  "test_kallisto.strandedness_direction": "unstranded"
+}
