@@ -63,7 +63,6 @@ Input is given in a json file like this (note that the resources in this input f
     "rna.endedness" : "paired",
     "rna.fastqs_R1" : [["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R1.fastq.gz"], ["test_data/ENCSR653DFZ_rep2_chr19_10000reads_R1.fastq.gz"]],
     "rna.fastqs_R2" : [["test_data/ENCSR653DFZ_rep1_chr19_10000reads_R2.fastq.gz"], ["test_data/ENCSR653DFZ_rep2_chr19_10000reads_R2.fastq.gz"]],
-    "rna.aligner" : "star",
     "rna.align_index" : "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
     "rna.rsem_index" : "test_data/GRCh38_v24_ERCC_phiX_rsemIndex_chr19only.tgz",
     "rna.bamroot" : "PE_stranded",
@@ -109,7 +108,6 @@ Assume you are running a single end experiment with 3 replicates. Further assume
 `"rna.fastqs_R2" : []` (in single ended experiment the second read input is empty)
 In the case when the input for a replicate consists of several fastq files, they will be automatically merged during the pipeline run.
 
-* `rna.aligner` Use `star` aligner, possibly extended to use others in future.
 * `rna.align_index` Is the index for STAR aligner.
 * `rna.rsem_index` Is the index for RSEM quantifier.
 * `rna.kallisto_index` Is the index for Kallisto quantifier.
@@ -265,6 +263,7 @@ RSEM index:
 ```
 
 Kallisto index:
+
 ```
 {
     "build_index.reference_sequence" : "gencode.v29.transcripts_ERCC_phiX.fa.gz",
@@ -273,6 +272,8 @@ Kallisto index:
     "build_index.memGB" : 60
 }
 ```
+
+Main pipeline:
 
 ```
 {
