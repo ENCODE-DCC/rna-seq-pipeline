@@ -176,8 +176,12 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 
 In case of an stranded run, the plus and minus strand signal tracks are separated (there will be four tracks per replicate).
 
-* `unique`, file name matches `*niq.bw`. Contains the signal track of the uniquely mapped reads.
-* `all`, the file name matches `*ll.bw`. Contains the signal track of all reads.
+* `unique_unstranded`, file name matches `*genome_uniq.bw`. Contains the signal track of the uniquely mapped reads.
+* `all_unstranded`, the file name matches `*genome_all.bw`. Contains the signal track of all reads.
+* `unique_plus`, file name matches `*genome_plusUniq.bw`. Contains the signal track of the uniquely mapped reads from plus strand.
+* `all_plus`, the file name matches `*genome_plusAll.bw`. Contains the signal track of all reads from plus strand.
+* `unique_minus`, file name matches `*genome_minusUniq.bw`. Contains the signal track of the uniquely mapped reads from minus strand.
+* `all_minus`, the file name matches `*genome_minusAll.bw`. Contains the signal track of all reads from minus strand.
 * `python_log` file name is `bam_to_signals.log`. This file contains possible additional information on the pipeline step.
 
 #### Task RSEM Quant
