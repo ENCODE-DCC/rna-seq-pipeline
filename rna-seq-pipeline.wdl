@@ -202,12 +202,12 @@ task  bam_to_signals {
     }
 
     output {
-        File? unique_unstranded = glob("*genome_uniq.bw")[0]
-        File? all_unstranded = glob("*genome_all.bw")[0]
-        File? unique_plus = glob("*genome_plusUniq.bw")[0]
-        File? unique_minus = glob("*genome_minusUniq.bw")[0]
-        File? all_plus = glob("*genome_plusAll.bw")[0]
-        File? all_minus = glob("*genome_minusAll.bw")[0]
+        Array[File]? unique_unstranded = glob("*genome_uniq.bw")[0]
+        Array[File]? all_unstranded = glob("*genome_all.bw")[0]
+        Array[File]? unique_plus = glob("*genome_plusUniq.bw")[0]
+        Array[File]? unique_minus = glob("*genome_minusUniq.bw")[0]
+        Array[File]? all_plus = glob("*genome_plusAll.bw")[0]
+        Array[File]? all_minus = glob("*genome_minusAll.bw")[0]
         File python_log = glob("bam_to_signals.log")[0]
     }
 
