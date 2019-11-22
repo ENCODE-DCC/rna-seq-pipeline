@@ -184,6 +184,7 @@ task align {
 }
 
 task  bam_to_signals {
+    File? null
     File input_bam
     File chrom_sizes
     String strandedness
@@ -202,8 +203,12 @@ task  bam_to_signals {
     }
 
     output {
-        Array[File] unique = glob("*niq.bw")
-        Array[File] all = glob("*ll.bw")
+        File? unique_unstranded = if (strandedness == "unstranded") then glob("*genome_uniq.bw")[0] else null
+        File? all_unstranded = if (strandedness == "unstranded") then glob("*genome_all.bw")[0] else null
+        File? unique_plus = if (strandedness == "stranded") then glob("*genome_plusUniq.bw")[0] else null
+        File? unique_minus = if (strandedness == "stranded") then glob("*genome_minusUniq.bw")[0] else null
+        File? all_plus = if (strandedness == "stranded") then glob("*genome_plusAll.bw")[0] else null
+        File? all_minus = if (strandedness == "stranded") then glob("*genome_minusAll.bw")[0] else null
         File python_log = glob("bam_to_signals.log")[0]
     }
 
