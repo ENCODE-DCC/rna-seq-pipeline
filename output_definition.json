@@ -40,15 +40,18 @@
   "rna.bam_to_signals": {
     "all_minus": {
       "path": "bam_to_signals/rep${i+1}/${basename}",
-      "table": "Bam_to_signals/Replicate ${i+1}/signal track of all reads from minus strand"
+      "table": "Bam_to_signals/Replicate ${i+1}/signal track of all reads from minus strand",
+      "ucsc_track": "track type=bigWig name=\"rep${i+1} all minus\" priority=${i+1} visibility=full smoothingWindow=off autoScale=off"
     },
     "all_plus": {
       "path": "bam_to_signals/rep${i+1}/${basename}",
-      "table": "Bam_to_signals/Replicate ${i+1}/signal track of all reads from plus strand"
+      "table": "Bam_to_signals/Replicate ${i+1}/signal track of all reads from plus strand",
+      "ucsc_track": "track type=bigWig name=\"rep${i+1} all plus\" priority=${i+1} visibility=full smoothingWindow=off autoScale=off"
     },
     "all_unstranded": {
       "path": "bam_to_signals/rep${i+1}/${basename}",
-      "table": "Bam_to_signals/Replicate ${i+1}/signal track of all reads"
+      "table": "Bam_to_signals/Replicate ${i+1}/signal track of all reads",
+      "ucsc_track": "track type=bigWig name=\"rep${i+1} all\" priority=${i+1} visibility=full smoothingWindow=off autoScale=off"
     },
     "python_log": {
       "path": "bam_to_signals/rep${i+1}/${basename}",
@@ -56,15 +59,18 @@
     },
     "unique_minus": {
       "path": "bam_to_signals/rep${i+1}/${basename}",
-      "table": "Bam_to_signals/Replicate ${i+1}/signal track of unique reads from minus strand"
+      "table": "Bam_to_signals/Replicate ${i+1}/signal track of unique reads from minus strand",
+      "ucsc_track": "track type=bigWig name=\"rep${i+1} unique minus\" priority=${i+1} visibility=full smoothingWindow=off autoScale=off"
     },
     "unique_plus": {
       "path": "bam_to_signals/rep${i+1}/${basename}",
-      "table": "Bam_to_signals/Replicate ${i+1}/signal track of unique reads from plus strand"
+      "table": "Bam_to_signals/Replicate ${i+1}/signal track of unique reads from plus strand",
+      "ucsc_track": "track type=bigWig name=\"rep${i+1} unique plus\" priority=${i+1} visibility=full smoothingWindow=off autoScale=off"
     },
     "unique_unstranded": {
       "path": "bam_to_signals/rep${i+1}/${basename}",
-      "table": "Bam_to_signals/Replicate ${i+1}/signal track of unique reads"
+      "table": "Bam_to_signals/Replicate ${i+1}/signal track of unique reads",
+      "ucsc_track": "track type=bigWig name=\"rep${i+1} unique\" priority=${i+1} visibility=full smoothingWindow=off autoScale=off"
     }
   },
   "rna.kallisto": {
