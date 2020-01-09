@@ -51,9 +51,9 @@ RUN unzip v1.2.31.zip && rm v1.2.31.zip
 RUN cd RSEM-1.2.31 && make
 ENV PATH="/software/RSEM-1.2.31:${PATH}"
 
-# Install BedGraphToBigWig and bedSort
-RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig && chmod +x bedGraphToBigWig
-RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedSort && chmod +x bedSort
+# Install kentutils 377
+RUN git clone https://github.com/ENCODE-DCC/kentUtils_bin_v377
+ENV PATH=${PATH}:/software/kentUtils_bin_v377/bin
 
 # Install qc-utils 19.8.1
 
