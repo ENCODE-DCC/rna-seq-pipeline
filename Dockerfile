@@ -51,9 +51,9 @@ RUN unzip v1.2.31.zip && rm v1.2.31.zip
 RUN cd RSEM-1.2.31 && make
 ENV PATH="/software/RSEM-1.2.31:${PATH}"
 
-# Install kentutils 377
-RUN git clone https://github.com/ENCODE-DCC/kentUtils_bin_v377
-ENV PATH=${PATH}:/software/kentUtils_bin_v377/bin
+# Install kentutils 385
+RUN git clone https://github.com/ENCODE-DCC/kentutils_v385_bin_bulkrna.git
+ENV PATH=${PATH}:/software/kentutils_v385_bin_bulkrna/
 
 # Install qc-utils 19.8.1
 
