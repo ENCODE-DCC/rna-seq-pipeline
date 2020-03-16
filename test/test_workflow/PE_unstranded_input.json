@@ -3,7 +3,6 @@
   "rna.align_index": "test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz",
   "rna.align_ncpus": 2,
   "rna.align_ramGB": 4,
-  "rna.aligner": "star",
   "rna.bam_to_signals_disk": "local-disk 20 HDD",
   "rna.bam_to_signals_ncpus": 1,
   "rna.bam_to_signals_ramGB": 2,
