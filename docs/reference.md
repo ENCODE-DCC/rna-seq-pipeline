@@ -292,7 +292,6 @@ Main pipeline:
       "https://www.encodeproject.org/files/ENCFF974EKR/@@download/ENCFF974EKR.fastq.gz"
     ]
   ],
-  "rna.aligner": "star",
   "rna.bamroot": "ENCSR843RJV_testing",
   "rna.align_index": "gs://long_read_rna_production/caper_out/build_index/9320f158-6b7f-400a-899e-5b3f7e2ca46e/call-make_index/glob-08af9cb4bb3f985849894cfeafd3be7b/GRCh38_v29_ERCC_phiX_starIndex.tgz",
   "rna.rsem_index": "gs://long_read_rna_production/caper_out/build_index/b15d94e9-b4ef-49dc-b164-45000a0b3cb0/call-make_index/glob-08af9cb4bb3f985849894cfeafd3be7b/GRCh38_v29_ERCC_phiX_rsemIndex.tgz",
