@@ -110,7 +110,7 @@ In the case when the input for a replicate consists of several fastq files, they
 
 * `rna.align_index` Is the index for STAR aligner.
 * `rna.rsem_index` Is the index for RSEM quantifier.
-* `rna.kallisto_index` Is the index for Kallisto quantifier.
+* `rna.kallisto_index` Is the index for Kallisto quantifier. Required only if `rna.run_kallisto` is `true` (Default is `true`).
 * `rna.bamroot` This is a prefix that gets added into the output filenames. Additionally the files are prefixed with information of the replicate they originate from.
 
 #### Example:
@@ -125,13 +125,16 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 * `rna.align_ncpus` How many cpus are available for RSEM quantification.
 * `rna.align_ramGB` How many GBs of memory are available for RSEM quantification.
 * `rna.align_disk` How much disk space is available for Align task. You can also specify the type of disk, `HDD` for a spinning disk and `SSD` for a solid state drive.
-* `rna.kallisto_disk` As above, but for Kallisto.
+* `rna.kallisto_disk` As above, but for Kallisto. Required only if `rna.run_kallisto` is `true` (Default is `true`).
+
 * `rna.rna_qc_disk` As above, but for RNA QC.
 * `rna.bam_to_signals_disk` As above, but for bam_to_signals.
 * `rna.mad_qc_disk` As above, but for MAD QC.
 * `rna.rsem_disk` As above, but for RSEM.
-* `rna.kallisto_number_of_threads` How many threads are available for Kallisto quantification.
-* `rna.kallisto_ramGB` How many GBs of memory are available for Kallisto quantification.
+* `rna.kallisto_number_of_threads` How many threads are used for Kallisto quantification. Required only if `rna.run_kallisto` is `true` (Default is `true`).
+
+* `rna.kallisto_ramGB` How many GBs of memory are available for Kallisto quantification. Required only if `rna.run_kallisto` is `true` (Default is `true`).
+
 
 
 #### Example:
@@ -146,9 +149,14 @@ Assume you want to allocate 100 gigabytes of spinning hard drive. In this case y
 
 Kallisto quantifier makes use of average fragment lenghts and standard deviations of those lengths. In the case of paired end experiments, those values can be calculated from the data, but in case of single-ended experiment those values must be provided.
 
-* `rna.kallisto_fragment_length` Is the average fragment length.
-* `rna.kallisto_sd_of_fragment_length` Is the standard deviation of the fragment lengths.
+* `rna.kallisto_fragment_length` Is the average fragment length. Required only if `rna.run_kallisto` is `true` (Default is `true`).
+.
+* `rna.kallisto_sd_of_fragment_length` Is the standard deviation of the fragment lengths. Required only if `rna.run_kallisto` is `true` (Default is `true`).
 
+
+If you do not have this data available, or if you for some other reason want to omit running kallisto you can use the following parameter:
+
+* `rna.run_kallisto` Boolean defaulting to `true`. If set to `false` kallisto will not be run, and you do not need to provide values for any kallisto related parameters.
 ## Outputs
 
 `Cromwell`: `Cromwell` will store outputs for each task under directory `cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]`. For all tasks `[IDX]` means a zero-based index for each replicate. In addition to the actual pipeline outputs, these directories contain a plethora of operational Cromwell-specific files. Use [croo](https://github.com/ENCODE-DCC/croo) to find and organize the pipeline outputs.
@@ -169,6 +177,7 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 
 #### Task Kallisto
 
+Kallisto related outputs will be produced only, if the `rna.run_kallisto` is set to `true` (Default is `true`).
 * `quants`, file name matches `*_abundance.tsv`. Kallisto quantifications.
 * `python_log` file name is `kallisto_quant.log`. This file contains possible additional information on the pipeline step.
 
