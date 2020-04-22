@@ -22,7 +22,8 @@ workflow rna {
     String strandedness_direction
     # chrom_sizes: chromosome sizes file
     File chrom_sizes
-
+    # Switch to false to not run kallisto
+    Boolean run_kallisto = true
     ## task level variables that are defined globally to make them visible to DNANexus UI
 
     # ALIGN
@@ -34,9 +35,9 @@ workflow rna {
 
     # KALLISTO
 
-    Int kallisto_number_of_threads
-    Int kallisto_ramGB
-    File kallisto_index
+    Int? kallisto_number_of_threads
+    Int? kallisto_ramGB
+    File? kallisto_index
     Int? kallisto_fragment_length
     Float? kallisto_sd_of_fragment_length
     String? kallisto_disk
@@ -105,20 +106,22 @@ workflow rna {
         }
     }
 
-    scatter (i in range(length(fastqs_R1))) {
-        call kallisto { input:
-            fastqs_R1 = fastqs_R1[i],
-            fastqs_R2 = fastqs_R2_[i],
-            endedness = endedness,
-            strandedness_direction = strandedness_direction,
-            kallisto_index = kallisto_index,
-            number_of_threads = kallisto_number_of_threads,
-            ramGB = kallisto_ramGB,
-            fragment_length = kallisto_fragment_length,
-            sd_of_fragment_length = kallisto_sd_of_fragment_length,
-            disks = kallisto_disk,
-            out_prefix = "rep"+(i+1)+bamroot,
-        }
+    if (run_kallisto) {
+      scatter (i in range(length(fastqs_R1))) {
+          call kallisto { input:
+              fastqs_R1 = fastqs_R1[i],
+              fastqs_R2 = fastqs_R2_[i],
+              endedness = endedness,
+              strandedness_direction = strandedness_direction,
+              kallisto_index = kallisto_index,
+              number_of_threads = kallisto_number_of_threads,
+              ramGB = kallisto_ramGB,
+              fragment_length = kallisto_fragment_length,
+              sd_of_fragment_length = kallisto_sd_of_fragment_length,
+              disks = kallisto_disk,
+              out_prefix = "rep"+(i+1)+bamroot,
+          }
+      }
     }
 
 
