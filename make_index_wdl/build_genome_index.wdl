@@ -25,15 +25,15 @@ workflow build_index {
     String? disks
 
     call make_index { input:
-        reference_sequence = reference_sequence,
-        spikeins = spikeins,
-        annotation = annotation,
-        anno_version = anno_version,
-        genome = genome,
-        index_type = index_type,
-        ncpu = ncpu,
-        memGB = memGB,
-        disks = disks,
+        reference_sequence=reference_sequence,
+        spikeins=spikeins,
+        annotation=annotation,
+        anno_version=anno_version,
+        genome=genome,
+        index_type=index_type,
+        ncpu=ncpu,
+        memGB=memGB,
+        disks=disks,
     }
 }
 

@@ -17,17 +17,17 @@ workflow test_kallisto {
 
     scatter (i in range(length(fastqs_R1))) {
         call rna.kallisto { input:
-            fastqs_R1 = fastqs_R1[i],
-            fastqs_R2 = fastqs_R2_[i],
-            endedness = endedness,
-            strandedness_direction = strandedness_direction,
-            kallisto_index = kallisto_index,
-            number_of_threads = kallisto_number_of_threads,
-            ramGB = kallisto_ramGB,
-            fragment_length = kallisto_fragment_length,
-            sd_of_fragment_length = kallisto_sd_of_fragment_length,
-            disks = kallisto_disk,
-            out_prefix = "rep"+(i+1)+out_prefix,
+            fastqs_R1=fastqs_R1[i],
+            fastqs_R2=fastqs_R2_[i],
+            endedness=endedness,
+            strandedness_direction=strandedness_direction,
+            kallisto_index=kallisto_index,
+            number_of_threads=kallisto_number_of_threads,
+            ramGB=kallisto_ramGB,
+            fragment_length=kallisto_fragment_length,
+            sd_of_fragment_length=kallisto_sd_of_fragment_length,
+            disks=kallisto_disk,
+            out_prefix="rep"+(i+1)+out_prefix,
         }
     }
 }

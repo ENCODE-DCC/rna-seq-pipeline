@@ -16,10 +16,10 @@ workflow merge_anno {
     String? disks
 
     call merge_annotation { input :
-        annotation = annotation,
-        tRNA = tRNA,
-        spikeins = spikeins,
-        output_filename = output_filename,
+        annotation=annotation,
+        tRNA=tRNA,
+        spikeins=spikeins,
+        output_filename=output_filename,
     }
 }
 
