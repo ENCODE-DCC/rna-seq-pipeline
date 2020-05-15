@@ -74,52 +74,52 @@ workflow rna {
 
     scatter (i in range(length(fastqs_R1))) {
         call align { input:
-            endedness = endedness,
-            fastqs_R1 = fastqs_R1[i],
-            fastqs_R2 = fastqs_R2_[i],
-            index = align_index,
-            bamroot = "rep"+(i+1)+bamroot,
-            ncpus = align_ncpus,
-            ramGB = align_ramGB,
-            disks = align_disk,
+            endedness=endedness,
+            fastqs_R1=fastqs_R1[i],
+            fastqs_R2=fastqs_R2_[i],
+            index=align_index,
+            bamroot="rep"+(i+1)+bamroot,
+            ncpus=align_ncpus,
+            ramGB=align_ramGB,
+            disks=align_disk,
         }
 
         call bam_to_signals { input:
-            input_bam = align.genomebam,
-            chrom_sizes = chrom_sizes,
-            strandedness = strandedness,
-            bamroot = "rep"+(i+1)+bamroot+"_genome",
-            ncpus = bam_to_signals_ncpus,
-            ramGB = bam_to_signals_ramGB,
-            disks = bam_to_signals_disk,
+            input_bam=align.genomebam,
+            chrom_sizes=chrom_sizes,
+            strandedness=strandedness,
+            bamroot="rep"+(i+1)+bamroot+"_genome",
+            ncpus=bam_to_signals_ncpus,
+            ramGB=bam_to_signals_ramGB,
+            disks=bam_to_signals_disk,
         }
 
         call rsem_quant { input:
-            rsem_index = rsem_index,
-            rnd_seed = rnd_seed,
-            anno_bam = align.annobam,
-            endedness = endedness,
-            read_strand = strandedness_direction,
-            ncpus = rsem_ncpus,
-            ramGB = rsem_ramGB,
-            disks = rsem_disk,
+            rsem_index=rsem_index,
+            rnd_seed=rnd_seed,
+            anno_bam=align.annobam,
+            endedness=endedness,
+            read_strand=strandedness_direction,
+            ncpus=rsem_ncpus,
+            ramGB=rsem_ramGB,
+            disks=rsem_disk,
         }
     }
 
     if (run_kallisto) {
       scatter (i in range(length(fastqs_R1))) {
           call kallisto { input:
-              fastqs_R1 = fastqs_R1[i],
-              fastqs_R2 = fastqs_R2_[i],
-              endedness = endedness,
-              strandedness_direction = strandedness_direction,
-              kallisto_index = kallisto_index,
-              number_of_threads = kallisto_number_of_threads,
-              ramGB = kallisto_ramGB,
-              fragment_length = kallisto_fragment_length,
-              sd_of_fragment_length = kallisto_sd_of_fragment_length,
-              disks = kallisto_disk,
-              out_prefix = "rep"+(i+1)+bamroot,
+              fastqs_R1=fastqs_R1[i],
+              fastqs_R2=fastqs_R2_[i],
+              endedness=endedness,
+              strandedness_direction=strandedness_direction,
+              kallisto_index=kallisto_index,
+              number_of_threads=kallisto_number_of_threads,
+              ramGB=kallisto_ramGB,
+              fragment_length=kallisto_fragment_length,
+              sd_of_fragment_length=kallisto_sd_of_fragment_length,
+              disks=kallisto_disk,
+              out_prefix="rep"+(i+1)+bamroot,
           }
       }
     }
@@ -129,18 +129,18 @@ workflow rna {
 # if there are exactly two replicates, calculate the madQC metrics and draw a plot
     if (length(fastqs_R1) == 2) {
         call mad_qc { input:
-            quants1 = rsem_quant.genes_results[0],
-            quants2 = rsem_quant.genes_results[1],
-            disks = mad_qc_disk,
+            quants1=rsem_quant.genes_results[0],
+            quants2=rsem_quant.genes_results[1],
+            disks=mad_qc_disk,
         }
     }
 
     scatter (i in range(length(align.annobam))) {
         call rna_qc { input:
-            input_bam = align.annobam[i],
-            tr_id_to_gene_type_tsv = rna_qc_tr_id_to_gene_type_tsv,
-            output_filename = "rep"+(i+1)+bamroot+"_qc.json",
-            disks = rna_qc_disk,
+            input_bam=align.annobam[i],
+            tr_id_to_gene_type_tsv=rna_qc_tr_id_to_gene_type_tsv,
+            output_filename="rep"+(i+1)+bamroot+"_qc.json",
+            disks=rna_qc_disk,
         }
     }
 }
