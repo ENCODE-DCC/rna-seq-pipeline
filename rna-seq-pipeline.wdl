@@ -100,9 +100,9 @@ workflow rna {
               kallisto_index=select_first([kallisto_index]),
               number_of_threads=select_first([kallisto_number_of_threads]),
               ramGB=select_first([kallisto_ramGB]),
-              fragment_length=select_first([kallisto_fragment_length]),
-              sd_of_fragment_length=select_first([kallisto_sd_of_fragment_length]),
-              disks=select_first([kallisto_disk]),
+              fragment_length=kallisto_fragment_length,
+              sd_of_fragment_length=kallisto_sd_of_fragment_length,
+              disks=kallisto_disk,
               out_prefix="rep"+(i+1)+bamroot,
           }
       }
