@@ -144,30 +144,30 @@ task align {
 
     command {
         python3 $(which align.py) \
-            --fastqs_R1 ${sep=' ' fastqs_R1} \
-            --fastqs_R2 ${sep=' ' fastqs_R2} \
-            --endedness ${endedness} \
-            --index ${index} \
-            ${"--bamroot " + bamroot} \
-            ${"--ncpus " + ncpus} \
-            ${"--ramGB " + ramGB}
+            --fastqs_R1 ~{sep=' ' fastqs_R1} \
+            --fastqs_R2 ~{sep=' ' fastqs_R2} \
+            --endedness ~{endedness} \
+            --index ~{index} \
+            ~{"--bamroot " + bamroot} \
+            ~{"--ncpus " + ncpus} \
+            ~{"--ramGB " + ramGB}
     }
 
     output {
-        File genomebam = glob("*_genome.bam")[0]
-        File annobam = glob("*_anno.bam")[0]
-        File genome_flagstat = glob("*_genome_flagstat.txt")[0]
-        File anno_flagstat = glob("*_anno_flagstat.txt")[0]
-        File log = glob("*_Log.final.out")[0]
-        File genome_flagstat_json = glob("*_genome_flagstat.json")[0]
-        File anno_flagstat_json = glob("*_anno_flagstat.json")[0]
-        File log_json = glob("*_Log.final.json")[0]
-        File python_log = glob("align.log")[0]
+        File genomebam = "~{bamroot}_genome.bam"
+        File annobam = "~{bamroot}_anno.bam"
+        File genome_flagstat = "~{bamroot}_genome_flagstat.txt"
+        File anno_flagstat = "~{bamroot}_anno_flagstat.txt"
+        File log = "~{bamroot}_Log.final.out"
+        File genome_flagstat_json = "~{bamroot}_genome_flagstat.json"
+        File anno_flagstat_json = "~{bamroot}_anno_flagstat.json"
+        File log_json = "~{bamroot}_Log.final.json"
+        File python_log = "align.log"
     }
 
     runtime {
       cpu: ncpus
-      memory: "${ramGB} GB"
+      memory: "~{ramGB} GB"
       disks : select_first([disks,"local-disk 100 SSD"])
     }
 }
@@ -186,10 +186,10 @@ task  bam_to_signals {
 
     command {
         python3 $(which bam_to_signals.py) \
-            --bamfile ${input_bam} \
-            --chrom_sizes ${chrom_sizes} \
-            --strandedness ${strandedness} \
-            --bamroot ${bamroot}
+            --bamfile ~{input_bam} \
+            --chrom_sizes ~{chrom_sizes} \
+            --strandedness ~{strandedness} \
+            --bamroot ~{bamroot}
     }
 
     output {
@@ -199,12 +199,12 @@ task  bam_to_signals {
         File? unique_minus = if (strandedness == "stranded") then glob("*genome_minusUniq.bw")[0] else null
         File? all_plus = if (strandedness == "stranded") then glob("*genome_plusAll.bw")[0] else null
         File? all_minus = if (strandedness == "stranded") then glob("*genome_minusAll.bw")[0] else null
-        File python_log = glob("bam_to_signals.log")[0]
+        File python_log = "bam_to_signals.log"
     }
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
     }
 }
@@ -223,25 +223,25 @@ task rsem_quant {
 
     command {
         python3 $(which rsem_quant.py) \
-            --rsem_index ${rsem_index} \
-            --anno_bam ${anno_bam} \
-            --endedness ${endedness} \
-            --read_strand ${read_strand} \
-            --rnd_seed ${rnd_seed} \
-            --ncpus ${ncpus} \
-            --ramGB ${ramGB}
+            --rsem_index ~{rsem_index} \
+            --anno_bam ~{anno_bam} \
+            --endedness ~{endedness} \
+            --read_strand ~{read_strand} \
+            --rnd_seed ~{rnd_seed} \
+            --ncpus ~{ncpus} \
+            --ramGB ~{ramGB}
     }
 
     output {
         File genes_results = glob("*.genes.results")[0]
         File isoforms_results = glob("*.isoforms.results")[0]
-        File python_log = glob("rsem_quant.log")[0]
+        File python_log = "rsem_quant.log"
         File number_of_genes = glob("*_number_of_genes_detected.json")[0]
     }
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
     }
 }
@@ -263,25 +263,25 @@ task kallisto {
 
     command {
         python3 $(which kallisto_quant.py) \
-            --fastqs_R1 ${sep=' ' fastqs_R1} \
-            --fastqs_R2 ${sep=' ' fastqs_R2} \
-            --number_of_threads ${number_of_threads} \
-            --strandedness ${strandedness_direction} \
-            --path_to_index ${kallisto_index} \
-            --endedness ${endedness} \
-            ${"--fragment_length " + fragment_length} \
-            ${"--sd_of_fragment_length " + sd_of_fragment_length} \
-            ${"--out_prefix " + out_prefix}
+            --fastqs_R1 ~{sep=' ' fastqs_R1} \
+            --fastqs_R2 ~{sep=' ' fastqs_R2} \
+            --number_of_threads ~{number_of_threads} \
+            --strandedness ~{strandedness_direction} \
+            --path_to_index ~{kallisto_index} \
+            --endedness ~{endedness} \
+            ~{"--fragment_length " + fragment_length} \
+            ~{"--sd_of_fragment_length " + sd_of_fragment_length} \
+            ~{"--out_prefix " + out_prefix}
     }
 
     output {
         File quants = glob("kallisto_out/*_abundance.tsv")[0]
-        File python_log = glob("kallisto_quant.log")[0]
+        File python_log = "kallisto_quant.log"
     }
 
     runtime {
         cpu: number_of_threads
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: select_first([disks, "local-disk 100 SSD"])
     }
 }
@@ -295,15 +295,15 @@ task mad_qc {
 
     command {
         python3 $(which mad_qc.py) \
-            --quants1 ${quants1} \
-            --quants2 ${quants2} \
+            --quants1 ~{quants1} \
+            --quants2 ~{quants2} \
             --MAD_R_path $(which MAD.R)
     }
 
     output {
         File madQCplot = glob("*_mad_plot.png")[0]
         File madQCmetrics = glob("*_mad_qc_metrics.json")[0]
-        File python_log = glob("mad_qc.log")[0]
+        File python_log = "mad_qc.log"
     }
 
     runtime {
@@ -323,14 +323,14 @@ task rna_qc {
 
     command {
         python3 $(which rna_qc.py) \
-            --input_bam ${input_bam} \
-            --tr_id_to_gene_type_tsv ${tr_id_to_gene_type_tsv} \
-            --output_filename ${output_filename}
+            --input_bam ~{input_bam} \
+            --tr_id_to_gene_type_tsv ~{tr_id_to_gene_type_tsv} \
+            --output_filename ~{output_filename}
     }
 
     output {
-        File rnaQC = glob("*_qc.json")[0]
-        File python_log = glob("rna_qc.log")[0]
+        File rnaQC = output_filename
+        File python_log = "rna_qc.log"
     }
 
     runtime {

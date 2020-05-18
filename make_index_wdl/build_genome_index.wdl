@@ -54,13 +54,13 @@ task make_index {
     }
 
     command {
-        $(which ${index_type + ".sh"}) \
-            ${reference_sequence} \
-            ${spikeins} \
-            ${annotation} \
-            ${anno_version} \
-            ${genome} \
-            ${ncpu}
+        $(which ~{index_type + ".sh"}) \
+            ~{reference_sequence} \
+            ~{spikeins} \
+            ~{annotation} \
+            ~{anno_version} \
+            ~{genome} \
+            ~{ncpu}
     }
 
     output {
@@ -69,7 +69,7 @@ task make_index {
 
     runtime {
         cpu : ncpu
-        memory : "${select_first([memGB,'8'])} GB"
+        memory : "~{select_first([memGB,'8'])} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
     }
 }

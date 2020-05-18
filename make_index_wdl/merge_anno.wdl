@@ -38,17 +38,17 @@ task merge_annotation {
 
     command {
         python3 $(which merge_annotation.py) \
-            ${"--annotation " + annotation} \
-            ${"--tRNA " + tRNA} \
-            ${"--spikeins " + spikeins} \
-            ${"--output_filename " + output_filename}
+            ~{"--annotation " + annotation} \
+            ~{"--tRNA " + tRNA} \
+            ~{"--spikeins " + spikeins} \
+            ~{"--output_filename " + output_filename}
     }
     output {
-        File merged_annotation = glob("${output_filename}")[0]
+        File merged_annotation = output_filename
     }
     runtime {
         cpu : select_first([cpu,2])
-        memory : "${select_first([memGB,'8'])} GB"
+        memory : "~{select_first([memGB,'8'])} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
     }
 }
