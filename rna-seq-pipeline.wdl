@@ -193,12 +193,12 @@ task  bam_to_signals {
     }
 
     output {
-        File? unique_unstranded = if (strandedness == "unstranded") then "~{bamroot}_genome_uniq.bw" else null
-        File? all_unstranded = if (strandedness == "unstranded") then "~{bamroot}_genome_all.bw" else null
-        File? unique_plus = if (strandedness == "stranded") then "~{bamroot}_genome_plusUniq.bw" else null
-        File? unique_minus = if (strandedness == "stranded") then "~{bamroot}_genome_minusUniq.bw" else null
-        File? all_plus = if (strandedness == "stranded") then "~{bamroot}_genome_plusAll.bw" else null
-        File? all_minus = if (strandedness == "stranded") then "~{bamroot}_genome_minusAll.bw" else null
+        File? unique_unstranded = if (strandedness == "unstranded") then glob("*_genome_uniq.bw")[0] else null
+        File? all_unstranded = if (strandedness == "unstranded") then glob("*_genome_all.bw")[0] else null
+        File? unique_plus = if (strandedness == "stranded") then glob("*_genome_plusUniq.bw")[0] else null
+        File? unique_minus = if (strandedness == "stranded") then glob("*_genome_minusUniq.bw")[0] else null
+        File? all_plus = if (strandedness == "stranded") then glob("*_genome_plusAll.bw")[0] else null
+        File? all_minus = if (strandedness == "stranded") then glob("*_genome_minusAll.bw")[0] else null
         File python_log = "bam_to_signals.log"
     }
 
@@ -275,7 +275,7 @@ task kallisto {
     }
 
     output {
-        File quants = glob("kallisto_out/*_abundance.tsv")[0]
+        File quants = "kallisto_out/~{out_prefix}_abundance.tsv"
         File python_log = "kallisto_quant.log"
     }
 
