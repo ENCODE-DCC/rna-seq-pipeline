@@ -1,3 +1,5 @@
+version 1.0
+
 # ENCODE DCC RNA-seq pipeline
 # Maintainer: Otto Jolanki
 
@@ -6,68 +8,51 @@
 #CROO out_def https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json
 
 workflow rna {
-    # endedness: paired or single
-    String endedness
-    # fastqs_R1: fastq.gz files for Read1 (only these if single-ended)
-    Array[Array[File]] fastqs_R1
-    # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
-    # corresponding to fastqs_R1
-    Array[Array[File]] fastqs_R2 = []
-    # bamroot: root name for output bams. For example foo_bar will
-    # create foo_bar_genome.bam and foo_bar_anno.bam
-    String bamroot
-    # strandedness: is the library strand specific (stranded or unstranded)
-    String strandedness
-    # strandedness_direction (forward, reverse, unstranded)
-    String strandedness_direction
-    # chrom_sizes: chromosome sizes file
-    File chrom_sizes
-    # Switch to false to not run kallisto
-    Boolean run_kallisto = true
-    ## task level variables that are defined globally to make them visible to DNANexus UI
-
-    # ALIGN
-    # index: aligner index archive (tar.gz)
-    File align_index
-    Int align_ncpus
-    Int align_ramGB
-    String? align_disk
-
-    # KALLISTO
-
-    Int? kallisto_number_of_threads
-    Int? kallisto_ramGB
-    File? kallisto_index
-    Int? kallisto_fragment_length
-    Float? kallisto_sd_of_fragment_length
-    String? kallisto_disk
-
-    # BAM_TO_SIGNALS
-
-    Int bam_to_signals_ncpus
-    Int bam_to_signals_ramGB
-    String? bam_to_signals_disk
-
-    # RSEM_QUANT
-
-    # rsem_index: RSEM index archive (tar.gz)
-    File rsem_index
-    # rnd_seed: random seed used for rsem
-    Int rnd_seed = 12345
-    Int rsem_ncpus
-    Int rsem_ramGB
-    String? rsem_disk
-
-    # RNA_QC
-
-    File rna_qc_tr_id_to_gene_type_tsv
-    String? rna_qc_disk
-
-    # MAD_QC
+    input {
+        # endedness: paired or single
+        String endedness
+        # fastqs_R1: fastq.gz files for Read1 (only these if single-ended)
+        Array[Array[File]] fastqs_R1
+        # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
+        # corresponding to fastqs_R1
+        Array[Array[File]] fastqs_R2 = []
+        # bamroot: root name for output bams. For example foo_bar will
+        # create foo_bar_genome.bam and foo_bar_anno.bam
+        String bamroot
+        # strandedness: is the library strand specific (stranded or unstranded)
+        String strandedness
+        # strandedness_direction (forward, reverse, unstranded)
+        String strandedness_direction
+        # chrom_sizes: chromosome sizes file
+        File chrom_sizes
+        # Switch to false to not run kallisto
+        Boolean run_kallisto = true
+        # index: aligner index archive (tar.gz)
+        File align_index
+        Int align_ncpus
+        Int align_ramGB
+        String? align_disk
+        Int? kallisto_number_of_threads
+        Int? kallisto_ramGB
+        File? kallisto_index
+        Int? kallisto_fragment_length
+        Float? kallisto_sd_of_fragment_length
+        String? kallisto_disk
+        Int bam_to_signals_ncpus
+        Int bam_to_signals_ramGB
+        String? bam_to_signals_disk
+        # rsem_index: RSEM index archive (tar.gz)
+        File rsem_index
+        # rnd_seed: random seed used for rsem
+        Int rnd_seed = 12345
+        Int rsem_ncpus
+        Int rsem_ramGB
+        String? rsem_disk
+        File rna_qc_tr_id_to_gene_type_tsv
+        String? rna_qc_disk
+    }
 
     String? mad_qc_disk
-
-    ## WORKFLOW BEGINS
 
     # dummy variable value for the single-ended case
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
@@ -145,16 +130,18 @@ workflow rna {
     }
 }
 
-## tasks
+
 task align {
-    Array[File] fastqs_R1
-    Array[File] fastqs_R2
-    String endedness
-    File index
-    String bamroot
-    Int ncpus
-    Int ramGB
-    String? disks
+    input {
+        Array[File] fastqs_R1
+        Array[File] fastqs_R2
+        String endedness
+        File index
+        String bamroot
+        Int ncpus
+        Int ramGB
+        String? disks
+    }
 
     command {
         python3 $(which align.py) \
@@ -187,15 +174,16 @@ task align {
 }
 
 task  bam_to_signals {
-    File? null
-    File input_bam
-    File chrom_sizes
-    String strandedness
-    String bamroot
-    Int ncpus
-    Int ramGB
-    String? disks
-
+    input {
+        File? null
+        File input_bam
+        File chrom_sizes
+        String strandedness
+        String bamroot
+        Int ncpus
+        Int ramGB
+        String? disks
+    }
 
     command {
         python3 $(which bam_to_signals.py) \
@@ -223,14 +211,16 @@ task  bam_to_signals {
 }
 
 task rsem_quant {
-    File rsem_index
-    File anno_bam
-    String endedness
-    String read_strand
-    Int rnd_seed
-    Int ncpus
-    Int ramGB
-    String? disks
+    input {
+        File rsem_index
+        File anno_bam
+        String endedness
+        String read_strand
+        Int rnd_seed
+        Int ncpus
+        Int ramGB
+        String? disks
+    }
 
     command {
         python3 $(which rsem_quant.py) \
@@ -258,17 +248,19 @@ task rsem_quant {
 }
 
 task kallisto {
-    Array[File] fastqs_R1
-    Array[File] fastqs_R2
-    File kallisto_index
-    String endedness
-    String strandedness_direction
-    Int number_of_threads
-    Int ramGB
-    String out_prefix
-    Int? fragment_length
-    Float? sd_of_fragment_length
-    String? disks
+    input {
+        Array[File] fastqs_R1
+        Array[File] fastqs_R2
+        File kallisto_index
+        String endedness
+        String strandedness_direction
+        Int number_of_threads
+        Int ramGB
+        String out_prefix
+        Int? fragment_length
+        Float? sd_of_fragment_length
+        String? disks
+    }
 
     command {
         python3 $(which kallisto_quant.py) \
@@ -296,9 +288,11 @@ task kallisto {
 }
 
 task mad_qc {
-    File quants1
-    File quants2
-    String? disks
+    input {
+        File quants1
+        File quants2
+        String? disks
+    }
 
     command {
         python3 $(which mad_qc.py) \
@@ -321,10 +315,12 @@ task mad_qc {
 }
 
 task rna_qc {
-    File input_bam
-    File tr_id_to_gene_type_tsv
-    String output_filename
-    String? disks
+    input {
+        File input_bam
+        File tr_id_to_gene_type_tsv
+        String output_filename
+        String? disks
+    }
 
     command {
         python3 $(which rna_qc.py) \

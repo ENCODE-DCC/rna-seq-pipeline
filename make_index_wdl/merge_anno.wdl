@@ -1,3 +1,5 @@
+version 1.0
+
 #ENCODE DCC RNA-Seq pipeline merge-annotation
 #Maintainer: Otto Jolanki
 
@@ -5,15 +7,15 @@
 #CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.1
 
 workflow merge_anno {
-    # input filenames
-    File annotation
-    File tRNA
-    File spikeins
-    # output filename
-    String output_filename
-    Int? cpu
-    Int? memGB
-    String? disks
+    input {
+        File annotation
+        File tRNA
+        File spikeins
+        String output_filename
+        Int? cpu
+        Int? memGB
+        String? disks
+    }
 
     call merge_annotation { input :
         annotation=annotation,
@@ -24,13 +26,15 @@ workflow merge_anno {
 }
 
 task merge_annotation {
-    File annotation
-    File tRNA
-    File spikeins
-    String output_filename
-    Int? cpu
-    Int? memGB
-    String? disks
+    input {
+        File annotation
+        File tRNA
+        File spikeins
+        String output_filename
+        Int? cpu
+        Int? memGB
+        String? disks
+    }
 
     command {
         python3 $(which merge_annotation.py) \

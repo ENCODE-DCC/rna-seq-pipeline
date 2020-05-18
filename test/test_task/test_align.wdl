@@ -1,14 +1,18 @@
+version 1.0
+
 import "../../rna-seq-pipeline.wdl" as rna
 
 workflow test_align {
-    String endedness
-    Array[Array[File]] fastqs_R1
-    Array[Array[File]] fastqs_R2 = []
-    String bamroot
-    File align_index
-    Int align_ncpus
-    Int align_ramGB
-    String? align_disk
+    input {
+        String endedness
+        Array[Array[File]] fastqs_R1
+        Array[Array[File]] fastqs_R2 = []
+        String bamroot
+        File align_index
+        Int align_ncpus
+        Int align_ramGB
+        String? align_disk
+    }
 
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
 
