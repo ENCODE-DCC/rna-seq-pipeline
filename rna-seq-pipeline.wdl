@@ -49,10 +49,9 @@ workflow rna {
         Int rsem_ramGB
         String? rsem_disk
         File rna_qc_tr_id_to_gene_type_tsv
+        String? mad_qc_disk
         String? rna_qc_disk
     }
-
-    String? mad_qc_disk
 
     # dummy variable value for the single-ended case
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
@@ -98,12 +97,12 @@ workflow rna {
               fastqs_R2=fastqs_R2_[i],
               endedness=endedness,
               strandedness_direction=strandedness_direction,
-              kallisto_index=kallisto_index,
-              number_of_threads=kallisto_number_of_threads,
-              ramGB=kallisto_ramGB,
-              fragment_length=kallisto_fragment_length,
-              sd_of_fragment_length=kallisto_sd_of_fragment_length,
-              disks=kallisto_disk,
+              kallisto_index=select_first([kallisto_index]),
+              number_of_threads=select_first([kallisto_number_of_threads]),
+              ramGB=select_first([kallisto_ramGB]),
+              fragment_length=select_first([kallisto_fragment_length]),
+              sd_of_fragment_length=select_first([kallisto_sd_of_fragment_length]),
+              disks=select_first([kallisto_disk]),
               out_prefix="rep"+(i+1)+bamroot,
           }
       }
