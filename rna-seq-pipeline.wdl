@@ -193,12 +193,12 @@ task  bam_to_signals {
     }
 
     output {
-        File? unique_unstranded = if (strandedness == "unstranded") then glob("*genome_uniq.bw")[0] else null
-        File? all_unstranded = if (strandedness == "unstranded") then glob("*genome_all.bw")[0] else null
-        File? unique_plus = if (strandedness == "stranded") then glob("*genome_plusUniq.bw")[0] else null
-        File? unique_minus = if (strandedness == "stranded") then glob("*genome_minusUniq.bw")[0] else null
-        File? all_plus = if (strandedness == "stranded") then glob("*genome_plusAll.bw")[0] else null
-        File? all_minus = if (strandedness == "stranded") then glob("*genome_minusAll.bw")[0] else null
+        File? unique_unstranded = if (strandedness == "unstranded") then "~{bamroot}_genome_uniq.bw" else null
+        File? all_unstranded = if (strandedness == "unstranded") then "~{bamroot}_genome_all.bw" else null
+        File? unique_plus = if (strandedness == "stranded") then "~{bamroot}_genome_plusUniq.bw" else null
+        File? unique_minus = if (strandedness == "stranded") then "~{bamroot}_genome_minusUniq.bw" else null
+        File? all_plus = if (strandedness == "stranded") then "~{bamroot}_genome_plusAll.bw" else null
+        File? all_minus = if (strandedness == "stranded") then "~{bamroot}_genome_minusAll.bw" else null
         File python_log = "bam_to_signals.log"
     }
 
