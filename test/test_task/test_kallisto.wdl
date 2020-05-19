@@ -1,17 +1,21 @@
+version 1.0
+
 import "../../rna-seq-pipeline.wdl" as rna
 
 workflow test_kallisto {
-    Array[Array[File]] fastqs_R1
-    Array[Array[File]] fastqs_R2 = []
-    File kallisto_index
-    String endedness
-    String strandedness_direction
-    Int kallisto_number_of_threads
-    Int kallisto_ramGB
-    String out_prefix
-    String kallisto_disk
-    Int? kallisto_fragment_length
-    Float? kallisto_sd_of_fragment_length
+    input {
+        Array[Array[File]] fastqs_R1
+        Array[Array[File]] fastqs_R2 = []
+        File kallisto_index
+        String endedness
+        String strandedness_direction
+        Int kallisto_number_of_threads
+        Int kallisto_ramGB
+        String out_prefix
+        String kallisto_disk
+        Int? kallisto_fragment_length
+        Float? kallisto_sd_of_fragment_length
+    }
 
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
 
