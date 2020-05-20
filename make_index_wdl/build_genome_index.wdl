@@ -1,12 +1,16 @@
 version 1.0
 
 # ENCODE DCC RNA-Seq pipeline build_genome_index
-# Maintainer: Otto Jolanki
 
 #CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.1
 #CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.1
 
 workflow build_index {
+    meta {
+        author: "Otto Jolanki"
+        version: "dev_1.2"
+    }
+
     input {
         # reference genome or transcriptome (in prep_kallisto mode)in gzipped fasta
         File reference_sequence
