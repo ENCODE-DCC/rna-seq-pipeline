@@ -28,12 +28,12 @@ make_tag: &make_tag
 get_star_index: &get_star_index
   name: get star index for test
   command: |
-    curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+    curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
 
 get_kallisto_index: &get_kallisto_index
   name: get kallisto index for test
   command: |
-    curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+    curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 
 install_singularity: &install_singularity
   name: install singularity
