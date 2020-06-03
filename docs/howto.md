@@ -31,8 +31,8 @@ Make sure you have completed the steps for installation and Google Cloud setup d
 2. Get STAR and kallisto index files:
 
 ```bash
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+  $ curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+  $ curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 ```
 
 3. Copy indexes and input data into the cloud:
@@ -110,8 +110,8 @@ The goal is to run a single-end, non-strand-specific experiment on a local compu
 2. Get STAR and kallisto index files:
 
 ```bash
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+  $ curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+  $ curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 ```
 
 The other data that is required to complete this recipe is included in the repository within test_data directory.
@@ -185,8 +185,8 @@ The goal is to run a single-end non-strand-specific experiment locally using sin
 3. Get STAR and kallisto index files:
 
 ```bash
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
+  $ curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
+  $ curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 ```
 
 4. Run the pipeline using caper:
