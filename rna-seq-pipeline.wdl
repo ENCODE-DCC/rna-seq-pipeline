@@ -40,7 +40,7 @@ workflow rna {
         Int? kallisto_ramGB
         File? kallisto_index
         Int? kallisto_fragment_length
-        Array[Float?] kallisto_sd_of_fragment_length
+        Array[Float?] kallisto_sd_of_fragment_length = []
         String? kallisto_disk
         Int bam_to_signals_ncpus
         Int bam_to_signals_ramGB
@@ -96,6 +96,7 @@ workflow rna {
 
     if (run_kallisto) {
       scatter (i in range(length(fastqs_R1))) {
+          Float? kallisto_sd = kallisto_sd_of_fragment_length[i]
           call kallisto { input:
               fastqs_R1=fastqs_R1[i],
               fastqs_R2=fastqs_R2_[i],
@@ -105,7 +106,7 @@ workflow rna {
               number_of_threads=select_first([kallisto_number_of_threads]),
               ramGB=select_first([kallisto_ramGB]),
               fragment_length=kallisto_fragment_length,
-              sd_of_fragment_length=kallisto_sd_of_fragment_length[i],
+              sd_of_fragment_length=kallisto_sd,
               disks=kallisto_disk,
               out_prefix="rep"+(i+1)+bamroot,
           }
