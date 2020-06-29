@@ -40,7 +40,8 @@ workflow rna {
         Int? kallisto_ramGB
         File? kallisto_index
         Int? kallisto_fragment_length
-        Array[Float?] kallisto_sd_of_fragment_length = []
+        Array[Float] kallisto_sd_of_fragment_length = []
+        Float? kallisto_sd_undefined
         String? kallisto_disk
         Int bam_to_signals_ncpus
         Int bam_to_signals_ramGB
@@ -96,7 +97,7 @@ workflow rna {
 
     if (run_kallisto) {
       scatter (i in range(length(fastqs_R1))) {
-          Float? kallisto_sd = kallisto_sd_of_fragment_length[i]
+          Float? kallisto_sd = if (length(kallisto_sd_of_fragment_length) > 0) then kallisto_sd_of_fragment_length[i] else kallisto_sd_undefined
           call kallisto { input:
               fastqs_R1=fastqs_R1[i],
               fastqs_R2=fastqs_R2_[i],
