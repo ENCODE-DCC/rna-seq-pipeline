@@ -40,7 +40,7 @@ workflow rna {
         Int? kallisto_ramGB
         File? kallisto_index
         Int? kallisto_fragment_length
-        Float? kallisto_sd_of_fragment_length
+        Array[Float?] kallisto_sd_of_fragment_length
         String? kallisto_disk
         Int bam_to_signals_ncpus
         Int bam_to_signals_ramGB
@@ -105,7 +105,7 @@ workflow rna {
               number_of_threads=select_first([kallisto_number_of_threads]),
               ramGB=select_first([kallisto_ramGB]),
               fragment_length=kallisto_fragment_length,
-              sd_of_fragment_length=kallisto_sd_of_fragment_length,
+              sd_of_fragment_length=kallisto_sd_of_fragment_length[i],
               disks=kallisto_disk,
               out_prefix="rep"+(i+1)+bamroot,
           }

@@ -14,7 +14,7 @@ workflow test_kallisto {
         String out_prefix
         String kallisto_disk
         Int? kallisto_fragment_length
-        Float? kallisto_sd_of_fragment_length
+        Array[Float?] kallisto_sd_of_fragment_length
     }
 
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
@@ -29,7 +29,7 @@ workflow test_kallisto {
             number_of_threads=kallisto_number_of_threads,
             ramGB=kallisto_ramGB,
             fragment_length=kallisto_fragment_length,
-            sd_of_fragment_length=kallisto_sd_of_fragment_length,
+            sd_of_fragment_length=kallisto_sd_of_fragment_length[i],
             disks=kallisto_disk,
             out_prefix="rep"+(i+1)+out_prefix,
         }

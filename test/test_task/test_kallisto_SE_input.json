@@ -16,7 +16,10 @@
   "test_kallisto.kallisto_index": "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
   "test_kallisto.kallisto_number_of_threads": 2,
   "test_kallisto.kallisto_ramGB": 4,
-  "test_kallisto.kallisto_sd_of_fragment_length": 10,
+  "test_kallisto.kallisto_sd_of_fragment_length": [
+    10,
+    10
+  ],
   "test_kallisto.out_prefix": "kallisto_SE",
   "test_kallisto.strandedness_direction": "unstranded"
 }
