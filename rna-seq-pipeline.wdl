@@ -40,9 +40,7 @@ workflow rna {
         Int? kallisto_ramGB
         File? kallisto_index
         Array[Int] kallisto_fragment_length = []
-        Int? kallisto_fragment_length_undefined
         Array[Float] kallisto_sd_of_fragment_length = []
-        Float? kallisto_sd_undefined
         String? kallisto_disk
         Int bam_to_signals_ncpus
         Int bam_to_signals_ramGB
@@ -57,6 +55,9 @@ workflow rna {
         File rna_qc_tr_id_to_gene_type_tsv
         String? mad_qc_disk
         String? rna_qc_disk
+        # These are for internal use, leave undefined
+        Int? kallisto_fragment_length_undefined
+        Float? kallisto_sd_undefined
     }
 
     # dummy variable value for the single-ended case
