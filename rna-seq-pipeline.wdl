@@ -55,11 +55,12 @@ workflow rna {
         File rna_qc_tr_id_to_gene_type_tsv
         String? mad_qc_disk
         String? rna_qc_disk
+
         # These are for internal use, leave undefined
+        Int? kallisto_fragment_length_undefined
+        Float? kallisto_sd_undefined
     }
 
-    Int? kallisto_fragment_length_undefined
-    Float? kallisto_sd_undefined
     # dummy variable value for the single-ended case
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
 
