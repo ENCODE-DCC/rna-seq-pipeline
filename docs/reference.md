@@ -149,9 +149,9 @@ Assume you want to allocate 100 gigabytes of spinning hard drive. In this case y
 
 Kallisto quantifier makes use of average fragment lenghts and standard deviations of those lengths. In the case of paired end experiments, those values can be calculated from the data, but in case of single-ended experiment those values must be provided.
 
-* `rna.kallisto_fragment_length` Is the average fragment length. Required only if `rna.run_kallisto` is `true` (Default is `true`).
+* `rna.kallisto_fragment_length` Is an array of average fragment lengths as integers, one per replicate. Required only if `rna.run_kallisto` is `true` (Default is `true`).
 .
-* `rna.kallisto_sd_of_fragment_length` Is the standard deviation of the fragment lengths. Required only if `rna.run_kallisto` is `true` (Default is `true`).
+* `rna.kallisto_sd_of_fragment_length` Is and array standard deviations of the fragment lengths as floats, one per replicate. Required only if `rna.run_kallisto` is `true` (Default is `true`).
 
 
 If you do not have this data available, or if you for some other reason want to omit running kallisto you can use the following parameter:

@@ -18,11 +18,17 @@
     ]
   ],
   "rna.kallisto_disk": "local-disk 20 HDD",
-  "rna.kallisto_fragment_length": 250,
+  "rna.kallisto_fragment_length": [
+    250,
+    250
+  ],
   "rna.kallisto_index": "test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx",
   "rna.kallisto_number_of_threads": 2,
   "rna.kallisto_ramGB": 4,
-  "rna.kallisto_sd_of_fragment_length": 10,
+  "rna.kallisto_sd_of_fragment_length": [
+    10,
+    10
+  ],
   "rna.mad_qc_disk": "local-disk 20 HDD",
   "rna.rna_qc_disk": "local-disk 20 HDD",
   "rna.rna_qc_tr_id_to_gene_type_tsv": "transcript_id_to_gene_type_mappings/gencodeV24pri-tRNAs-ERCC-phiX.transcript_id_to_genes.tsv",

@@ -39,8 +39,8 @@ workflow rna {
         Int? kallisto_number_of_threads
         Int? kallisto_ramGB
         File? kallisto_index
-        Int? kallisto_fragment_length
-        Float? kallisto_sd_of_fragment_length
+        Array[Int] kallisto_fragment_length = []
+        Array[Float] kallisto_sd_of_fragment_length = []
         String? kallisto_disk
         Int bam_to_signals_ncpus
         Int bam_to_signals_ramGB
@@ -55,6 +55,10 @@ workflow rna {
         File rna_qc_tr_id_to_gene_type_tsv
         String? mad_qc_disk
         String? rna_qc_disk
+
+        # These are for internal use, leave undefined
+        Int? kallisto_fragment_length_undefined
+        Float? kallisto_sd_undefined
     }
 
     # dummy variable value for the single-ended case
@@ -96,6 +100,8 @@ workflow rna {
 
     if (run_kallisto) {
       scatter (i in range(length(fastqs_R1))) {
+          Float? kallisto_sd = if (length(kallisto_sd_of_fragment_length) > 0) then kallisto_sd_of_fragment_length[i] else kallisto_sd_undefined
+          Int? kallisto_fl = if (length(kallisto_fragment_length) > 0) then kallisto_fragment_length[i] else kallisto_fragment_length_undefined
           call kallisto { input:
               fastqs_R1=fastqs_R1[i],
               fastqs_R2=fastqs_R2_[i],
@@ -104,8 +110,8 @@ workflow rna {
               kallisto_index=select_first([kallisto_index]),
               number_of_threads=select_first([kallisto_number_of_threads]),
               ramGB=select_first([kallisto_ramGB]),
-              fragment_length=kallisto_fragment_length,
-              sd_of_fragment_length=kallisto_sd_of_fragment_length,
+              fragment_length=kallisto_fl,
+              sd_of_fragment_length=kallisto_sd,
               disks=kallisto_disk,
               out_prefix="rep"+(i+1)+bamroot,
           }
