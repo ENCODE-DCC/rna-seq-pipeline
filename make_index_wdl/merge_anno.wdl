@@ -2,13 +2,13 @@ version 1.0
 
 #ENCODE DCC RNA-Seq pipeline merge-annotation
 
-#CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.1
-#CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.1
+#CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.2.0
+#CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.2.0
 
 workflow merge_anno {
     meta {
         author: "Otto Jolanki"
-        version: "dev_1.2"
+        version: "v1.2.0"
     }
 
     input {
