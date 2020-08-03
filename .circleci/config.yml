@@ -35,26 +35,6 @@ get_kallisto_index: &get_kallisto_index
   command: |
     curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 
-install_singularity: &install_singularity
-  name: install singularity
-  command: |
-    sudo apt-get update
-    sudo apt-get install \
-    python \
-    dh-autoreconf \
-    build-essential \
-    libarchive-dev \
-    squashfs-tools
-    wget https://github.com/singularityware/singularity/releases/download/2.6.0/singularity-2.6.0.tar.gz
-    tar xvf singularity-2.6.0.tar.gz
-    cd singularity-2.6.0
-    ./configure --prefix=/usr/local --sysconfdir=/etc
-    make
-    sudo make install
-    singularity --version
-# Jobs
-orbs:
-  singularity: singularity/singularity@1.0.3
 jobs:
   unittests:
     <<: *python_defaults
@@ -150,66 +130,6 @@ jobs:
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
           no_output_timeout: 30m
 
-  test_PE_unstranded_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: *make_tag
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *get_star_index
-      - run: *get_kallisto_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG singularity
-            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all_unstranded rna.bam_to_signals.unique_unstranded --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
-            cat PE_unstranded_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_unstranded_input.result.json
-          no_output_timeout: 30m
-
-  test_SE_unstranded_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: *make_tag
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *get_star_index
-      - run: *get_kallisto_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG singularity
-            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all_unstranded rna.bam_to_signals.unique_unstranded --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
-            cat SE_unstranded_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < SE_unstranded_input.result.json
-          no_output_timeout: 30m
-
-  test_PE_stranded_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: *make_tag
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *get_star_index
-      - run: *get_kallisto_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG singularity
-            python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all_plus rna.bam_to_signals.all_minus rna.bam_to_signals.unique_plus rna.bam_to_signals.unique_minus --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
-            cat PE_stranded_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < PE_stranded_input.result.json
-          no_output_timeout: 30m
-
   test_PE_align_docker:
     <<: *machine_defaults
     steps:
@@ -226,49 +146,11 @@ jobs:
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_align_PE_input.result.json
           no_output_timeout: 30m
 
-  test_PE_align_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: *make_tag
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *get_star_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_PE_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_PE_input.metadata.json --reference_json test/test_task/test_align_PE_reference_md5.json --outfile test_align_PE_input.result.json
-            cat test_align_PE_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_align_PE_input.result.json
-          no_output_timeout: 30m
-
   test_SE_align_docker:
     <<: *machine_defaults
     steps:
       - checkout
       - run: *make_tag
-      - run: *get_star_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_SE_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_SE_input.metadata.json --reference_json test/test_task/test_align_SE_reference_md5.json --outfile test_align_SE_input.result.json
-            cat test_align_SE_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_align_SE_input.result.json
-          no_output_timeout: 30m
-
-  test_SE_align_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: *make_tag
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
       - run: *get_star_index
       - run:
           command: |
@@ -297,25 +179,10 @@ workflows:
       - test_PE_stranded_docker:
           requires:
             - build
-      - test_PE_unstranded_singularity:
-          requires:
-            - build
-      - test_SE_unstranded_singularity:
-          requires:
-            - build
-      - test_PE_stranded_singularity:
-          requires:
-            - build
       - test_PE_align_docker:
           requires:
             - build
-      - test_PE_align_singularity:
-          requires:
-            - build
       - test_SE_align_docker:
-          requires:
-            - build
-      - test_SE_align_singularity:
           requires:
             - build
       - push_template:
@@ -324,10 +191,5 @@ workflows:
             - test_PE_unstranded_docker
             - test_SE_unstranded_docker
             - test_PE_stranded_docker
-            - test_PE_unstranded_singularity
-            - test_SE_unstranded_singularity
-            - test_PE_stranded_singularity
             - test_PE_align_docker
-            - test_PE_align_singularity
             - test_SE_align_docker
-            - test_SE_align_singularity
