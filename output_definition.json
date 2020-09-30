@@ -176,17 +176,17 @@
   },
   "task_graph_template": {
     "graph [rankdir=LR nodesep=0.1 ranksep=0.3]": null,
-    "node [shape=box fontsize=9 margin=0.05 penwidth=0.5 height=0 fillcolor=lightcyan color=darkgrey style=filled]": null,
-    "edge [arrowsize=0.5 color=darkgrey penwidth=0.5]": null,
-    "subgraph cluster_rep1":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 1\""},
-    "subgraph cluster_rep2":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 2\""},
-    "subgraph cluster_rep3":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 3\""},
-    "subgraph cluster_rep4":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 4\""},
-    "subgraph cluster_rep5":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 5\""},
-    "subgraph cluster_rep6":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 6\""},
-    "subgraph cluster_rep7":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 7\""},
-    "subgraph cluster_rep8":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 8\""},
-    "subgraph cluster_rep9":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 9\""},
-    "subgraph cluster_rep10": {"style": "\"filled, dashed\"", "fontsize": "9", "color": "darkgrey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 10\""}
+    "node [shape=box fontsize=9 margin=0.05 penwidth=0.5 height=0 fillcolor=lightcyan color=grey style=filled]": null,
+    "edge [arrowsize=0.5 color=grey penwidth=0.5]": null,
+    "subgraph cluster_rep1":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 1\""},
+    "subgraph cluster_rep2":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 2\""},
+    "subgraph cluster_rep3":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 3\""},
+    "subgraph cluster_rep4":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 4\""},
+    "subgraph cluster_rep5":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 5\""},
+    "subgraph cluster_rep6":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 6\""},
+    "subgraph cluster_rep7":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 7\""},
+    "subgraph cluster_rep8":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 8\""},
+    "subgraph cluster_rep9":  {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 9\""},
+    "subgraph cluster_rep10": {"style": "\"filled, dashed\"", "fontsize": "9", "color": "grey", "penwidth": "0.5", "fillcolor": "honeydew", "labeljust": "\"l\"", "label": "\"Replicate 10\""}
   }
 }
