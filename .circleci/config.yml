@@ -17,7 +17,7 @@ python_defaults: &python_defaults
 
 machine_defaults: &machine_defaults
   machine:
-    image: ubuntu-1604:201903-01
+    image: ubuntu-1604:202007-01
   working_directory: ~/rna-seq-pipeline
 
 make_tag: &make_tag
