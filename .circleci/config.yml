@@ -7,7 +7,7 @@
 version: 2.1
 defaults: &defaults
   docker:
-    - image: circleci/buildpack-deps:xenial-scm
+    - image: cimg/base@sha256:d75b94c6eae6e660b6db36761709626b93cabe8c8da5b955bfbf7832257e4201
   working_directory: ~/rna-seq-pipeline
 
 python_defaults: &python_defaults
