@@ -17,6 +17,7 @@ import re
 import shlex
 import shutil
 import subprocess
+import sys
 import tarfile
 from abc import ABC, abstractmethod
 
@@ -140,7 +141,7 @@ def samtools_quickcheck(input_bam):
         logger.error("samtools quickcheck exitcode {}".format(err.returncode))
         logger.error("{} has a problem".format(input_bam))
         logger.error("samtools quickcheck output: {}".format(str(err.output)))
-        raise
+        sys.exit(1)
     else:
         logger.info("{} passes samtools quickcheck".format(input_bam))
     return None
