@@ -122,6 +122,30 @@ def write_json(input_obj, output_path):
     return None
 
 
+def samtools_quickcheck(input_bam):
+    """
+    Run samtools quickcheck.
+    In case of exception, log it and raise, crashing the pipeline.
+    Args:
+        input_bam: bam file that gets checked
+    Raises:
+        subprocess.CalledProcessError
+    """
+    try:
+        subprocess.check_call(
+            shlex.split("samtools quickcheck {}".format(input_bam)),
+            stderr=subprocess.STDOUT,
+        )
+    except subprocess.CalledProcessError as err:
+        logger.error("samtools quickcheck exitcode {}".format(err.returncode))
+        logger.error("{} has a problem".format(input_bam))
+        logger.error("samtools quickcheck output: {}".format(str(err.output)))
+        raise
+    else:
+        logger.info("{} passes samtools quickcheck".format(input_bam))
+    return None
+
+
 class StarAligner(ABC):
     """
     Abstract base class that gathers aspects common to both PE and SE
@@ -280,6 +304,10 @@ def main(args):
         )
         logger.info("Running %s", rsem_sort_cmd)
         subprocess.call(shlex.split(rsem_sort_cmd))
+    # Samtools quickcheck bams to make sure that they are nonempty, and that they are not truncated.
+    # If quickcheck exits with a nonzero code, log and raise.
+    samtools_quickcheck(anno_bam_path)
+    samtools_quickcheck(genome_bam_path)
     get_flagstats(genome_bam_path, genome_flagstat_path)
     get_flagstats(anno_bam_path, anno_flagstat_path)
     anno_flagstat_content = parse_flagstats(anno_flagstat_path)
