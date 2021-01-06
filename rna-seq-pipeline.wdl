@@ -76,14 +76,14 @@ workflow rna {
             disks=align_disk,
         }
 
-        call samtools_quickcheck as check_genome {
+        call samtools_quickcheck as check_genome { input:
             bam=align.genomebam,
             ncpus=bam_to_signals_ncpus,
             ramGB=bam_to_signals_ramGB,
             disks=bam_to_signals_disk,
         }
 
-        call samtools_quickcheck as check_anno {
+        call samtools_quickcheck as check_anno { input:
             bam=align.annobam,
             ncpus=bam_to_signals_ncpus,
             ramGB=bam_to_signals_ramGB,
