@@ -129,8 +129,6 @@ def samtools_quickcheck(input_bam):
     In case of exception, log it and raise, crashing the pipeline.
     Args:
         input_bam: bam file that gets checked
-    Raises:
-        subprocess.CalledProcessError
     """
     try:
         subprocess.check_call(
