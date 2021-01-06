@@ -140,7 +140,6 @@ def samtools_quickcheck(input_bam):
     except subprocess.CalledProcessError as err:
         logger.error("samtools quickcheck exitcode {}".format(err.returncode))
         logger.error("{} has a problem".format(input_bam))
-        logger.error("samtools quickcheck output: {}".format(str(err.output)))
         sys.exit(1)
     else:
         logger.info("{} passes samtools quickcheck".format(input_bam))
