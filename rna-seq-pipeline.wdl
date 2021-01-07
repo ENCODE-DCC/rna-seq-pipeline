@@ -76,6 +76,20 @@ workflow rna {
             disks=align_disk,
         }
 
+        call samtools_quickcheck as check_genome { input:
+            bam=align.genomebam,
+            ncpus=bam_to_signals_ncpus,
+            ramGB=bam_to_signals_ramGB,
+            disks=bam_to_signals_disk,
+        }
+
+        call samtools_quickcheck as check_anno { input:
+            bam=align.annobam,
+            ncpus=bam_to_signals_ncpus,
+            ramGB=bam_to_signals_ramGB,
+            disks=bam_to_signals_disk,
+        }
+
         call bam_to_signals { input:
             input_bam=align.genomebam,
             chrom_sizes=chrom_sizes,
@@ -173,6 +187,25 @@ task align {
         File anno_flagstat_json = "~{bamroot}_anno_flagstat.json"
         File log_json = "~{bamroot}_Log.final.json"
         File python_log = "align.log"
+    }
+
+    runtime {
+      cpu: ncpus
+      memory: "~{ramGB} GB"
+      disks : select_first([disks,"local-disk 100 SSD"])
+    }
+}
+
+task samtools_quickcheck {
+    input {
+        File bam
+        Int ncpus
+        Int ramGB
+        String? disks
+    }
+
+    command {
+        samtools quickcheck ~{bam}
     }
 
     runtime {
