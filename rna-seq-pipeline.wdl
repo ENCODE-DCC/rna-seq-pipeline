@@ -211,7 +211,7 @@ task samtools_quickcheck {
     }
 
     output {
-        File quickcheck_rc = out
+        File quickcheck_rc = quickcheck_rc
     }
 
     runtime {
