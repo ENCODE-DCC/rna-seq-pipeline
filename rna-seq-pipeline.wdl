@@ -199,6 +199,7 @@ task align {
 task samtools_quickcheck {
     input {
         File bam
+        String quickcheck_rc = "quickcheck_returncode.txt"
         Int ncpus
         Int ramGB
         String? disks
@@ -206,6 +207,11 @@ task samtools_quickcheck {
 
     command {
         samtools quickcheck ~{bam}
+        echo "$?" > ~{quickcheck_rc}
+    }
+
+    output {
+        File quickcheck_rc = out
     }
 
     runtime {
