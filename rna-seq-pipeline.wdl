@@ -199,7 +199,6 @@ task align {
 task samtools_quickcheck {
     input {
         File bam
-        String dummy = "dummy.txt"
         Int ncpus
         Int ramGB
         String? disks
@@ -207,11 +206,6 @@ task samtools_quickcheck {
 
     command {
         samtools quickcheck ~{bam}
-        echo "dummy" > ~{dummy}
-    }
-
-    output {
-        File dummy = dummy
     }
 
     runtime {
