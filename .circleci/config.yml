@@ -98,7 +98,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - prepare_pytest_environment
+      - set_env_variables
       - run:
           name: build image
           command: |
@@ -115,7 +115,7 @@ jobs:
       steps:
         - checkout
         - setup_remote_docker
-        - prepare_pytest_environment
+        - set_env_variables
         - run:
             command: |
               docker pull $TAG
