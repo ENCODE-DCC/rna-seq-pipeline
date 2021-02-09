@@ -35,6 +35,54 @@ get_kallisto_index: &get_kallisto_index
   command: |
     curl https://storage.googleapis.com/circle_ci_test_data/rna-seq-pipeline/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 
+commands:
+  set_env_variables:
+    description: "Set environment ready for docker running and pushing"
+    steps:
+      - run:
+          command: |
+            echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" >> ${BASH_ENV}
+            echo "export CROMWELL=./cromwell-49.jar" >> ${BASH_ENV}
+            echo "export WOMTOOL=./womtool-49.jar" >> ${BASH_ENV}
+            source ${BASH_ENV}
+
+  install_python_requirements:
+    description: "Install pytest workflow requirements"
+    steps:
+      - run: pyenv global 3.7.8
+      - run: pip install --upgrade pip
+      - run: pip install -r test_env_requirements.txt
+
+  download_file:
+    description: "Download a file using wget"
+    parameters:
+      file_url:
+        type: string
+    steps:
+      - run: wget <<parameters.file_url>>
+
+  prepare_pytest_environment:
+    description: "Get machine ready to run caper and pytest-workflow"
+    steps:
+      - set_env_variables
+      - install_python_requirements
+      - download_file:
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/49/cromwell-49.jar"
+      - download_file:
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/49/womtool-49.jar"
+
+  run_test_tag:
+    description: "Run tagged test"
+    parameters:
+      tag:
+        type: string
+      wt:
+        type: string
+    steps:
+      - run:
+          command: pytest -v --tag <<parameters.tag>> --wt <<parameters.wt>> --symlink --kwd
+          no_output_timeout: 60m
+
 jobs:
   unittests:
     <<: *python_defaults
@@ -50,11 +98,10 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: *make_tag
+      - prepare_pytest_environment
       - run:
           name: build image
           command: |
-            source ${BASH_ENV}
             echo "pulling template!"
             docker pull encodedcc/rna-seq-pipeline:template
             docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
@@ -68,10 +115,9 @@ jobs:
       steps:
         - checkout
         - setup_remote_docker
-        - run: *make_tag
+        - prepare_pytest_environment
         - run:
             command: |
-              source ${BASH_ENV}
               docker pull $TAG
               docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
               docker tag $TAG encodedcc/rna-seq-pipeline:template
@@ -83,12 +129,11 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
           command: |
-            source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all_unstranded rna.bam_to_signals.unique_unstranded --metadata_json PE_unstranded_input.metadata.json --reference_json test/test_workflow/PE_unstranded_reference_md5.json --outfile PE_unstranded_input.result.json
             cat PE_unstranded_input.result.json
@@ -99,12 +144,11 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
           command: |
-            source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all_unstranded rna.bam_to_signals.unique_unstranded --metadata_json SE_unstranded_input.metadata.json --reference_json test/test_workflow/SE_unstranded_reference_md5.json --outfile SE_unstranded_input.result.json
             cat SE_unstranded_input.result.json
@@ -115,12 +159,11 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
           command: |
-            source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all_plus rna.bam_to_signals.all_minus rna.bam_to_signals.unique_plus rna.bam_to_signals.unique_minus --metadata_json PE_stranded_input.metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
             cat PE_stranded_input.result.json
@@ -131,11 +174,10 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run: *get_star_index
       - run:
           command: |
-            source ${BASH_ENV}
             test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_PE_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_PE_input.metadata.json --reference_json test/test_task/test_align_PE_reference_md5.json --outfile test_align_PE_input.result.json
             cat test_align_PE_input.result.json
@@ -146,11 +188,10 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run: *get_star_index
       - run:
           command: |
-            source ${BASH_ENV}
             test/test_workflow/test.sh test/test_task/test_align.wdl test/test_task/test_align_SE_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect test_align.align.genome_flagstat_json test_align.align.anno_flagstat_json --metadata_json test_align_SE_input.metadata.json --reference_json test/test_task/test_align_SE_reference_md5.json --outfile test_align_SE_input.result.json
             cat test_align_SE_input.result.json
