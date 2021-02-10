@@ -44,7 +44,7 @@ commands:
             echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" >> ${BASH_ENV}
             echo "export CROMWELL=./cromwell-56.jar" >> ${BASH_ENV}
             echo "export WOMTOOL=./womtool-56.jar" >> ${BASH_ENV}
-            source ${BASH_ENV}
+            #            source ${BASH_ENV}
 
   install_python_requirements:
     description: "Install pytest workflow requirements"
