@@ -1,3 +1,3 @@
 caper==0.8.2.1
 pytest==5.4.3
-pytest-workflow @ git+https://github.com/LUMC/pytest-workflow.git@4cbc3bb6b9840dafdfc584d62c1e7f9503f6291b
+pytest-workflow==1.5.0
