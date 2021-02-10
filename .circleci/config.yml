@@ -67,9 +67,9 @@ commands:
       - set_env_variables
       - install_python_requirements
       - download_file:
-          file_url: "https://github.com/broadinstitute/cromwell/releases/download/49/cromwell-49.jar"
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/56/cromwell-56.jar"
       - download_file:
-          file_url: "https://github.com/broadinstitute/cromwell/releases/download/49/womtool-49.jar"
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/56/womtool-56.jar"
 
   run_test_tag:
     description: "Run tagged test"
