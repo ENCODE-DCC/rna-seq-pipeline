@@ -1,7 +1,8 @@
 # Dockerfile for ENCODE-DCC rna-seq-pipeline
-FROM ubuntu@sha256:97b54e5692c27072234ff958a7442dde4266af21e7b688e7fca5dc5acc8ed7d9
+FROM ubuntu@sha256:2695d3e10e69cc500a16eae6d6629c803c43ab075fa5ce60813a0fc49c47e859
 MAINTAINER Otto Jolanki
 
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     python3-dev \
     python3-pip \
