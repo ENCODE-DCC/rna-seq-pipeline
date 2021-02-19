@@ -60,9 +60,9 @@ ENV PATH=${PATH}:/software/kentutils_v385_bin_bulkrna/
 
 RUN pip3 install qc-utils==19.8.1
 
-# Install ptools_bin 0.0.4
+# Install ptools_bin 0.0.5
 
-RUN pip3 install ptools-bin==0.0.4
+RUN pip3 install ptools-bin==0.0.5
 
 RUN mkdir -p rna-seq-pipeline/src
 COPY /src rna-seq-pipeline/src
