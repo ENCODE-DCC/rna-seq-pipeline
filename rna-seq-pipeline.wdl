@@ -2,14 +2,13 @@ version 1.0
 
 # ENCODE DCC RNA-seq pipeline
 
-#CAPER docker encodedcc/rna-seq-pipeline:v1.2.1
-#CAPER singularity docker://encodedcc/rna-seq-pipeline:v1.2.1
-#CROO out_def https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json
-
 workflow rna {
     meta {
         author: "Otto Jolanki"
-        version: "v1.2.1"
+        version: "1.2.3"
+        caper_docker: "encodedcc/rna-seq-pipeline:1.2.3"
+        caper_singularity: "encodedcc/rna-seq-pipeline:v1.2.3"
+        croo_out_def: "https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json"
     }
 
     input {
