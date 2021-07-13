@@ -8,7 +8,8 @@ Note that the files used in these exampled are first restricted to reads from ch
 
 # CONTENTS
 
-[Google Cloud](howto.md#google-cloud)  
+[Google Cloud](howto.md#google-cloud)     
+[Truwl](howto.md#truwl)    
 [Local with Docker](howto.md#local-with-docker)  
 [Local with Singularity](howto.md#local-with-singularity)  
 [Other Platforms](howto.md#other-platforms)  
@@ -95,6 +96,11 @@ Replace `[YOUR_BUCKET_NAME]` with the name of the bucket you created.
 
 This command will output into the bucket an HTML table, that shows the locations of the outputs nicely organized. Note that if your output bucket is not public, you need to be logged into your google account to be able to follow the links.
 
+## Truwl
+
+You can run this pipeline on [truwl.com](https://truwl.com/). This provides a web interface that allows you to define inputs and parameters, run the job on GCP, and monitor progress in a ready-to-go environment. To run it you will need to create an account on the platform then request early access by emailing [info@truwl.com](mailto:info@truwl.com) to get the right permissions. You can see the paired-end stranded example case from this repo [here](https://truwl.com/workflows/library/RNA-seq%20pipeline/v1.2.1/instances/WF_0741dc.ac.1e10). The example job (or other jobs) can be forked to pre-populate the inputs for your own job.
+
+If you do not run the pipeline on Truwl, you can still share your use-case/job on the platform by getting in touch at [info@truwl.com](mailto:info@truwl.com) and providing your inputs.json file.
 
 ## Local with Docker
 
