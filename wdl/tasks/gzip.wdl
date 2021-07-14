@@ -27,3 +27,4 @@ task decompress {
         memory: "~{ramGB} GB"
         disks: disks
     }
+}

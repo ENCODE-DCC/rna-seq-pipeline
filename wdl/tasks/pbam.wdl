@@ -15,11 +15,11 @@ task make_genome_pbam {
     command {
         makepBAM_genome.sh \
             ~{bam} \
-            ~{ref}
+            ~{reference_genome}
     }
 
     output {
-        File out = "~{bam_base}.p.bam"
+        File out = "~{bam_base}.sorted.p.bam"
     }
 
     runtime {

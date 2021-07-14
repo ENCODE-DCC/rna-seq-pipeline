@@ -3,6 +3,7 @@ version 1.0
 # ENCODE DCC RNA-seq pipeline
 import "wdl/tasks/cat.wdl"
 import "wdl/tasks/gzip.wdl"
+import "wdl/tasks/pbam.wdl"
 
 workflow rna {
     meta {
@@ -64,10 +65,10 @@ workflow rna {
         File? reference_genome
         File? reference_transcriptome
         # Usually for ENCODE experiments this would be the usual annotation file + the tRNAs in gtf.gz format
-        Array[File]? reference_annotations
+        Array[File] reference_annotations = []
         Int pbam_ncpus = 2
-        Int pbam_ramGB = 4
-        String pbam_disks = "local-disk 20 SSD"
+        Int pbam_ramGB = 6
+        String pbam_disks = "local-disk 200 SSD"
         # These are for internal use, leave undefined
         Int? kallisto_fragment_length_undefined
         Float? kallisto_sd_undefined
@@ -79,13 +80,13 @@ workflow rna {
     if (produce_pbams) {
         call cat.cat as combined_gtf_gz { input:
             files=reference_annotations,
-            out="combined_annotation.gtf.gz"
+            out="combined_annotation.gtf.gz",
             ncpus=2,
             ramGB=4,
             disks="local-disk 100 SSD",
         }
         call gzip.decompress as combined_gtf { input:
-            input_file=combined_gtf_gz.out,
+            input_file=combined_gtf_gz.concatenated,
             output_filename="combined_annotation.gtf",
             ncpus=2,
             ramGB=4,
@@ -122,14 +123,14 @@ workflow rna {
         if (produce_pbams) {
 
             call gzip.decompress as reference_genome_decompressed { input:
-                input_file = reference_genome,
+                input_file = select_first([reference_genome]),
                 ncpus = 2,
                 ramGB = 4,
                 disks = "local-disk 40 SSD",
             }
 
             call gzip.decompress as reference_transcriptome_decompressed { input:
-                input_file = reference_transcriptome,
+                input_file = select_first([reference_transcriptome]),
                 ncpus = 2,
                 ramGB = 4,
                 disks = "local-disk 40 SSD",
@@ -147,7 +148,7 @@ workflow rna {
                 bam = align.annobam,
                 reference_genome=reference_genome_decompressed.out,
                 reference_transcriptome=reference_transcriptome_decompressed.out,
-                annotation=combined_gtf.out,
+                reference_annotation=select_first([combined_gtf.out]),
                 ncpus=pbam_ncpus,
                 ramGB=pbam_ramGB,
                 disks=pbam_disks,
@@ -211,8 +212,11 @@ workflow rna {
     }
 
     scatter (i in range(length(align.annobam))) {
+
+        Array[File?] annobams = select_first([anno_pbam.out, align.annobam])
+
         call rna_qc { input:
-            input_bam=align.annobam[i],
+            input_bam=select_first([annobams[i]]),
             tr_id_to_gene_type_tsv=rna_qc_tr_id_to_gene_type_tsv,
             output_filename="rep"+(i+1)+bamroot+"_qc.json",
             disks=rna_qc_disk,
