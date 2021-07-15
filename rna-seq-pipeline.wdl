@@ -212,8 +212,8 @@ workflow rna {
     }
 
     scatter (i in range(length(align.annobam))) {
-
-        Array[File?] annobams = select_first([anno_pbam.out, align.annobam])
+        # if pbams are present they will be in the beginning and thus used, and if not the bams directly from alignment are used
+        Array[File] annobams = select_all(flatten([anno_pbam.out, align.annobam]))
 
         call rna_qc { input:
             input_bam=select_first([annobams[i]]),
