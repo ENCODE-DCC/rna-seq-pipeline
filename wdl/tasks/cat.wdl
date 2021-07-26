@@ -13,7 +13,7 @@ task cat {
     command {
         cat \
             ~{sep=" " files} \
-            > ~{out}
+            > ~{output_filename}
     }
 
     output {
