@@ -8,9 +8,9 @@ import "wdl/tasks/pbam.wdl"
 workflow rna {
     meta {
         author: "Otto Jolanki"
-        version: "1.2.3"
-        caper_docker: "encodedcc/rna-seq-pipeline:1.2.3"
-        caper_singularity: "encodedcc/rna-seq-pipeline:v1.2.3"
+        version: "1.2.4"
+        caper_docker: "encodedcc/rna-seq-pipeline:1.2.4"
+        caper_singularity: "encodedcc/rna-seq-pipeline:1.2.4"
         croo_out_def: "https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json"
     }
 
