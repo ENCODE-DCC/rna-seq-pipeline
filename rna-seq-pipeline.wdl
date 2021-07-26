@@ -1,13 +1,16 @@
 version 1.0
 
 # ENCODE DCC RNA-seq pipeline
+import "wdl/tasks/cat.wdl"
+import "wdl/tasks/gzip.wdl"
+import "wdl/tasks/pbam.wdl"
 
 workflow rna {
     meta {
         author: "Otto Jolanki"
-        version: "1.2.3"
-        caper_docker: "encodedcc/rna-seq-pipeline:1.2.3"
-        caper_singularity: "encodedcc/rna-seq-pipeline:v1.2.3"
+        version: "1.2.4"
+        caper_docker: "encodedcc/rna-seq-pipeline:1.2.4"
+        caper_singularity: "encodedcc/rna-seq-pipeline:1.2.4"
         croo_out_def: "https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json"
     }
 
@@ -55,6 +58,17 @@ workflow rna {
         String? mad_qc_disk
         String? rna_qc_disk
 
+        # Following inputs should only be defined if you want to produce
+        # privacy preserving pBAM files, and use those for signal_track
+        # generation and quantification.
+        Boolean produce_pbams = false
+        File? reference_genome
+        File? reference_transcriptome
+        # Usually for ENCODE experiments this would be the usual annotation file + the tRNAs in gtf.gz format
+        Array[File] reference_annotations = []
+        Int pbam_ncpus = 2
+        Int pbam_ramGB = 6
+        String pbam_disks = "local-disk 200 SSD"
         # These are for internal use, leave undefined
         Int? kallisto_fragment_length_undefined
         Float? kallisto_sd_undefined
@@ -62,6 +76,23 @@ workflow rna {
 
     # dummy variable value for the single-ended case
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
+
+    if (produce_pbams) {
+        call cat.cat as combined_gtf_gz { input:
+            files=reference_annotations,
+            output_filename="combined_annotation.gtf.gz",
+            ncpus=2,
+            ramGB=4,
+            disks="local-disk 100 SSD",
+        }
+        call gzip.decompress as combined_gtf { input:
+            input_file=combined_gtf_gz.concatenated,
+            output_filename="combined_annotation.gtf",
+            ncpus=2,
+            ramGB=4,
+            disks="local-disk 100 SSD",
+        }
+    }
 
     scatter (i in range(length(fastqs_R1))) {
         call align { input:
@@ -89,8 +120,46 @@ workflow rna {
             disks=bam_to_signals_disk,
         }
 
+        if (produce_pbams) {
+
+            call gzip.decompress as reference_genome_decompressed { input:
+                input_file = select_first([reference_genome]),
+                ncpus = 2,
+                ramGB = 4,
+                disks = "local-disk 40 SSD",
+            }
+
+            call gzip.decompress as reference_transcriptome_decompressed { input:
+                input_file = select_first([reference_transcriptome]),
+                ncpus = 2,
+                ramGB = 4,
+                disks = "local-disk 40 SSD",
+            }
+
+            call pbam.make_genome_pbam as genome_pbam { input:
+                bam=align.genomebam,
+                reference_genome=reference_genome_decompressed.out,
+                ncpus=pbam_ncpus,
+                ramGB=pbam_ramGB,
+                disks=pbam_disks,
+            }
+
+            call pbam.make_transcriptome_pbam as anno_pbam { input:
+                bam = align.annobam,
+                reference_genome=reference_genome_decompressed.out,
+                reference_transcriptome=reference_transcriptome_decompressed.out,
+                reference_annotation=select_first([combined_gtf.out]),
+                ncpus=pbam_ncpus,
+                ramGB=pbam_ramGB,
+                disks=pbam_disks,
+            }
+        }
+
+        File genome_alignment = select_first([genome_pbam.out, align.genomebam])
+        File transcriptome_alignment = select_first([anno_pbam.out, align.annobam])
+
         call bam_to_signals { input:
-            input_bam=align.genomebam,
+            input_bam=genome_alignment,
             chrom_sizes=chrom_sizes,
             strandedness=strandedness,
             bamroot="rep"+(i+1)+bamroot+"_genome",
@@ -102,7 +171,7 @@ workflow rna {
         call rsem_quant { input:
             rsem_index=rsem_index,
             rnd_seed=rnd_seed,
-            anno_bam=align.annobam,
+            anno_bam=transcriptome_alignment,
             endedness=endedness,
             read_strand=strandedness_direction,
             ncpus=rsem_ncpus,
@@ -143,8 +212,11 @@ workflow rna {
     }
 
     scatter (i in range(length(align.annobam))) {
+        # if pbams are present they will be in the beginning and thus used, and if not the bams directly from alignment are used
+        Array[File] annobams = select_all(flatten([anno_pbam.out, align.annobam]))
+
         call rna_qc { input:
-            input_bam=align.annobam[i],
+            input_bam=select_first([annobams[i]]),
             tr_id_to_gene_type_tsv=rna_qc_tr_id_to_gene_type_tsv,
             output_filename="rep"+(i+1)+bamroot+"_qc.json",
             disks=rna_qc_disk,

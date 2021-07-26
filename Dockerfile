@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip3 install pandas==0.24.2
 RUN pip3 install pysam==0.15.3
-
 # Add mountpoint directory
 RUN mkdir /data
 # Stick to Jin's way of organizing the directory structure
@@ -56,9 +55,9 @@ ENV PATH="/software/RSEM-1.2.31:${PATH}"
 RUN git clone https://github.com/ENCODE-DCC/kentutils_v385_bin_bulkrna.git
 ENV PATH=${PATH}:/software/kentutils_v385_bin_bulkrna/
 
-# Install qc-utils 19.8.1
+# Install qc-utils 19.8.1 and ptools
 
-RUN pip3 install qc-utils==19.8.1
+RUN pip3 install qc-utils==19.8.1 ptools_bin==0.0.7
 
 RUN mkdir -p rna-seq-pipeline/src
 COPY /src rna-seq-pipeline/src

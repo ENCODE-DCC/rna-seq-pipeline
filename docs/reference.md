@@ -9,6 +9,7 @@ This document contains more detailed information on the inputs, outputs and the 
 [Inputs](reference.md#inputs)  
 [Resource Considerations](reference.md#note-about-resources)  
 [Outputs](reference.md#outputs)  
+[pBAM](reference.md#pBAM)
 
 ## Software
 
@@ -157,6 +158,20 @@ Kallisto quantifier makes use of average fragment lenghts and standard deviation
 If you do not have this data available, or if you for some other reason want to omit running kallisto you can use the following parameter:
 
 * `rna.run_kallisto` Boolean defaulting to `true`. If set to `false` kallisto will not be run, and you do not need to provide values for any kallisto related parameters.
+
+## pBAM
+
+This pipeline offers an option to also output the alignments in privacy-preserving BAM, also known as pBAM format. For more details about the format, see [Cell article by Gursoy et al.](https://pubmed.ncbi.nlm.nih.gov/33186529/). Note, that also the usual BAM is output, and making sure only the privacy-preserving BAM is published is up to you. All the downstream operations (RSEM quantification, signal track generation, MAD QC and RNA QC) are based on pBAMs. Note that kallisto step, that is directly based on fastqs will not be changed when using this option, and kallisto quantifications might leak some information. Safest way to handle possible leakage from kallisto is to just skip it by setting `rna.run_kallisto` to `false`.
+
+#### Enabling the pBAM option
+To enable pBAM producing the following additional inputs are required:
+
+* `rna.produce_pbams` needs to be set to `true`.
+* `rna.reference_genome` The reference genome fasta compressed with gzip. The human reference genome used by ENCODE can be found [here](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/).
+* `rna.reference_transcriptome` The reference transcriptome fasta compressed with gzip. The version should match the genome annotation version. The human version 29 transcriptome corresponding to ENCODE4 data can be found [here](https://www.encodeproject.org/files/ENCFF088TTQ/).
+* `rna.reference_annotations` An array of annotation gtf files compressed with gzip. Typically this would be [the genome annotation](https://www.encodeproject.org/files/gencode.v29.primary_assembly.annotation_UCSC_names/) and [tRNA annotation](https://www.encodeproject.org/files/gencode.v29.tRNAs/).
+
+
 ## Outputs
 
 `Cromwell`: `Cromwell` will store outputs for each task under directory `cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]`. For all tasks `[IDX]` means a zero-based index for each replicate. In addition to the actual pipeline outputs, these directories contain a plethora of operational Cromwell-specific files. Use [croo](https://github.com/ENCODE-DCC/croo) to find and organize the pipeline outputs.

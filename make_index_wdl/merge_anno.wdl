@@ -2,13 +2,13 @@ version 1.0
 
 #ENCODE DCC RNA-Seq pipeline merge-annotation
 
-#CAPER docker encodedcc/rna-seq-pipeline:v1.2.1
-#CAPER singularity docker://encodedcc/rna-seq-pipeline:v1.2.1
 
 workflow merge_anno {
     meta {
         author: "Otto Jolanki"
-        version: "v1.2.1"
+        version: "1.2.4"
+        caper_docker: "encodedcc/rna-seq-pipeline:1.2.4"
+        caper_singularity:"encodedcc/rna-seq-pipeline:1.2.4"
     }
 
     input {
