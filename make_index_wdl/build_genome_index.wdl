@@ -2,9 +2,6 @@ version 1.0
 
 # ENCODE DCC RNA-Seq pipeline build_genome_index
 
-#CAPER docker encodedcc/rna-seq-pipeline:1.2.4
-#CAPER singularity docker://encodedcc/rna-seq-pipeline:1.2.4
-
 workflow build_index {
     meta {
         author: "Otto Jolanki"
