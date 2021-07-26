@@ -17,7 +17,7 @@ task cat {
     }
 
     output {
-        File concatenated = out
+        File concatenated = output_filename
     }
 
     runtime {
