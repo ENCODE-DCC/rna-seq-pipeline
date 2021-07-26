@@ -4,7 +4,7 @@ version 1.0
 task cat {
     input {
         Array[File] files
-        String out = "concatenated"
+        String output_filename = "concatenated"
         Int ncpus
         Int ramGB
         String disks

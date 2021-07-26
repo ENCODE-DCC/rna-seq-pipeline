@@ -80,7 +80,7 @@ workflow rna {
     if (produce_pbams) {
         call cat.cat as combined_gtf_gz { input:
             files=reference_annotations,
-            out="combined_annotation.gtf.gz",
+            output_filename="combined_annotation.gtf.gz",
             ncpus=2,
             ramGB=4,
             disks="local-disk 100 SSD",
