@@ -168,7 +168,7 @@ To enable pBAM producing the following additional inputs are required:
 
 * `rna.produce_pbams` needs to be set to `true`.
 * `rna.reference_genome` The reference genome fasta compressed with gzip. The human reference genome used by ENCODE can be found [here](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/).
-* `rna.reference_transcriptome` The reference transcriptome fasta compressed with gzip. The version should match the genome annotation version. The human version 29 transcriptome corresponding to ENCODE4 data can be found [here](https://www.encodeproject.org/files/ENCFF088TTQ/).
+* `rna.reference_transcriptome` The reference transcriptome fasta compressed with gzip. The version should match the genome annotation version. The human version 29 transcriptome corresponding to ENCODE4 data can be found [here](https://www.encodeproject.org/files/ENCFF538CQV/).
 * `rna.reference_annotations` An array of annotation gtf files compressed with gzip. Typically this would be [the genome annotation](https://www.encodeproject.org/files/gencode.v29.primary_assembly.annotation_UCSC_names/) and [tRNA annotation](https://www.encodeproject.org/files/gencode.v29.tRNAs/).
 
 
