@@ -1,0 +1,1 @@
+cromwell-extra-parameters: --options [ABSOLUTE-PATH-TO]/rna-seq-pipeline/workflow_opts/dockstore_workflow_opts.json
