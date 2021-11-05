@@ -8,6 +8,7 @@ task make_genome_pbam {
         Int ncpus
         Int ramGB
         String disks
+        RuntimeEnvironment runtime_environment
     }
 
     String bam_base = basename(bam, ".bam")
@@ -26,6 +27,8 @@ task make_genome_pbam {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disks
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -38,6 +41,7 @@ task make_transcriptome_pbam {
         Int ncpus
         Int ramGB
         String disks
+        RuntimeEnvironment runtime_environment
     }
 
     String bam_base = basename(bam, ".bam")
@@ -58,5 +62,7 @@ task make_transcriptome_pbam {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disks
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }

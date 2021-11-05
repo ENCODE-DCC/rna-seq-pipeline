@@ -4,13 +4,14 @@ version 1.0
 import "wdl/tasks/cat.wdl"
 import "wdl/tasks/gzip.wdl"
 import "wdl/tasks/pbam.wdl"
+import "wdl/structs/runtime.wdl"
 
 workflow rna {
     meta {
         author: "Otto Jolanki"
         version: "1.2.4"
         caper_docker: "encodedcc/rna-seq-pipeline:1.2.4"
-        caper_singularity: "encodedcc/rna-seq-pipeline:1.2.4"
+        caper_singularity: "docker://encodedcc/rna-seq-pipeline:1.2.4"
         croo_out_def: "https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json"
     }
 
@@ -72,6 +73,14 @@ workflow rna {
         # These are for internal use, leave undefined
         Int? kallisto_fragment_length_undefined
         Float? kallisto_sd_undefined
+        String docker: "encodedcc/rna-seq-pipeline:1.2.4"
+        String singularity: "docker://encodedcc/rna-seq-pipeline:1.2.4"
+
+    }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker,
+      "singularity": singularity
     }
 
     # dummy variable value for the single-ended case
@@ -84,6 +93,7 @@ workflow rna {
             ncpus=2,
             ramGB=4,
             disks="local-disk 100 SSD",
+            runtime_environment=runtime_environment,
         }
         call gzip.decompress as combined_gtf { input:
             input_file=combined_gtf_gz.concatenated,
@@ -91,6 +101,7 @@ workflow rna {
             ncpus=2,
             ramGB=4,
             disks="local-disk 100 SSD",
+            runtime_environment=runtime_environment,
         }
     }
 
@@ -104,6 +115,7 @@ workflow rna {
             ncpus=align_ncpus,
             ramGB=align_ramGB,
             disks=align_disk,
+            runtime_environment=runtime_environment,
         }
 
         call samtools_quickcheck as check_genome { input:
@@ -111,6 +123,7 @@ workflow rna {
             ncpus=bam_to_signals_ncpus,
             ramGB=bam_to_signals_ramGB,
             disks=bam_to_signals_disk,
+            runtime_environment=runtime_environment,
         }
 
         call samtools_quickcheck as check_anno { input:
@@ -118,6 +131,7 @@ workflow rna {
             ncpus=bam_to_signals_ncpus,
             ramGB=bam_to_signals_ramGB,
             disks=bam_to_signals_disk,
+            runtime_environment=runtime_environment,
         }
 
         if (produce_pbams) {
@@ -127,6 +141,7 @@ workflow rna {
                 ncpus = 2,
                 ramGB = 4,
                 disks = "local-disk 40 SSD",
+                runtime_environment=runtime_environment,
             }
 
             call gzip.decompress as reference_transcriptome_decompressed { input:
@@ -134,6 +149,7 @@ workflow rna {
                 ncpus = 2,
                 ramGB = 4,
                 disks = "local-disk 40 SSD",
+                runtime_environment=runtime_environment,
             }
 
             call pbam.make_genome_pbam as genome_pbam { input:
@@ -142,6 +158,7 @@ workflow rna {
                 ncpus=pbam_ncpus,
                 ramGB=pbam_ramGB,
                 disks=pbam_disks,
+                runtime_environment=runtime_environment,
             }
 
             call pbam.make_transcriptome_pbam as anno_pbam { input:
@@ -152,6 +169,7 @@ workflow rna {
                 ncpus=pbam_ncpus,
                 ramGB=pbam_ramGB,
                 disks=pbam_disks,
+                runtime_environment=runtime_environment,
             }
         }
 
@@ -166,6 +184,7 @@ workflow rna {
             ncpus=bam_to_signals_ncpus,
             ramGB=bam_to_signals_ramGB,
             disks=bam_to_signals_disk,
+            runtime_environment=runtime_environment,
         }
 
         call rsem_quant { input:
@@ -177,6 +196,7 @@ workflow rna {
             ncpus=rsem_ncpus,
             ramGB=rsem_ramGB,
             disks=rsem_disk,
+            runtime_environment=runtime_environment,
         }
     }
 
@@ -196,6 +216,7 @@ workflow rna {
               sd_of_fragment_length=kallisto_sd,
               disks=kallisto_disk,
               out_prefix="rep"+(i+1)+bamroot,
+              runtime_environment=runtime_environment,
           }
       }
     }
@@ -208,6 +229,7 @@ workflow rna {
             quants1=rsem_quant.genes_results[0],
             quants2=rsem_quant.genes_results[1],
             disks=mad_qc_disk,
+            runtime_environment=runtime_environment,
         }
     }
 
@@ -220,6 +242,7 @@ workflow rna {
             tr_id_to_gene_type_tsv=rna_qc_tr_id_to_gene_type_tsv,
             output_filename="rep"+(i+1)+bamroot+"_qc.json",
             disks=rna_qc_disk,
+            runtime_environment=runtime_environment,
         }
     }
 }
@@ -235,6 +258,7 @@ task align {
         Int ncpus
         Int ramGB
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -264,6 +288,8 @@ task align {
       cpu: ncpus
       memory: "~{ramGB} GB"
       disks : select_first([disks,"local-disk 100 SSD"])
+      docker: runtime_environment.docker
+      singularity: runtime_environment.singularity
     }
 }
 
@@ -273,6 +299,7 @@ task samtools_quickcheck {
         Int ncpus
         Int ramGB
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -283,6 +310,8 @@ task samtools_quickcheck {
       cpu: ncpus
       memory: "~{ramGB} GB"
       disks : select_first([disks,"local-disk 100 SSD"])
+      docker: runtime_environment.docker
+      singularity: runtime_environment.singularity
     }
 }
 
@@ -296,6 +325,7 @@ task  bam_to_signals {
         Int ncpus
         Int ramGB
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -320,6 +350,8 @@ task  bam_to_signals {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -333,6 +365,7 @@ task rsem_quant {
         Int ncpus
         Int ramGB
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -357,6 +390,8 @@ task rsem_quant {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -373,6 +408,7 @@ task kallisto {
         Int? fragment_length
         Float? sd_of_fragment_length
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -397,6 +433,8 @@ task kallisto {
         cpu: number_of_threads
         memory: "~{ramGB} GB"
         disks: select_first([disks, "local-disk 100 SSD"])
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -405,6 +443,7 @@ task mad_qc {
         File quants1
         File quants2
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -424,6 +463,8 @@ task mad_qc {
         cpu: 2
         memory: "3400 MB"
         disks: select_first([disks,"local-disk 100 SSD"])
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -433,6 +474,7 @@ task rna_qc {
         File tr_id_to_gene_type_tsv
         String output_filename
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -451,5 +493,7 @@ task rna_qc {
         cpu: 2
         memory: "1024 MB"
         disks: select_first([disks, "local-disk 100 SSD"])
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }

@@ -2,12 +2,14 @@ version 1.0
 
 # ENCODE DCC RNA-Seq pipeline build_genome_index
 
+import "../wdl/structs/runtime.wdl/"
+
 workflow build_index {
     meta {
         author: "Otto Jolanki"
         version: "1.2.4"
         caper_docker: "encodedcc/rna-seq-pipeline:1.2.4"
-        caper_singularity: "encodedcc/rna-seq-pipeline:1.2.4"
+        caper_singularity: "docker://encodedcc/rna-seq-pipeline:1.2.4"
     }
 
     input {
@@ -28,6 +30,13 @@ workflow build_index {
         Int ncpu = 8
         Int? memGB
         String? disks
+        String docker = "encodedcc/rna-seq-pipeline:1.2.4"
+        String singularity = "docker://encodedcc/rna-seq-pipeline:1.2.4"
+    }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker,
+      "singularity": singularity
     }
 
     call make_index { input:
@@ -40,6 +49,7 @@ workflow build_index {
         ncpu=ncpu,
         memGB=memGB,
         disks=disks,
+        runtime_environment=runtime_environment,
     }
 }
 
@@ -54,6 +64,7 @@ task make_index {
         Int ncpu
         Int? memGB
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -71,8 +82,10 @@ task make_index {
     }
 
     runtime {
-        cpu : ncpu
-        memory : "~{select_first([memGB,'8'])} GB"
-        disks : select_first([disks,"local-disk 100 SSD"])
+        cpu: ncpu
+        memory: "~{select_first([memGB,'8'])} GB"
+        disks: select_first([disks,"local-disk 100 SSD"])
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }

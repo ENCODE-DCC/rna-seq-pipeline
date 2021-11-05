@@ -8,6 +8,7 @@ task decompress {
         Int ncpus
         Int ramGB
         String disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -26,5 +27,7 @@ task decompress {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disks
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
