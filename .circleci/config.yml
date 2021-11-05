@@ -165,7 +165,7 @@ jobs:
       - run: *get_kallisto_index
       - run:
           command: |
-            test/add_docker_image_tag_to_input.json test/test_workflow/PE_stranded_input.json rna
+            test/add_docker_image_tag_to_input.sh test/test_workflow/PE_stranded_input.json rna
             test/caper_run.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json
             python3 src/compare_md5.py --keys_to_inspect rna.rna_qc.rnaQC rna.rsem_quant.number_of_genes rna.mad_qc.madQCmetrics rna.kallisto.quants rna.align.genome_flagstat rna.align.anno_flagstat rna.bam_to_signals.all_plus rna.bam_to_signals.all_minus rna.bam_to_signals.unique_plus rna.bam_to_signals.unique_minus --metadata_json metadata.json --reference_json test/test_workflow/PE_stranded_reference_md5.json --outfile PE_stranded_input.result.json
             cat PE_stranded_input.result.json
