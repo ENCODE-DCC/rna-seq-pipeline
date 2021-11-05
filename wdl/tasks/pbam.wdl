@@ -1,5 +1,6 @@
 version 1.0
 
+import "../structs/runtime.wdl"
 
 task make_genome_pbam {
     input {
