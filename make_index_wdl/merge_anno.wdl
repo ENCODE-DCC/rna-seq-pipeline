@@ -19,7 +19,8 @@ workflow merge_anno {
         Int? cpu
         Int? memGB
         String? disks
-        RuntimeEnvironment runtime_environment
+        String docker = "encodedcc/rna-seq-pipeline:1.2.4"
+        String singularity = "docker://encodedcc/rna-seq-pipeline:1.2.4"
     }
 
     call merge_annotation { input :

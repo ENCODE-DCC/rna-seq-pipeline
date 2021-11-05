@@ -73,8 +73,8 @@ workflow rna {
         # These are for internal use, leave undefined
         Int? kallisto_fragment_length_undefined
         Float? kallisto_sd_undefined
-        String docker: "encodedcc/rna-seq-pipeline:1.2.4"
-        String singularity: "docker://encodedcc/rna-seq-pipeline:1.2.4"
+        String docker = "encodedcc/rna-seq-pipeline:1.2.4"
+        String singularity = "docker://encodedcc/rna-seq-pipeline:1.2.4"
 
     }
 
