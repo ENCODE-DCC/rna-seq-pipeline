@@ -8,7 +8,7 @@ workflow merge_anno {
         author: "Otto Jolanki"
         version: "1.2.4"
         caper_docker: "encodedcc/rna-seq-pipeline:1.2.4"
-        caper_singularity:"encodedcc/rna-seq-pipeline:1.2.4"
+        caper_singularity:"docker://encodedcc/rna-seq-pipeline:1.2.4"
     }
 
     input {
@@ -19,6 +19,8 @@ workflow merge_anno {
         Int? cpu
         Int? memGB
         String? disks
+        String docker = "encodedcc/rna-seq-pipeline:1.2.4"
+        String singularity = "docker://encodedcc/rna-seq-pipeline:1.2.4"
     }
 
     call merge_annotation { input :
@@ -26,6 +28,7 @@ workflow merge_anno {
         tRNA=tRNA,
         spikeins=spikeins,
         output_filename=output_filename,
+        runtime_environment=runtime_environment,
     }
 }
 
@@ -38,6 +41,7 @@ task merge_annotation {
         Int? cpu
         Int? memGB
         String? disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -54,5 +58,7 @@ task merge_annotation {
         cpu : select_first([cpu,2])
         memory : "~{select_first([memGB,'8'])} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }

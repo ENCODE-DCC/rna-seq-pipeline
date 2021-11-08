@@ -1,5 +1,6 @@
 version 1.0
 
+import "../structs/runtime.wdl"
 
 task decompress {
     input {
@@ -8,6 +9,7 @@ task decompress {
         Int ncpus
         Int ramGB
         String disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -26,5 +28,7 @@ task decompress {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disks
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }

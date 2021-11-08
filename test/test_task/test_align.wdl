@@ -12,6 +12,12 @@ workflow test_align {
         Int align_ncpus
         Int align_ramGB
         String? align_disk
+        String docker
+    }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker,
+      "singularity": ""
     }
 
     Array[Array[File]] fastqs_R2_ = if (endedness == "single") then fastqs_R1 else fastqs_R2
@@ -26,6 +32,7 @@ workflow test_align {
             ncpus=align_ncpus,
             ramGB=align_ramGB,
             disks=align_disk,
+            runtime_environment=runtime_environment,
         }
     }
 }
