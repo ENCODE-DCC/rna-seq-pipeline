@@ -1,0 +1,12 @@
+---
+version: 1.2
+workflows:
+   - name: rna-seq-pipeline
+     publish: True
+     subclass: WDL
+     primaryDescriptorPath: /rna-seq-pipeline.wdl
+     testParameterFiles:
+         - /test/test_workflow/PE_stranded_input.json
+     authors:
+       - name: Otto Jolanki
+         orcid: https://orcid.org/0000-0001-8601-4849
