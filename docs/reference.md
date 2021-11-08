@@ -135,6 +135,7 @@ Assume the `rna.bamroot` is `FOO`. Outputs from first replicate would be prefixe
 * `rna.kallisto_number_of_threads` How many threads are used for Kallisto quantification. Required only if `rna.run_kallisto` is `true` (Default is `true`).
 
 * `rna.kallisto_ramGB` How many GBs of memory are available for Kallisto quantification. Required only if `rna.run_kallisto` is `true` (Default is `true`).
+* `rna.docker` and `rna.singularity` Container image locations. You should usually not touch these, unless you are for some reason using locally stored images, in which case you probably know what you are doing :)
 
 
 
