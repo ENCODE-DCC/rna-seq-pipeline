@@ -1,5 +1,0 @@
-{
-  "default_runtime_attributes": {
-    "docker": "encodedcc/rna-seq-pipeline:1.2.4"
-  }
-}
