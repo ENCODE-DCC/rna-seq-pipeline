@@ -48,6 +48,7 @@ commands:
   install_python_requirements:
     description: "Install pytest workflow requirements"
     steps:
+      - run: pyenv install 3.7.8
       - run: pyenv global 3.7.8
       - run: pip install --upgrade pip
       - run: pip install -r test_env_requirements.txt
