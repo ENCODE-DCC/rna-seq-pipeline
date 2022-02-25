@@ -13,7 +13,6 @@ workflow rna {
         caper_docker: "encodedcc/rna-seq-pipeline:1.2.4"
         caper_singularity: "docker://encodedcc/rna-seq-pipeline:1.2.4"
         croo_out_def: "https://storage.googleapis.com/encode-pipeline-output-definition/bulkrna.output_definition.json"
-        description: "ENCODE Bulk-RNA pipeline, see https://github.com/ENCODE-DCC/rna-seq-pipeline for details."
     }
 
     input {
