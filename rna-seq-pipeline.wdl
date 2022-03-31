@@ -1,10 +1,10 @@
 version 1.0
 
 # ENCODE DCC RNA-seq pipeline
-import "wdl/tasks/cat.wdl"
-import "wdl/tasks/gzip.wdl"
-import "wdl/tasks/pbam.wdl"
-import "wdl/structs/runtime.wdl"
+import "wdl/tasks/cat.wdl" as cat
+import "wdl/tasks/gzip.wdl" as gzip
+import "wdl/tasks/pbam.wdl" as pbam
+import "wdl/structs/runtime.wdl" as struct_runtime
 
 workflow rna {
     meta {
