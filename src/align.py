@@ -249,7 +249,7 @@ def main(args):
     if merged_R2 and args.endedness == "paired":
         fastqs.append(merged_R2)
     with tarfile.open(args.index, "r:gz") as archive:
-        archive.extractall()
+        archive.extractall(path=args.indexdir)
     aligner = make_aligner(
         args.endedness, fastqs, args.ncpus, args.ramGB, args.indexdir
     )
