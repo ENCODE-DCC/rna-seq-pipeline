@@ -89,7 +89,26 @@ def main(args):
     remove_bam_from_end_re = re.compile("\.bam$")
     bam_root = remove_bam_from_end_re.sub("", os.path.basename(args.anno_bam))
     with tarfile.open(args.rsem_index, "r:gz") as archive:
-        archive.extractall(".", members=make_modified_TarInfo(archive, "rsem_index"))
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(archive, ".", members=make_modified_TarInfo(archive,"rsem_index"))
     rsem_call = shlex.split(
         RSEM_COMMAND.format(
             rnd_seed=args.rnd_seed,
